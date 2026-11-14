@@ -227,6 +227,19 @@ const RULES = `
   color: var(--dsw-alias-state-error-primary);
 }
 
+/* 危险操作的主按钮在 DSH 里是淡红色填充配错误色文字，而不是整块高饱和红底：
+   后者在深色主题下会变成一块亮粉色，与宿主的删除确认弹窗不一致。 */
+.dsh-ui .arco-btn-primary.arco-btn-status-danger:not(.arco-btn-disabled) {
+  background-color: var(--dsw-alias-interactive-bg-hover-danger);
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.dsh-ui .arco-btn-primary.arco-btn-status-danger:not(.arco-btn-disabled):not(.arco-btn-loading):hover,
+.dsh-ui .arco-btn-primary.arco-btn-status-danger:not(.arco-btn-disabled):not(.arco-btn-loading):active {
+  background-color: color-mix(in srgb, var(--dsw-alias-state-error-primary) 16%, transparent);
+  color: var(--dsw-alias-state-error-primary);
+}
+
 .dsh-ui :focus-visible {
   outline-color: var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
   outline-width: var(--dsw-focus-ring-width, 2px);

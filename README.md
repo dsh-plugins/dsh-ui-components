@@ -97,8 +97,24 @@ Icons inherit `currentColor`, so they follow the surrounding text colour automat
 | Inputs | `Input`, `Textarea`, `InputNumber`, `Select`, `AutoComplete` |
 | Toggles | `Checkbox`, `CheckboxGroup`, `Radio`, `RadioGroup`, `Switch`, `Slider`, `Rate` |
 | Form | `Form`, `FormItem`, `Field` |
+| Display | `Card`, `Tag`, `Pill`, `Avatar`, `Badge`, `Divider`, `Descriptions`, `Typography`, `Text`, `Paragraph`, `Empty`, `Skeleton`, `Spin`, `Tooltip`, `Popover`, `HoverCard`, `Collapse`, `CollapseItem` |
+| Feedback | `Alert`, `Progress`, `Result`, `Popconfirm`, `Modal`, `confirm`, `Drawer`, `Message`, `Notification`, `message`, `messageSuccess`, `messageError`, `messageWarning` |
+| Navigation | `Menu`, `MenuItem`, `Dropdown`, `Tabs`, `TabPane`, `Breadcrumb`, `BreadcrumbItem`, `Pagination`, `Steps`, `Step`, `SegmentedControl`, `DisclosureRow`, `StateDot` |
+| Data | `Table`, `List`, `ListItem`, `Tree`, `DatePicker`, `TimePicker`, `Cascader`, `TreeSelect`, `Transfer`, `Statistic`, `Timeline`, `TimelineItem`, `Calendar`, `Carousel`, `Image` |
+| DSH composites | `SettingsCard`, `SettingsRow`, `PanelShell`, `MenuSelect`, `JsonTree`, `CodeBlockShell`, `FileTypeBadge`, `StatusLine` |
 
 Every control forwards native props and `className`, so escaping the defaults never requires forking a component.
+
+`SettingsCard` + `SettingsRow` render the host's settings-page card. `PanelShell` is a plain overlay shell that already satisfies the 120px top and bottom margin rule and scrolls its body through the host's `Scrollbar`. `MenuSelect` is the self-drawn dropdown for settings pages, where a native `<select>` popup cannot follow the DSH theme.
+
+## Preview
+
+```sh
+npm run gen:tokens   # copy the host token sheets into docs/preview/
+npm run preview      # http://localhost:5178
+```
+
+The preview site renders every component against the host's own token values, with a light/dark switch and a searchable index over all 2658 icons. It reads the package source directly, so a change shows up on refresh without a build.
 
 ## Development
 

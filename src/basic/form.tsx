@@ -52,11 +52,15 @@ const FIELD_CSS = `
   gap: 16px;
 }
 
-.dsh-field--inline .dsh-field__text {
+.dsh-field__text {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+}
+
+.dsh-field--inline .dsh-field__text {
+  flex: 1 1 auto;
 }
 `
 

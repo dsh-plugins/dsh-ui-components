@@ -39,6 +39,35 @@ export function Popover(props: PopoverProps): React.ReactElement {
   return <Arco.Popover {...props} />
 }
 
+/** {@link HoverCard} 的 props。 */
+export type HoverCardProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Popover>, 'trigger'> & {
+  /**
+   * 悬停多久后显示，单位毫秒，默认 120。触屏设备上悬停不可用，因此调用方应
+   * 保证同样的信息也能通过点击路径获得。
+   */
+  delayMs?: number
+}
+
+/**
+ * 悬停预览卡片，用于在列表里展开一段只读详情。
+ *
+ * 与 `Popover` 的差别只在触发方式：这里固定为悬停加键盘聚焦，并且带一个很短
+ * 的延迟，避免指针划过整列时连续弹层。
+ *
+ * @param props - 见 {@link HoverCardProps}。
+ * @returns 悬停卡片元素。
+ */
+export function HoverCard({ delayMs = 120, triggerProps, ...rest }: HoverCardProps): React.ReactElement {
+  injectDisplayStyles()
+  return (
+    <Arco.Popover
+      {...rest}
+      trigger="hover"
+      triggerProps={{ ...triggerProps, mouseEnterDelay: delayMs, mouseLeaveDelay: 80 }}
+    />
+  )
+}
+
 /** {@link Collapse} 的 props。 */
 export type CollapseProps = React.ComponentPropsWithoutRef<typeof Arco.Collapse>
 

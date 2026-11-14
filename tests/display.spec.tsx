@@ -5,7 +5,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as React from 'react'
 import { cleanup, render, screen } from '@testing-library/react'
-import { Card, Collapse, CollapseItem, Divider, Descriptions, Empty, Pill, Tag, Text } from '../src/display/index.js'
+import { Card, Collapse, CollapseItem, Divider, Descriptions, Empty, HoverCard, Pill, Tag, Text } from '../src/display/index.js'
 
 afterEach(cleanup)
 
@@ -114,5 +114,16 @@ describe('Text', () => {
     render(<Text type="error">错误信息</Text>)
     const element = screen.getByText('错误信息')
     expect(element.className).toContain('arco-typography-error')
+  })
+})
+
+describe('HoverCard', () => {
+  it('渲染触发元素本身', () => {
+    render(
+      <HoverCard content="预览内容">
+        <button type="button">悬停我</button>
+      </HoverCard>,
+    )
+    expect(screen.getByRole('button', { name: '悬停我' })).toBeTruthy()
   })
 })

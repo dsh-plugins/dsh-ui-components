@@ -33,9 +33,12 @@
   ],
   "scripts": {
     "gen:icons": "node scripts/gen-icons.mjs",
+    "gen:tokens": "node scripts/gen-host-tokens.mjs",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "preview": "vite --config docs/preview/vite.config.ts",
+    "preview:build": "vite build --config docs/preview/vite.config.ts",
     "verify:tokens": "node scripts/verify-tokens.mjs",
     "verify:icons": "node scripts/gen-icons.mjs --check",
     "verify:colors": "node scripts/verify-no-literal-colors.mjs",
@@ -84,6 +87,7 @@
     }
   },
   "devDependencies": {
+    "@arco-design/web-react": "^2.66.18",
     "@dsh-plugin/dsh-loader": "^2.0.0-0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.1.0",
@@ -94,6 +98,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^7.0.2",
+    "vite": "^6.4.6",
     "vitest": "^2.1.0"
   }
 }

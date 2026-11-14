@@ -70,4 +70,10 @@ describe('桥接样式表', () => {
     expect(BRIDGE_CSS).toContain('background-color: var(--dsw-alias-button-primary-fill)')
     expect(BRIDGE_CSS).toContain('var(--dsw-alias-button-primary-hover)')
   })
+
+  it('危险主按钮用淡红填充配错误色文字', () => {
+    expect(BRIDGE_CSS).toContain('.arco-btn-primary.arco-btn-status-danger')
+    expect(BRIDGE_CSS).toContain('var(--dsw-alias-interactive-bg-hover-danger)')
+    expect(BRIDGE_CSS).toContain('color: var(--dsw-alias-state-error-primary)')
+  })
 })

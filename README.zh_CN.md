@@ -97,8 +97,24 @@ import { ICON_INDEX } from '@dsh-plugin/dsh-ui-components/icons-index'
 | 输入 | `Input`、`Textarea`、`InputNumber`、`Select`、`AutoComplete` |
 | 选择 | `Checkbox`、`CheckboxGroup`、`Radio`、`RadioGroup`、`Switch`、`Slider`、`Rate` |
 | 表单 | `Form`、`FormItem`、`Field` |
+| 展示 | `Card`、`Tag`、`Pill`、`Avatar`、`Badge`、`Divider`、`Descriptions`、`Typography`、`Text`、`Paragraph`、`Empty`、`Skeleton`、`Spin`、`Tooltip`、`Popover`、`HoverCard`、`Collapse`、`CollapseItem` |
+| 反馈 | `Alert`、`Progress`、`Result`、`Popconfirm`、`Modal`、`confirm`、`Drawer`、`Message`、`Notification`、`message`、`messageSuccess`、`messageError`、`messageWarning` |
+| 导航 | `Menu`、`MenuItem`、`Dropdown`、`Tabs`、`TabPane`、`Breadcrumb`、`BreadcrumbItem`、`Pagination`、`Steps`、`Step`、`SegmentedControl`、`DisclosureRow`、`StateDot` |
+| 数据 | `Table`、`List`、`ListItem`、`Tree`、`DatePicker`、`TimePicker`、`Cascader`、`TreeSelect`、`Transfer`、`Statistic`、`Timeline`、`TimelineItem`、`Calendar`、`Carousel`、`Image` |
+| DSH 组合件 | `SettingsCard`、`SettingsRow`、`PanelShell`、`MenuSelect`、`JsonTree`、`CodeBlockShell`、`FileTypeBadge`、`StatusLine` |
 
 所有控件都透传原生 props 与 `className`，因此想脱离默认样式时不必 fork 组件。
+
+`SettingsCard` 加 `SettingsRow` 组成宿主设置页的卡片结构。`PanelShell` 是自带 120px 上下留白、内容区走宿主 `Scrollbar` 的浮层外壳。`MenuSelect` 是设置页用的自绘下拉，因为原生 `<select>` 的弹层无法跟随 DSH 主题。
+
+## 预览
+
+```sh
+npm run gen:tokens   # 把宿主令牌样式表复制到 docs/preview/
+npm run preview      # http://localhost:5178
+```
+
+预览站用宿主自己的令牌取值渲染全部组件，带深浅主题切换与覆盖 2658 个图标的可搜索索引。它直接读包源码，改完刷新即可看到效果，不必先构建。
 
 ## 开发
 

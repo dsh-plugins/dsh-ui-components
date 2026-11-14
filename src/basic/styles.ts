@@ -11,7 +11,13 @@ import { injectUiStyle } from '../foundation/style.js'
 /** 基础控件样式表。 */
 export const BASIC_CSS = `
 /* ── 按钮 ────────────────────────────────────────────────────────── */
+/* Arco 的按钮基线是 inline-block，落进 flex 容器后会被块化，文字随即失去
+   垂直居中并在小尺寸下被裁切。DSH 的按钮是 flex 居中的，这里显式改成同一
+   语义，不再依赖容器的布局方式。 */
 .dsh-ui .arco-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: inherit;
   font-weight: 500;
   box-sizing: border-box;
@@ -52,17 +58,22 @@ export const BASIC_CSS = `
   width: 28px;
 }
 
-.dsh-ui .arco-btn-shape-square {
+/* Arco 给所有按钮默认带上 shape="square"，只有真正省略文字的图标按钮才该是
+   固定方形，因此这里按 icon-only 收紧而不是按 shape。 */
+.dsh-ui .arco-btn.arco-btn-icon-only {
   width: 36px;
   padding: 0;
 }
 
-.dsh-ui .arco-btn-shape-square.arco-btn-size-small {
+.dsh-ui .arco-btn.arco-btn-icon-only.arco-btn-size-small {
   width: 28px;
 }
 
+.dsh-ui .arco-btn.arco-btn-icon-only.arco-btn-size-large {
+  width: 44px;
+}
+
 .dsh-ui .arco-btn-icon-only {
-  padding: 0;
   gap: 0;
 }
 
@@ -98,6 +109,28 @@ export const BASIC_CSS = `
 .dsh-ui .arco-input::placeholder,
 .dsh-ui .arco-textarea::placeholder {
   color: var(--dsw-alias-label-dimmed);
+}
+
+/* Arco 的错误态默认用整块浅红填充；DSH 的输入框只换描边与焦点环，填充保持
+   背景色，避免表单错误时整片发红。 */
+.dsh-ui .arco-input-error,
+.dsh-ui .arco-textarea-error,
+.dsh-ui .arco-input-wrapper-error,
+.dsh-ui .arco-select-view-error {
+  background-color: var(--dsw-alias-bg-layer-1);
+  border-color: var(--dsw-alias-state-error-primary);
+}
+
+.dsh-ui .arco-input-error:hover,
+.dsh-ui .arco-textarea-error:hover,
+.dsh-ui .arco-input-wrapper-error:hover,
+.dsh-ui .arco-select-view-error:hover {
+  background-color: var(--dsw-alias-bg-layer-1);
+  border-color: var(--dsw-alias-state-error-primary);
+}
+
+.dsh-ui .arco-input-wrapper.arco-input-error > .arco-input {
+  background: transparent;
 }
 
 .dsh-ui .dsh-mono .arco-input,

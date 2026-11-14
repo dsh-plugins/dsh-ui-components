@@ -32,10 +32,12 @@ export {
 export {
   Collapse,
   CollapseItem,
+  HoverCard,
   Popover,
   Tooltip,
   type CollapseItemProps,
   type CollapseProps,
+  type HoverCardProps,
   type PopoverProps,
   type TooltipProps,
 } from './overlay.js'

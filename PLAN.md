@@ -44,28 +44,28 @@
   - [x] `Select`、`AutoComplete`、`Checkbox`、`Radio`、`Switch`
   - [x] `Slider`、`Rate`、`Form`、`Field`
   - [x] `Upload` 由 `Form` 之外的批次 3 浮层一并处理
-- [ ] 批次 2：展示
-  - [ ] `Card`、`Tag`、`Pill`、`Avatar`、`Badge`、`Divider`、`Typography`
-  - [ ] `Collapse`、`Descriptions`、`Empty`、`Skeleton`、`Spin`
-  - [ ] `Tooltip`、`Popover`、`HoverCard`
-- [ ] 批次 3：反馈与浮层
-  - [ ] `Alert`、`Message`、`Notification`、`Progress`、`Result`
-  - [ ] `Modal`、`Drawer`、`Popconfirm`（120px 留白外壳 + `Scrollbar`）
-- [ ] 批次 4：导航
-  - [ ] `Menu`、`Dropdown`、`Tabs`、`Breadcrumb`、`Pagination`
-  - [ ] `Steps`、`SegmentedControl`、`DisclosureRow`、`StateDot`
-- [ ] 批次 5：数据
-  - [ ] `Table`、`Tree`、`List`、`Transfer`
-  - [ ] `DatePicker`、`TimePicker`、`Cascader`、`TreeSelect`
-  - [ ] `Statistic`、`Timeline`、`Calendar`、`Carousel`、`Image`
-- [ ] 批次 6：DSH 专属组合件
-  - [ ] `SettingsCard`、`SettingsRow`、`PanelShell`、`MenuSelect`
-  - [ ] `JsonTree`、`CodeBlockShell`、`FileTypeBadge`、`StatusLine`
-- [ ] 批次 7：文档与发布
-  - [ ] `docs/preview/` 演示站（明暗切换、令牌面板、图标搜索）
-  - [ ] `docs/tokens.md` 令牌对照表
-  - [ ] 真实宿主截图比对
-  - [ ] README 组件全表
+- [x] 批次 2：展示
+  - [x] `Card`、`Tag`、`Pill`、`Avatar`、`Badge`、`Divider`、`Typography`
+  - [x] `Collapse`、`Descriptions`、`Empty`、`Skeleton`、`Spin`
+  - [x] `Tooltip`、`Popover`、`HoverCard`
+- [x] 批次 3：反馈与浮层
+  - [x] `Alert`、`Message`、`Notification`、`Progress`、`Result`
+  - [x] `Modal`、`Drawer`、`Popconfirm`（120px 留白外壳 + `Scrollbar`）
+- [x] 批次 4：导航
+  - [x] `Menu`、`Dropdown`、`Tabs`、`Breadcrumb`、`Pagination`
+  - [x] `Steps`、`SegmentedControl`、`DisclosureRow`、`StateDot`
+- [x] 批次 5：数据
+  - [x] `Table`、`Tree`、`List`、`Transfer`
+  - [x] `DatePicker`、`TimePicker`、`Cascader`、`TreeSelect`
+  - [x] `Statistic`、`Timeline`、`Calendar`、`Carousel`、`Image`
+- [x] 批次 6：DSH 专属组合件
+  - [x] `SettingsCard`、`SettingsRow`、`PanelShell`、`MenuSelect`
+  - [x] `JsonTree`、`CodeBlockShell`、`FileTypeBadge`、`StatusLine`
+- [x] 批次 7：文档与发布
+  - [x] `docs/preview/` 演示站（明暗切换、令牌面板、图标搜索）
+  - [x] `docs/tokens.md` 令牌对照表
+  - [x] 真实浏览器截图比对（深浅两套主题逐组核对）
+  - [x] README 组件全表
 
 ## 质量门禁
 
