@@ -1,0 +1,21 @@
+/* dsh-ui-components 第三方组件声明
+ *
+ * 本包在运行期依赖以下第三方作品，按其许可证要求在此声明来源与授权：
+ *
+ * 1. IconPark（@icon-park/react 1.4.2，Apache License 2.0）
+ *    https://github.com/bytedance/IconPark
+ *    本包 src/icons/ 下的 2658 个图标模块由脚本从该包的 es/icons/ 于安装时
+ *    直接转导出，不复制其源码；src/icons-index.ts 的图标元数据由该包
+ *    icons.json 生成。图标图形的著作权归 IconPark 及其贡献者所有。
+ *    消费方使用本包即同时受 Apache License 2.0 约束，该许可证全文见
+ *    https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * 2. Arco Design（@arco-design/web-react 2.66.18，MIT License）
+ *    https://github.com/arco-design/arco-design
+ *    本包不复制、不打包 Arco 源码，仅在运行期通过 @dsh-plugin/dsh-loader
+ *    提供的 Arco 单例使用其组件，并以 CSS 变量重绑的方式覆盖其外观。
+ *
+ * 3. DeepSeek Harness 设计令牌（--dsw-*）
+ *    令牌名称与取值来自 DSH 源码 packages/client/ui-theme/src/styles/。
+ *    本包只引用变量名并附带回退值，不内联其样式表。
+ */

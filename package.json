@@ -1,0 +1,99 @@
+{
+  "name": "@dsh-plugin/dsh-ui-components",
+  "version": "0.1.0",
+  "description": "React component library that restyles Arco Design with dsh (DeepSeek Harness) design tokens, and exposes the full IconPark icon set by name.",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./icons/*": {
+      "types": "./lib/icons/*.d.ts",
+      "default": "./lib/icons/*.js"
+    },
+    "./icons-index": {
+      "types": "./lib/icons-index.d.ts",
+      "default": "./lib/icons-index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "!src/icons",
+    "scripts",
+    "docs/tokens.md",
+    "README.md",
+    "README.zh_CN.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "gen:icons": "node scripts/gen-icons.mjs",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "verify:tokens": "node scripts/verify-tokens.mjs",
+    "verify:icons": "node scripts/gen-icons.mjs --check",
+    "verify:colors": "node scripts/verify-no-literal-colors.mjs",
+    "verify:size": "node scripts/check-size.mjs",
+    "verify": "npm run verify:tokens && npm run verify:icons && npm run verify:colors && npm run verify:size",
+    "prepublishOnly": "npm run typecheck && npm run build && npm test && npm run verify"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=24.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsh-plugins/dsh-ui-components.git"
+  },
+  "homepage": "https://github.com/dsh-plugins/dsh-ui-components",
+  "bugs": {
+    "url": "https://github.com/dsh-plugins/dsh-ui-components/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "ui",
+    "components",
+    "arco-design",
+    "react"
+  ],
+  "dependencies": {
+    "@icon-park/react": "^1.4.2"
+  },
+  "peerDependencies": {
+    "@dsh-plugin/dsh-loader": "^2.0.0-0",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": false
+    },
+    "react-dom": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "@dsh-plugin/dsh-loader": "^2.0.0-0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.1.0",
+    "@types/node": "^26.6.6",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "jsdom": "^25.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^7.0.2",
+    "vitest": "^2.1.0"
+  }
+}
