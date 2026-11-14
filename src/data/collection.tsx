@@ -49,10 +49,12 @@ function ListBase(props: ListProps): React.ReactElement {
 export type ListItemProps = React.ComponentPropsWithoutRef<typeof Arco.List.Item>
 
 /** 列表项，直接取 Arco 的原组件以保持子组件识别。 */
-export const ListItem = Arco.List.Item
+export const ListItem: typeof Arco.List.Item = Arco.List.Item
 
 /** 带静态子组件的列表导出。 */
-export const List = Object.assign(ListBase, { Item: Arco.List.Item })
+export const List: typeof ListBase & { Item: typeof Arco.List.Item } = Object.assign(ListBase, {
+  Item: Arco.List.Item,
+})
 
 /** {@link Tree} 的 props。 */
 export type TreeProps = React.ComponentPropsWithoutRef<typeof Arco.Tree>

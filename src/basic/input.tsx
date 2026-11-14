@@ -60,22 +60,23 @@ export type InputProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Input>,
  * @param ref - Arco 的输入框句柄，含 `dom`、`focus`、`blur`。
  * @returns 输入框元素。
  */
-export const Input = React.forwardRef<InputRef, InputProps>(function Input(
-  { size = 'md', mono, invalid, className, status, ...rest },
-  ref,
-) {
-  injectBasicStyles()
-  return (
-    <Arco.Input
-      {...rest}
-      ref={ref}
-      size={ARCO_SIZE[size]}
-      status={invalid === true ? 'error' : status}
-      aria-invalid={invalid === true ? true : undefined}
-      className={mergeClass(className, mono === true && 'dsh-mono')}
-    />
-  )
-})
+export const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<InputRef>> =
+  React.forwardRef<InputRef, InputProps>(function Input(
+    { size = 'md', mono, invalid, className, status, ...rest },
+    ref,
+  ) {
+    injectBasicStyles()
+    return (
+      <Arco.Input
+        {...rest}
+        ref={ref}
+        size={ARCO_SIZE[size]}
+        status={invalid === true ? 'error' : status}
+        aria-invalid={invalid === true ? true : undefined}
+        className={mergeClass(className, mono === true && 'dsh-mono')}
+      />
+    )
+  })
 
 /** {@link Textarea} 的 props。 */
 export type TextareaProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Input.TextArea>, 'className'> & {
@@ -96,21 +97,22 @@ export type TextareaProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Inpu
  * @param ref - Arco 的文本域句柄。
  * @returns 文本域元素。
  */
-export const Textarea = React.forwardRef<TextareaRef, TextareaProps>(function Textarea(
-  { size = 'md', mono, invalid, className, status, ...rest },
-  ref,
-) {
-  injectBasicStyles()
-  return (
-    <Arco.Input.TextArea
-      {...rest}
-      ref={ref}
-      status={invalid === true ? 'error' : status}
-      aria-invalid={invalid === true ? true : undefined}
-      className={mergeClass(className, `dsh-textarea-${size}`, mono === true && 'dsh-mono')}
-    />
-  )
-})
+export const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<TextareaRef>> =
+  React.forwardRef<TextareaRef, TextareaProps>(function Textarea(
+    { size = 'md', mono, invalid, className, status, ...rest },
+    ref,
+  ) {
+    injectBasicStyles()
+    return (
+      <Arco.Input.TextArea
+        {...rest}
+        ref={ref}
+        status={invalid === true ? 'error' : status}
+        aria-invalid={invalid === true ? true : undefined}
+        className={mergeClass(className, `dsh-textarea-${size}`, mono === true && 'dsh-mono')}
+      />
+    )
+  })
 
 /** Arco 数字输入暴露的句柄。 */
 export type InputNumberRef = React.ElementRef<typeof Arco.InputNumber>
@@ -128,10 +130,11 @@ export type InputNumberProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.I
  * @param ref - Arco 的数字输入句柄。
  * @returns 数字输入元素。
  */
-export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(function InputNumber(
-  { size = 'md', ...rest },
-  ref,
-) {
-  injectBasicStyles()
-  return <Arco.InputNumber {...rest} ref={ref} size={ARCO_SIZE[size]} />
-})
+export const InputNumber: React.ForwardRefExoticComponent<InputNumberProps & React.RefAttributes<InputNumberRef>> =
+  React.forwardRef<InputNumberRef, InputNumberProps>(function InputNumber(
+    { size = 'md', ...rest },
+    ref,
+  ) {
+    injectBasicStyles()
+    return <Arco.InputNumber {...rest} ref={ref} size={ARCO_SIZE[size]} />
+  })

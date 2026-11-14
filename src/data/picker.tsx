@@ -24,18 +24,24 @@ function DatePickerBase(props: DatePickerProps): React.ReactElement {
 }
 
 /** 月份选择。 */
-export const MonthPicker = Arco.DatePicker.MonthPicker
+export const MonthPicker: typeof Arco.DatePicker.MonthPicker = Arco.DatePicker.MonthPicker
 /** 年份选择。 */
-export const YearPicker = Arco.DatePicker.YearPicker
+export const YearPicker: typeof Arco.DatePicker.YearPicker = Arco.DatePicker.YearPicker
 /** 季度选择。 */
-export const QuarterPicker = Arco.DatePicker.QuarterPicker
+export const QuarterPicker: typeof Arco.DatePicker.QuarterPicker = Arco.DatePicker.QuarterPicker
 /** 周选择。 */
-export const WeekPicker = Arco.DatePicker.WeekPicker
+export const WeekPicker: typeof Arco.DatePicker.WeekPicker = Arco.DatePicker.WeekPicker
 /** 日期区间选择。 */
-export const RangePicker = Arco.DatePicker.RangePicker
+export const RangePicker: typeof Arco.DatePicker.RangePicker = Arco.DatePicker.RangePicker
 
 /** 带静态子组件的日期选择导出。 */
-export const DatePicker = Object.assign(DatePickerBase, {
+export const DatePicker: typeof DatePickerBase & {
+  MonthPicker: typeof Arco.DatePicker.MonthPicker
+  YearPicker: typeof Arco.DatePicker.YearPicker
+  QuarterPicker: typeof Arco.DatePicker.QuarterPicker
+  WeekPicker: typeof Arco.DatePicker.WeekPicker
+  RangePicker: typeof Arco.DatePicker.RangePicker
+} = Object.assign(DatePickerBase, {
   MonthPicker: Arco.DatePicker.MonthPicker,
   YearPicker: Arco.DatePicker.YearPicker,
   QuarterPicker: Arco.DatePicker.QuarterPicker,
@@ -58,10 +64,11 @@ function TimePickerBase(props: TimePickerProps): React.ReactElement {
 }
 
 /** 时间区间选择。 */
-export const TimeRangePicker = Arco.TimePicker.RangePicker
+export const TimeRangePicker: typeof Arco.TimePicker.RangePicker = Arco.TimePicker.RangePicker
 
 /** 带静态子组件的时间选择导出。 */
-export const TimePicker = Object.assign(TimePickerBase, { RangePicker: Arco.TimePicker.RangePicker })
+export const TimePicker: typeof TimePickerBase & { RangePicker: typeof Arco.TimePicker.RangePicker } =
+  Object.assign(TimePickerBase, { RangePicker: Arco.TimePicker.RangePicker })
 
 /** {@link Cascader} 的 props。 */
 export type CascaderProps = React.ComponentPropsWithoutRef<typeof Arco.Cascader>

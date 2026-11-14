@@ -86,7 +86,9 @@ export type TabPaneProps = React.ComponentPropsWithoutRef<typeof Arco.Tabs.TabPa
  * 直接取 Arco 的原组件而不是包一层：Arco 通过 `child.type` 识别子页，包一层
  * 会让识别失败并静默渲染出空标签栏。
  */
-export const TabPane = Arco.Tabs.TabPane
+export const TabPane: typeof Arco.Tabs.TabPane = Arco.Tabs.TabPane
 
 /** 带静态子组件的标签页导出，`<Tabs><Tabs.TabPane /></Tabs>` 可直接使用。 */
-export const Tabs = Object.assign(TabsBase, { TabPane: Arco.Tabs.TabPane })
+export const Tabs: typeof TabsBase & { TabPane: typeof Arco.Tabs.TabPane } = Object.assign(TabsBase, {
+  TabPane: Arco.Tabs.TabPane,
+})

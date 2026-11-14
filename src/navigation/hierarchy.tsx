@@ -74,7 +74,9 @@ export type StepProps = React.ComponentPropsWithoutRef<typeof Arco.Steps.Step>
  * 这里直接取 Arco 的原组件而不是包一层：Arco 通过 `child.type` 识别子步骤，
  * 包一层会让识别失败并静默渲染出空步骤条。
  */
-export const Step = Arco.Steps.Step
+export const Step: typeof Arco.Steps.Step = Arco.Steps.Step
 
 /** 带静态子组件的步骤条导出。 */
-export const Steps = Object.assign(StepsBase, { Step: Arco.Steps.Step })
+export const Steps: typeof StepsBase & { Step: typeof Arco.Steps.Step } = Object.assign(StepsBase, {
+  Step: Arco.Steps.Step,
+})

@@ -40,10 +40,10 @@ export function messageWarning(message: string): ReturnType<typeof Arco.Message.
 }
 
 /** {@link Message} 组件本身，供需要内联渲染的场景使用。 */
-export const Message = Arco.Message
+export const Message: typeof Arco.Message = Arco.Message
 
 /** {@link Notification} 命名空间，命令式通知。 */
-export const Notification = Arco.Notification
+export const Notification: typeof Arco.Notification = Arco.Notification
 
 /** {@link Popconfirm} 的 props。 */
 export type PopconfirmProps = React.ComponentPropsWithoutRef<typeof Arco.Popconfirm>

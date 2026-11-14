@@ -53,23 +53,24 @@ const ARCO_SIZE: Record<ButtonSize, 'default' | 'small' | 'large'> = {
  * @param ref - 指向原生 `button` 元素，供焦点管理与浮层定位使用。
  * @returns 按钮元素。
  */
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'secondary', size = 'md', danger, icon, block, children, htmlType, ...rest },
-  ref,
-) {
-  injectBasicStyles()
-  return (
-    <Arco.Button
-      {...rest}
-      ref={ref}
-      type={ARCO_TYPE[variant]}
-      size={ARCO_SIZE[size]}
-      status={danger === true ? 'danger' : undefined}
-      long={block === true}
-      htmlType={htmlType ?? 'button'}
-    >
-      {icon === undefined || icon === null ? null : icon}
-      {children}
-    </Arco.Button>
-  )
-})
+export const Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>> =
+  React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+    { variant = 'secondary', size = 'md', danger, icon, block, children, htmlType, ...rest },
+    ref,
+  ) {
+    injectBasicStyles()
+    return (
+      <Arco.Button
+        {...rest}
+        ref={ref}
+        type={ARCO_TYPE[variant]}
+        size={ARCO_SIZE[size]}
+        status={danger === true ? 'danger' : undefined}
+        long={block === true}
+        htmlType={htmlType ?? 'button'}
+      >
+        {icon === undefined || icon === null ? null : icon}
+        {children}
+      </Arco.Button>
+    )
+  })

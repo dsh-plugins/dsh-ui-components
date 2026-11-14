@@ -39,10 +39,12 @@ function TimelineBase(props: TimelineProps): React.ReactElement {
 export type TimelineItemProps = React.ComponentPropsWithoutRef<typeof Arco.Timeline.Item>
 
 /** 时间线节点，直接取 Arco 的原组件以保持子组件识别。 */
-export const TimelineItem = Arco.Timeline.Item
+export const TimelineItem: typeof Arco.Timeline.Item = Arco.Timeline.Item
 
 /** 带静态子组件的时间线导出。 */
-export const Timeline = Object.assign(TimelineBase, { Item: Arco.Timeline.Item })
+export const Timeline: typeof TimelineBase & { Item: typeof Arco.Timeline.Item } = Object.assign(TimelineBase, {
+  Item: Arco.Timeline.Item,
+})
 
 /** {@link Calendar} 的 props。 */
 export type CalendarProps = React.ComponentPropsWithoutRef<typeof Arco.Calendar>
