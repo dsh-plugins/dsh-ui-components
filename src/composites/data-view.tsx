@@ -102,7 +102,7 @@ function JsonNode({ name, value, last, defaultExpanded, depth }: JsonNodeProps):
           aria-label={expanded ? '收起' : '展开'}
           onClick={() => setExpanded(previous => !previous)}
         >
-          <Icon name={expanded ? 'CollapseDown' : 'ChevronRight'} size={10} />
+          <Icon name={expanded ? 'ChevronDown' : 'ChevronRight'} size={10} />
         </button>
         {keyPart}
         <span className="dsh-json-tree__punct">{open}</span>

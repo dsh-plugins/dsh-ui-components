@@ -116,7 +116,7 @@ export const NAVIGATION_CSS = `
 
 /* 卡片式标签改为胶囊分段 */
 .dsh-ui .dsh-tabs--segment .arco-tabs-header-nav {
-  background-color: var(--dsw-alias-interactive-bg-hover);
+  background-color: var(--dsw-alias-interactive-bg-hover-solid);
   border-radius: var(--dsw-radius-md, 12px);
   padding: 4px;
   display: inline-flex;
@@ -124,6 +124,12 @@ export const NAVIGATION_CSS = `
 
 .dsh-ui .dsh-tabs--segment .arco-tabs-header-nav::before {
   display: none;
+}
+
+/* Arco 的行式标签给首个标题额外加了 16px 左外边距，分段外观下会变成大面积留白。 */
+.dsh-ui .dsh-tabs--segment .arco-tabs-header > .arco-tabs-header-title:first-of-type,
+.dsh-ui .dsh-tabs--segment .arco-tabs-header-scroll > .arco-tabs-header-title:first-of-type {
+  margin-left: 0;
 }
 
 .dsh-ui .dsh-tabs--segment .arco-tabs-header-title {
@@ -238,7 +244,7 @@ export const NAVIGATION_CSS = `
   gap: 2px;
   padding: 4px;
   border-radius: var(--dsw-radius-md, 12px);
-  background-color: var(--dsw-alias-interactive-bg-hover);
+  background-color: var(--dsw-alias-interactive-bg-hover-solid);
 }
 
 .dsh-segmented--block {
@@ -318,6 +324,8 @@ export const NAVIGATION_CSS = `
   border: 0;
   background: none;
   padding: 0;
+  /* 按钮不继承父级文字颜色，不写这一行在深色主题下会是浏览器默认的黑色。 */
+  color: inherit;
   font-family: inherit;
   font-size: 13px;
   line-height: 24px;

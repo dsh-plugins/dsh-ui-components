@@ -70,7 +70,7 @@ export function DisclosureRow({
       <span className="dsh-disclosure__title">{title}</span>
       {expandable ? (
         <span className="dsh-disclosure__leading" aria-hidden="true">
-          <Icon name={open ? 'ChevronUp' : 'ChevronDown'} size={14} />
+          <Icon name={open ? 'ChevronDown' : 'ChevronRight'} size={14} />
         </span>
       ) : null}
     </>

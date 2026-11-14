@@ -78,8 +78,8 @@ export const BASIC_CSS = `
 }
 
 /* ── 输入类控件 ──────────────────────────────────────────────────── */
-/* 宿主的输入框是「层级底色 + 半像素描边」，Arco 默认用半透明的填充层且描边
-   透明，深色主题下会明显更暗。 */
+/* 宿主的输入框是「层级底色 + 半像素描边」，且用的是第三层（深色下比第一层亮
+   一档）；Arco 默认用半透明的填充层且描边透明，深色主题下会明显更暗。 */
 .dsh-ui .arco-input,
 .dsh-ui .arco-input-inner-wrapper,
 .dsh-ui .arco-textarea,
@@ -89,8 +89,16 @@ export const BASIC_CSS = `
   font-size: 14px;
   line-height: 22px;
   border-radius: var(--dsw-radius-md, 12px);
-  background-color: var(--dsw-alias-bg-layer-1);
+  background-color: var(--dsw-alias-bg-layer-3);
   border: 0.5px solid var(--dsw-alias-border-l4);
+}
+
+/* 包裹层自己画边框与底色，内部的原生输入框必须退回透明，否则会出现双层边框。 */
+.dsh-ui .arco-input-inner-wrapper > .arco-input,
+.dsh-ui .arco-input-inner-wrapper .arco-input,
+.dsh-ui .arco-input-number > .arco-input {
+  border: 0;
+  background-color: transparent;
 }
 
 .dsh-ui .arco-input:hover,
@@ -99,7 +107,7 @@ export const BASIC_CSS = `
 .dsh-ui .arco-input-number:hover,
 .dsh-ui .arco-select:hover .arco-select-view,
 .dsh-ui .arco-select-view:hover {
-  background-color: var(--dsw-alias-bg-layer-1);
+  background-color: var(--dsw-alias-bg-layer-3);
   border-color: var(--dsw-alias-border-l4);
 }
 
