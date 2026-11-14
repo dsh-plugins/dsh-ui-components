@@ -140,9 +140,19 @@ export const ICON_COUNT = ${entries.length}
 
 if (check) {
   const problems = []
+  /**
+   * 读取源码并把行尾归一为 LF。
+   *
+   * 生成内容始终是 LF；Windows 检出时 Git 的 `core.autocrlf` 会把工作区文件
+   * 转成 CRLF，逐字节比较就会让全部图标误报为不一致。
+   *
+   * @param path - 文件绝对路径。
+   * @returns 归一化后的内容。
+   */
+  const readNormalized = path => readFileSync(path, 'utf8').replace(/\r\n/g, '\n')
   if (!existsSync(indexFile)) {
     problems.push('缺少 src/icons-index.ts')
-  } else if (readFileSync(indexFile, 'utf8') !== indexSource) {
+  } else if (readNormalized(indexFile) !== indexSource) {
     problems.push('src/icons-index.ts 与 icons.json 不一致')
   }
   const existing = existsSync(iconsDir) ? readdirSync(iconsDir).filter(file => file.endsWith('.ts')) : []
@@ -156,7 +166,7 @@ if (check) {
       continue
     }
     const entry = entries.find(item => `${item.pascal}.ts` === file)
-    if (readFileSync(join(iconsDir, file), 'utf8') !== iconModule(entry)) {
+    if (readNormalized(join(iconsDir, file)) !== iconModule(entry)) {
       problems.push(`src/icons/${file} 内容与模板不一致`)
     }
   }

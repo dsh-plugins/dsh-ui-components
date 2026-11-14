@@ -1,0 +1,8 @@
+# 生成文件统一使用 LF。生成脚本产出 LF，而 Windows 默认的 core.autocrlf=true
+# 会在检出时转成 CRLF，导致 `npm run verify:icons` 的逐字节比较全部误报。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.tgz binary
