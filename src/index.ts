@@ -11,3 +11,6 @@
  */
 export * from './foundation/index.js'
 export * from './basic/index.js'
+export * from './display/index.js'
+export * from './feedback/index.js'
+export * from './navigation/index.js'
