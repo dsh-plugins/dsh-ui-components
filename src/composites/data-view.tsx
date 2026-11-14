@@ -114,22 +114,25 @@ function JsonNode({ name, value, last, defaultExpanded, depth }: JsonNodeProps):
         )}
       </div>
       {expanded ? (
-        <div className="dsh-json-tree__children">
-          {entries.map(([key, item], index) => (
-            <JsonNode
-              key={key}
-              name={kind === 'array' ? undefined : key}
-              value={item}
-              last={index === entries.length - 1}
-              defaultExpanded={defaultExpanded}
-              depth={depth + 1}
-            />
-          ))}
+        <>
+          <div className="dsh-json-tree__children">
+            {entries.map(([key, item], index) => (
+              <JsonNode
+                key={key}
+                name={kind === 'array' ? undefined : key}
+                value={item}
+                last={index === entries.length - 1}
+                defaultExpanded={defaultExpanded}
+                depth={depth + 1}
+              />
+            ))}
+          </div>
+          {/* 闭合括号属于当前层，必须与开括号同级缩进；放进子容器会多缩一层。 */}
           <div className="dsh-json-tree__row" style={{ paddingLeft: depth * 12 }}>
             <span style={{ width: 14, flex: 'none' }} />
             <span className="dsh-json-tree__punct">{close}{suffix}</span>
           </div>
-        </div>
+        </>
       ) : null}
     </div>
   )

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 基础控件追加样式。
  *
  * 桥接样式表已经把 Arco 的配色与圆角整体改指 DSH 令牌，这里只补充那些
@@ -249,7 +249,6 @@ export const BASIC_CSS = `
   border-width: 1px;
   border-color: var(--dsw-alias-border-l4);
   background-color: transparent;
-  top: 2px;
 }
 
 .dsh-ui .arco-radio-mask {
@@ -267,7 +266,20 @@ export const BASIC_CSS = `
   color: var(--dsw-alias-label-primary-foreground);
 }
 
+/* Arco 的圆点是绝对定位在左上角再缩放；mask 尺寸被改大后必须重新居中。 */
+.dsh-ui .arco-radio-mask::after {
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  transition: transform var(--ds-transition-duration-fast, 0.15s) var(--ds-ease-in-out, ease-out);
+}
+
 .dsh-ui .arco-radio-checked .arco-radio-mask::after {
+  transform: translate(-50%, -50%) scale(1);
   background-color: var(--dsw-alias-label-primary-foreground);
 }
 
@@ -277,17 +289,54 @@ export const BASIC_CSS = `
   color: var(--dsw-alias-label-tertiary);
 }
 
+/* Arco 的 road 是 12px 高的点击热区，轨道本身画在伪元素上；给 road 上色
+   会得到一条粗灰带，因此只给轨道和已完成段上色。 */
 .dsh-ui .arco-slider-road {
+  background-color: transparent;
+}
+
+.dsh-ui .arco-slider-road::before {
+  height: 4px;
+  border-radius: 999px;
   background-color: var(--dsw-alias-border-l2);
 }
 
 .dsh-ui .arco-slider-bar {
+  height: 4px;
+  top: calc(50% - 2px);
+  transform: none;
+  border-radius: 999px;
   background-color: var(--dsw-alias-brand-primary);
 }
 
-.dsh-ui .arco-slider-btn {
-  border-color: var(--dsw-alias-brand-primary);
+/* Arco 把可见手柄画在手柄元素的伪元素上，外层定位盒子与轨道同为 12px 高，
+   因此只需调整伪元素本身的尺寸与描边。 */
+.dsh-ui .arco-slider-button::after {
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  top: -1px;
+  left: -1px;
+  border: 2px solid var(--dsw-alias-brand-primary);
+  border-radius: 50%;
   background-color: var(--dsw-alias-bg-layer-1);
+  box-shadow: var(--dsw-elevation-soft);
+  transition: transform var(--ds-transition-duration-fast, 0.15s) var(--ds-ease-in-out, ease-out);
+}
+
+.dsh-ui .arco-slider-button:hover::after,
+.dsh-ui .arco-slider-button.arco-slider-button-active::after {
+  transform: none;
+  border-color: var(--dsw-alias-state-business-primary);
+  box-shadow: var(--dsw-elevation-soft);
+}
+
+.dsh-ui .arco-slider-button:focus-visible {
+  outline: none;
+}
+
+.dsh-ui .arco-slider-button:focus-visible::after {
+  box-shadow: 0 0 0 2px var(--dsw-alias-state-business-primary);
 }
 
 /* ── 表单 ───────────────────────────────────────────────────────── */

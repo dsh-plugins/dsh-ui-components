@@ -29,6 +29,29 @@ export function injectUiStyle(cssId: string, css: string): () => void {
   return injectStyle(OWNER, cssId, css)
 }
 
+/** 浮层容器的类名，带上它才能在 body 层读到同一套变量。 */
+export const OVERLAY_CLASS = `${ROOT_CLASS}-overlay`
+
+/**
+ * 取得或创建 body 级浮层容器。
+ *
+ * Arco 的 `Modal`、`Drawer` 与命令式弹层自带 `getPopupContainer` 默认值
+ * （直接返回 `document.body`），不读 `ConfigProvider` 的设置，因此这类组件
+ * 必须显式传入本容器，否则浮层挂在 `body` 下拿不到 `.dsh-ui` 的变量。
+ *
+ * @returns 容器元素；服务端渲染时返回 `null`。
+ */
+export function ensureOverlayContainer(): HTMLElement | null {
+  if (typeof document === 'undefined') return null
+  const existing = document.getElementById(PORTAL_ID)
+  if (existing !== null) return existing
+  const host = document.createElement('div')
+  host.id = PORTAL_ID
+  host.className = OVERLAY_CLASS
+  document.body.appendChild(host)
+  return host
+}
+
 /**
  * 拼接类名，忽略假值。
  *

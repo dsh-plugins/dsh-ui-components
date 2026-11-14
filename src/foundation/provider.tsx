@@ -11,7 +11,7 @@
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { BRIDGE_CSS } from './bridge.js'
-import { PORTAL_ID, ROOT_CLASS, injectUiStyle } from './style.js'
+import { ROOT_CLASS, ensureOverlayContainer, injectUiStyle } from './style.js'
 
 /** {@link DshProvider} 的 props。 */
 export interface DshProviderProps {
@@ -32,14 +32,7 @@ export interface DshProviderProps {
  * @returns 浮层容器元素；服务端渲染时返回 `null`。
  */
 function ensurePortal(): HTMLElement | null {
-  if (typeof document === 'undefined') return null
-  const existing = document.getElementById(PORTAL_ID)
-  if (existing !== null) return existing
-  const host = document.createElement('div')
-  host.id = PORTAL_ID
-  host.className = `${ROOT_CLASS}-overlay`
-  document.body.appendChild(host)
-  return host
+  return ensureOverlayContainer()
 }
 
 /**

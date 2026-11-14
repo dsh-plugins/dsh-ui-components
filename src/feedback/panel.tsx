@@ -11,7 +11,21 @@
  */
 import * as React from 'react'
 import { Arco, Scrollbar } from '@dsh-plugin/dsh-loader/client'
+import { ensureOverlayContainer } from '../foundation/style.js'
 import { injectFeedbackStyles } from './styles.js'
+
+/**
+ * 把浮层挂到带皮肤变量的容器上。
+ *
+ * Arco 的 `Modal` 与 `Drawer` 自带 `getPopupContainer` 默认值，它直接返回
+ * `document.body` 且不读 `ConfigProvider`，因此这两类组件必须逐次传入，否则
+ * 弹层会在 body 层渲染，拿不到 `.dsh-ui` 上的 DSH 变量。
+ *
+ * @returns 浮层容器；服务端渲染时退回 `document.body`。
+ */
+function overlayContainer(): HTMLElement {
+  return ensureOverlayContainer() ?? document.body
+}
 
 /** {@link Modal} 的 props。 */
 export type ModalProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Modal>, 'children'> & {
@@ -31,11 +45,17 @@ export type ModalProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Modal>,
  * @param props - 见 {@link ModalProps}。
  * @returns 弹窗元素。
  */
-export function Modal({ title, children, footer, scroll = true, ...rest }: ModalProps): React.ReactElement {
+export function Modal({ title, children, footer, scroll = true, getPopupContainer, ...rest }: ModalProps): React.ReactElement {
   injectFeedbackStyles()
   const body = scroll === true ? <Scrollbar style={{ maxHeight: '100%' }}>{children}</Scrollbar> : children
   return (
-    <Arco.Modal {...rest} title={title} footer={footer} alignCenter>
+    <Arco.Modal
+      {...rest}
+      getPopupContainer={getPopupContainer ?? overlayContainer}
+      title={title}
+      footer={footer}
+      alignCenter
+    >
       {body}
     </Arco.Modal>
   )
@@ -52,7 +72,10 @@ export type ModalConfirmOptions = Parameters<typeof Arco.Modal.confirm>[0]
  */
 export function confirm(options: ModalConfirmOptions): ReturnType<typeof Arco.Modal.confirm> {
   injectFeedbackStyles()
-  return Arco.Modal.confirm(options)
+  return Arco.Modal.confirm({
+    getPopupContainer: overlayContainer,
+    ...options,
+  })
 }
 
 /** {@link Drawer} 的 props。 */
@@ -64,7 +87,7 @@ export type DrawerProps = React.ComponentPropsWithoutRef<typeof Arco.Drawer>
  * @param props - 见 {@link DrawerProps}。
  * @returns 抽屉元素。
  */
-export function Drawer(props: DrawerProps): React.ReactElement {
+export function Drawer({ getPopupContainer, ...props }: DrawerProps): React.ReactElement {
   injectFeedbackStyles()
-  return <Arco.Drawer {...props} />
+  return <Arco.Drawer {...props} getPopupContainer={getPopupContainer ?? overlayContainer} />
 }

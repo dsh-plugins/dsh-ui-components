@@ -192,8 +192,12 @@ const RULES = `
   color: var(--dsw-alias-label-primary-foreground);
 }
 
-.dsh-ui .arco-btn-primary:not(.arco-btn-disabled):not(.arco-btn-loading):hover {
+/* Arco 的 hover 规则把文字硬编码成白色；DSH 的主色在深色主题下是浅色填充，
+   白字会失去对比，因此背景与文字必须成对覆盖。 */
+.dsh-ui .arco-btn-primary:not(.arco-btn-disabled):not(.arco-btn-loading):hover,
+.dsh-ui .arco-btn-primary:not(.arco-btn-disabled):not(.arco-btn-loading):active {
   background-color: var(--dsw-alias-button-primary-hover);
+  color: var(--dsw-alias-label-primary-foreground);
 }
 
 .dsh-ui .arco-btn-primary:not(.arco-btn-disabled):not(.arco-btn-loading):active {
@@ -242,14 +246,27 @@ const RULES = `
 
 .dsh-ui :focus-visible {
   outline-color: var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
-  outline-width: var(--dsw-focus-ring-width, 2px);
+  outline-width: var(--dsw-focus-ring-width);
 }
 
-.dsh-ui .arco-btn:focus-visible,
+/* 输入类控件的聚焦用描边表达，与宿主 Input 的边框变色一致；不叠加外扩焦点
+   环，否则边框外会多出一圈比控件本身更大的蓝框。这里必须显式写 outline-style
+   与 outline-width，单写 outline: none 会被上面的 :focus-visible 规则盖掉。 */
 .dsh-ui .arco-input:focus-visible,
-.dsh-ui .arco-textarea:focus-visible {
+.dsh-ui .arco-textarea:focus-visible,
+.dsh-ui .arco-input-inner-wrapper:focus-within,
+.dsh-ui .arco-input-number:focus-within,
+.dsh-ui .arco-select-view:focus-visible,
+.dsh-ui .arco-select-view:focus-within {
   box-shadow: none;
-  outline: var(--dsw-focus-ring-width, 2px) solid var(--dsw-alias-state-business-primary);
+  outline-style: none;
+  outline-width: 0;
+  border-color: var(--dsw-alias-state-business-primary);
+}
+
+.dsh-ui .arco-btn:focus-visible {
+  box-shadow: none;
+  outline: var(--dsw-focus-ring-width) solid var(--dsw-alias-state-business-primary);
   outline-offset: 2px;
 }
 

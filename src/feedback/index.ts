@@ -11,6 +11,7 @@ export {
   messageError,
   messageSuccess,
   messageWarning,
+  notification,
   type PopconfirmProps,
 } from './global.js'
 export { Alert, Progress, Result, type AlertProps, type ProgressProps, type ResultProps } from './inline.js'

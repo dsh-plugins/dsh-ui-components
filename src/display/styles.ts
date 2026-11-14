@@ -195,9 +195,10 @@ export const DISPLAY_CSS = `
   box-shadow: none;
 }
 
+/* 宿主的提示气泡没有箭头，靠稳定的贴合间距区分锚点，这里一并去掉。 */
 .dsh-ui-overlay .arco-tooltip-arrow,
 .dsh-ui .arco-tooltip-arrow {
-  background-color: var(--dsw-alias-tooltip-bg);
+  display: none;
 }
 
 .dsh-ui-overlay .arco-popover-content,
