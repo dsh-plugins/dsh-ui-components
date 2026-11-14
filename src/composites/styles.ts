@@ -177,7 +177,7 @@ export const COMPOSITES_CSS = `
   width: 100%;
   box-sizing: border-box;
   min-height: 32px;
-  padding: 5px 10px;
+  padding: 5px 11px;
   font-family: inherit;
   font-size: 14px;
   line-height: 20px;

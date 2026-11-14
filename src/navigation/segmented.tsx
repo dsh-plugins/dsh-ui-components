@@ -39,6 +39,8 @@ export interface SegmentedControlProps {
   id?: string
   /** 锁定全部段，用于有操作在途时。 */
   disabled?: boolean
+  /** 撑满父容器宽度，默认按内容收缩。 */
+  block?: boolean
   /** 追加类名。 */
   className?: string
 }
@@ -59,6 +61,7 @@ export function SegmentedControl({
   label,
   id,
   disabled,
+  block,
   className,
 }: SegmentedControlProps): React.ReactElement {
   injectNavigationStyles()
@@ -98,7 +101,7 @@ export function SegmentedControl({
       role="tablist"
       aria-label={label}
       aria-disabled={disabled === true ? true : undefined}
-      className={cx('dsh-segmented', className)}
+      className={cx('dsh-segmented', block === true && 'dsh-segmented--block', className)}
       style={
         {
           '--dsh-segment-count': items.length,

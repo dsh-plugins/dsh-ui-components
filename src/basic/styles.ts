@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 基础控件追加样式。
  *
  * 桥接样式表已经把 Arco 的配色与圆角整体改指 DSH 令牌，这里只补充那些
@@ -78,14 +78,29 @@ export const BASIC_CSS = `
 }
 
 /* ── 输入类控件 ──────────────────────────────────────────────────── */
+/* 宿主的输入框是「层级底色 + 半像素描边」，Arco 默认用半透明的填充层且描边
+   透明，深色主题下会明显更暗。 */
 .dsh-ui .arco-input,
 .dsh-ui .arco-input-inner-wrapper,
 .dsh-ui .arco-textarea,
-.dsh-ui .arco-input-number {
+.dsh-ui .arco-input-number,
+.dsh-ui .arco-select-view {
   font-family: inherit;
   font-size: 14px;
   line-height: 22px;
   border-radius: var(--dsw-radius-md, 12px);
+  background-color: var(--dsw-alias-bg-layer-1);
+  border: 0.5px solid var(--dsw-alias-border-l4);
+}
+
+.dsh-ui .arco-input:hover,
+.dsh-ui .arco-input-inner-wrapper:hover,
+.dsh-ui .arco-textarea:hover,
+.dsh-ui .arco-input-number:hover,
+.dsh-ui .arco-select:hover .arco-select-view,
+.dsh-ui .arco-select-view:hover {
+  background-color: var(--dsw-alias-bg-layer-1);
+  border-color: var(--dsw-alias-border-l4);
 }
 
 .dsh-ui .arco-input-size-default,

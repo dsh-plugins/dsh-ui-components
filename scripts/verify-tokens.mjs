@@ -9,7 +9,9 @@
  *   2. 工作区内的 DSH 源码副本 `.dsh/temp/session-tree-harness/...`；
  *   3. `node_modules/@deepseek-ai/dsh-client-ui-theme/` 之类已安装布局。
  *
- * 全部探测失败时以非零码退出，避免把「没找到样式表」误判成「全部通过」。
+ * 全部探测失败时默认跳过本次校验并以 0 退出：宿主样式表不属于本包依赖，缺了
+ * 它只说明当前机器没装 DSH 源码，不该阻断发布。设置 `DSH_UI_REQUIRE_TOKENS=1`
+ * 可以让缺失变成失败，供需要强校验的 CI 使用。
  */
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -34,11 +36,23 @@ function locateThemeDir() {
   for (const candidate of candidates) {
     if (existsSync(candidate) && statSync(candidate).isDirectory()) return candidate
   }
-  console.error('未找到 DSH 宿主样式目录。请设置 DSH_UI_THEME_DIR，或在工作区保留 .dsh/temp/session-tree-harness 源码副本。')
-  process.exit(2)
+  return null
 }
 
 const themeDir = locateThemeDir()
+
+if (themeDir === null) {
+  const message = [
+    '未找到 DSH 宿主样式目录，跳过令牌校验。',
+    '需要该校验时设置 DSH_UI_THEME_DIR，或在工作区保留 .dsh/temp/session-tree-harness 源码副本。',
+  ].join('\n')
+  if (process.env.DSH_UI_REQUIRE_TOKENS === '1') {
+    console.error(message.replace('跳过令牌校验', '且已设置 DSH_UI_REQUIRE_TOKENS=1'))
+    process.exit(2)
+  }
+  console.log(message)
+  process.exit(0)
+}
 
 /** 从宿主样式表解析出的全部变量名。 */
 const hostTokens = new Set()

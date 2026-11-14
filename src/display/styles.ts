@@ -195,10 +195,21 @@ export const DISPLAY_CSS = `
   box-shadow: none;
 }
 
-/* 宿主的提示气泡没有箭头，靠稳定的贴合间距区分锚点，这里一并去掉。 */
+/* 宿主的提示气泡没有箭头，且贴着锚点；Arco 的 12px 偏移与箭头预留空间由 JS
+   算进绝对定位里，因此只能用负外边距收回到 4px。 */
 .dsh-ui-overlay .arco-tooltip-arrow,
 .dsh-ui .arco-tooltip-arrow {
   display: none;
+}
+
+.dsh-ui-overlay .arco-tooltip.arco-trigger-position-bottom,
+.dsh-ui .arco-tooltip.arco-trigger-position-bottom {
+  margin-top: -8px;
+}
+
+.dsh-ui-overlay .arco-tooltip.arco-trigger-position-top,
+.dsh-ui .arco-tooltip.arco-trigger-position-top {
+  margin-bottom: -8px;
 }
 
 .dsh-ui-overlay .arco-popover-content,

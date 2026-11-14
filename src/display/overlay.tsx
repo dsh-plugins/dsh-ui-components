@@ -12,17 +12,23 @@ import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { injectDisplayStyles } from './styles.js'
 
 /** {@link Tooltip} 的 props。 */
-export type TooltipProps = React.ComponentPropsWithoutRef<typeof Arco.Tooltip>
+export type TooltipProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Tooltip>, 'position'> & {
+  /** 相对锚点的方位，默认 `bottom`。 */
+  position?: React.ComponentPropsWithoutRef<typeof Arco.Tooltip>['position']
+}
 
 /**
  * 悬停或聚焦时显示的短提示，内容应只有一行文字。
  *
+ * 宿主的气泡贴着锚点、没有箭头，默认出现在下方；Arco 的默认值是上方，且四向
+ * 各留 12px 并预留箭头空间，间距因此明显偏大。箭头与间距都在样式表里收掉。
+ *
  * @param props - 见 {@link TooltipProps}。
  * @returns 提示元素。
  */
-export function Tooltip(props: TooltipProps): React.ReactElement {
+export function Tooltip({ position = 'bottom', ...rest }: TooltipProps): React.ReactElement {
   injectDisplayStyles()
-  return <Arco.Tooltip {...props} />
+  return <Arco.Tooltip {...rest} position={position} />
 }
 
 /** {@link Popover} 的 props。 */

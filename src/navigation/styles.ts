@@ -229,12 +229,22 @@ export const NAVIGATION_CSS = `
 .dsh-segmented {
   position: relative;
   display: inline-grid;
+  /* 放在 grid 容器里时，inline-grid 仍会被拉伸到整行；按内容收缩才符合宿主的
+     表单控件观感。需要撑满时用 block 形态。 */
+  justify-self: start;
+  width: fit-content;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   gap: 2px;
   padding: 4px;
   border-radius: var(--dsw-radius-md, 12px);
   background-color: var(--dsw-alias-interactive-bg-hover);
+}
+
+.dsh-segmented--block {
+  display: grid;
+  width: 100%;
+  justify-self: stretch;
 }
 
 .dsh-segmented__indicator {
