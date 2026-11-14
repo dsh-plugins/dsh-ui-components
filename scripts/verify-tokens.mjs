@@ -46,7 +46,7 @@ for (const file of STYLE_FILES) {
   const path = join(themeDir, file)
   if (!existsSync(path)) continue
   const css = readFileSync(path, 'utf8')
-  for (const match of css.matchAll(/(--ds[a-z]?-[a-z0-9-]*[a-z0-9])\s*:/g)) hostTokens.add(match[1])
+  for (const match of css.matchAll(/(--ds[wh]?-[a-z0-9-]*[a-z0-9])\s*:/g)) hostTokens.add(match[1])
 }
 
 if (hostTokens.size === 0) {
@@ -62,7 +62,7 @@ if (hostTokens.size === 0) {
  * 紧跟 `-`、`*` 或标识符字符，这样注释里的通配写法（`--dsw-alias-*`）与
  * 半截前缀不会被当成真实令牌名。
  */
-const TOKEN_PATTERN = /--ds[a-z]?-[a-z0-9-]*[a-z0-9](?![-\w*])/g
+const TOKEN_PATTERN = /--ds[wh]?-[a-z0-9-]*[a-z0-9](?![-\w*])/g
 
 /**
  * 递归列出目录下的 TypeScript 源文件。
@@ -80,16 +80,35 @@ function listSources(dir) {
   return out
 }
 
+/**
+ * 匹配本包自己定义局部变量的两种写法：CSS 里的 `--name:` 声明，以及 TSX
+ * inline style 里的 `'--name': value` 键。分段控件的位置变量就是这样注入的。
+ */
+const DECLARATION_PATTERNS = [
+  /(--ds[wh]?-[a-z0-9-]*[a-z0-9])\s*:/g,
+  /['"](--ds[wh]?-[a-z0-9-]*[a-z0-9])['"]\s*:/g,
+]
+
+const sources = listSources(join(root, 'src')).filter(file => !file.endsWith('icons-index.ts'))
+
+// 本包自己声明的局部变量（如分段控件的位置变量）不要求宿主定义。
+const localTokens = new Set()
+for (const file of sources) {
+  const text = readFileSync(file, 'utf8')
+  for (const pattern of DECLARATION_PATTERNS) {
+    for (const match of text.matchAll(pattern)) localTokens.add(match[1])
+  }
+}
+
 const problems = []
 const referenced = new Set()
-for (const file of listSources(join(root, 'src'))) {
+for (const file of sources) {
   const relative = file.slice(root.length + 1).replace(/\\/g, '/')
-  if (relative === 'src/icons-index.ts') continue
   const text = readFileSync(file, 'utf8')
   for (const match of text.matchAll(TOKEN_PATTERN)) {
     const name = match[0]
     referenced.add(name)
-    if (!hostTokens.has(name)) problems.push(`${relative} 引用了不存在的令牌 ${name}`)
+    if (!hostTokens.has(name) && !localTokens.has(name)) problems.push(`${relative} 引用了不存在的令牌 ${name}`)
   }
 }
 
@@ -99,4 +118,4 @@ if (problems.length > 0) {
   process.exit(1)
 }
 
-console.log(`令牌校验通过：引用 ${referenced.size} 个 DSH 令牌，宿主定义 ${hostTokens.size} 个`)
+console.log(`令牌校验通过：引用 ${referenced.size} 个令牌（其中本包声明 ${localTokens.size} 个），宿主定义 ${hostTokens.size} 个`)
