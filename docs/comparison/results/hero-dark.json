@@ -1,0 +1,190 @@
+{
+  "buttons": [
+    {
+      "background": "oklch(0.6204 0.195 253.83)",
+      "borderRadius": "24px",
+      "color": "oklch(0.9911 0 0)",
+      "font": "500 14px / 20px Arial, sans-serif",
+      "fontFamily": "Arial, sans-serif",
+      "fontWeight": "500",
+      "height": 32,
+      "width": 52
+    },
+    {
+      "background": "oklch(0.6204 0.195 253.83)",
+      "borderRadius": "24px",
+      "color": "oklch(0.9911 0 0)",
+      "font": "500 14px / 20px Arial, sans-serif",
+      "fontFamily": "Arial, sans-serif",
+      "fontWeight": "500",
+      "height": 36,
+      "width": 60
+    },
+    {
+      "background": "oklch(0.6204 0.195 253.83)",
+      "borderRadius": "24px",
+      "color": "oklch(0.9911 0 0)",
+      "font": "500 16px / 24px Arial, sans-serif",
+      "fontFamily": "Arial, sans-serif",
+      "fontWeight": "500",
+      "height": 40,
+      "width": 64
+    }
+  ],
+  "canvas": {
+    "height": 1844,
+    "width": 1280
+  },
+  "samples": {
+    "accordion": {
+      "height": 176,
+      "width": 400,
+      "x": 856,
+      "y": 1212
+    },
+    "alert": {
+      "height": 176,
+      "width": 400,
+      "x": 440,
+      "y": 1212
+    },
+    "avatar": {
+      "height": 176,
+      "width": 400,
+      "x": 440,
+      "y": 996
+    },
+    "breadcrumb": {
+      "height": 176,
+      "width": 400,
+      "x": 856,
+      "y": 1428
+    },
+    "button-danger": {
+      "height": 176,
+      "width": 400,
+      "x": 856,
+      "y": 132
+    },
+    "button-disabled": {
+      "height": 176,
+      "width": 400,
+      "x": 24,
+      "y": 348
+    },
+    "button-primary": {
+      "height": 176,
+      "width": 400,
+      "x": 24,
+      "y": 132
+    },
+    "button-variants": {
+      "height": 176,
+      "width": 400,
+      "x": 440,
+      "y": 132
+    },
+    "card": {
+      "height": 176,
+      "width": 400,
+      "x": 856,
+      "y": 780
+    },
+    "checkbox": {
+      "height": 176,
+      "width": 400,
+      "x": 24,
+      "y": 564
+    },
+    "chip": {
+      "height": 176,
+      "width": 400,
+      "x": 24,
+      "y": 996
+    },
+    "input": {
+      "height": 176,
+      "width": 400,
+      "x": 440,
+      "y": 348
+    },
+    "progress": {
+      "height": 176,
+      "width": 400,
+      "x": 24,
+      "y": 1212
+    },
+    "radio": {
+      "height": 176,
+      "width": 400,
+      "x": 440,
+      "y": 564
+    },
+    "select": {
+      "height": 176,
+      "width": 400,
+      "x": 440,
+      "y": 780
+    },
+    "skeleton": {
+      "height": 176,
+      "width": 400,
+      "x": 440,
+      "y": 1428
+    },
+    "slider": {
+      "height": 176,
+      "width": 400,
+      "x": 24,
+      "y": 780
+    },
+    "switch": {
+      "height": 176,
+      "width": 400,
+      "x": 856,
+      "y": 564
+    },
+    "table": {
+      "height": 176,
+      "width": 400,
+      "x": 24,
+      "y": 1428
+    },
+    "tabs": {
+      "height": 176,
+      "width": 400,
+      "x": 856,
+      "y": 996
+    },
+    "textarea": {
+      "height": 176,
+      "width": 400,
+      "x": 856,
+      "y": 348
+    },
+    "tooltip": {
+      "height": 176,
+      "width": 400,
+      "x": 24,
+      "y": 1644
+    }
+  },
+  "url": "http://127.0.0.1:5180/?theme=dark",
+  "viewport": {
+    "dpr": 1,
+    "height": 960,
+    "width": 1280
+  },
+  "state": {
+    "fonts": "loaded",
+    "progressFill": [
+      {
+        "style": "width: 62%;",
+        "width": 173.59375
+      }
+    ],
+    "skeleton": 1,
+    "textarea": "工作区说明"
+  },
+  "repeatIdentical": true
+}

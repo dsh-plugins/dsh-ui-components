@@ -1,0 +1,951 @@
+{
+  "threshold": 8,
+  "themes": {
+    "light": {
+      "vue": {
+        "aggregate": {
+          "pixels": 1548800,
+          "changed_pixels": 107724,
+          "changed_percent": 6.955,
+          "over_8_percent": 4.782,
+          "mean_channel_error": 2.067,
+          "identical": false
+        },
+        "cases": [
+          {
+            "case": "accordion",
+            "pixels": 70400,
+            "changed_pixels": 1704,
+            "changed_percent": 2.42,
+            "over_8_percent": 2.315,
+            "mean_channel_error": 1.639,
+            "identical": false
+          },
+          {
+            "case": "alert",
+            "pixels": 70400,
+            "changed_pixels": 22540,
+            "changed_percent": 32.017,
+            "over_8_percent": 31.584,
+            "mean_channel_error": 7.476,
+            "identical": false
+          },
+          {
+            "case": "avatar",
+            "pixels": 70400,
+            "changed_pixels": 1324,
+            "changed_percent": 1.881,
+            "over_8_percent": 1.75,
+            "mean_channel_error": 0.371,
+            "identical": false
+          },
+          {
+            "case": "breadcrumb",
+            "pixels": 70400,
+            "changed_pixels": 859,
+            "changed_percent": 1.22,
+            "over_8_percent": 1.132,
+            "mean_channel_error": 0.853,
+            "identical": false
+          },
+          {
+            "case": "button-danger",
+            "pixels": 70400,
+            "changed_pixels": 2140,
+            "changed_percent": 3.04,
+            "over_8_percent": 3.004,
+            "mean_channel_error": 1.004,
+            "identical": false
+          },
+          {
+            "case": "button-disabled",
+            "pixels": 70400,
+            "changed_pixels": 2644,
+            "changed_percent": 3.756,
+            "over_8_percent": 3.598,
+            "mean_channel_error": 0.646,
+            "identical": false
+          },
+          {
+            "case": "button-primary",
+            "pixels": 70400,
+            "changed_pixels": 7072,
+            "changed_percent": 10.045,
+            "over_8_percent": 9.888,
+            "mean_channel_error": 5.581,
+            "identical": false
+          },
+          {
+            "case": "button-variants",
+            "pixels": 70400,
+            "changed_pixels": 3151,
+            "changed_percent": 4.476,
+            "over_8_percent": 4.178,
+            "mean_channel_error": 1.009,
+            "identical": false
+          },
+          {
+            "case": "card",
+            "pixels": 70400,
+            "changed_pixels": 7561,
+            "changed_percent": 10.74,
+            "over_8_percent": 5.805,
+            "mean_channel_error": 3.768,
+            "identical": false
+          },
+          {
+            "case": "checkbox",
+            "pixels": 70400,
+            "changed_pixels": 1122,
+            "changed_percent": 1.594,
+            "over_8_percent": 1.388,
+            "mean_channel_error": 1.205,
+            "identical": false
+          },
+          {
+            "case": "chip",
+            "pixels": 70400,
+            "changed_pixels": 1300,
+            "changed_percent": 1.847,
+            "over_8_percent": 1.818,
+            "mean_channel_error": 0.219,
+            "identical": false
+          },
+          {
+            "case": "input",
+            "pixels": 70400,
+            "changed_pixels": 2961,
+            "changed_percent": 4.206,
+            "over_8_percent": 1.994,
+            "mean_channel_error": 0.619,
+            "identical": false
+          },
+          {
+            "case": "progress",
+            "pixels": 70400,
+            "changed_pixels": 2238,
+            "changed_percent": 3.179,
+            "over_8_percent": 2.581,
+            "mean_channel_error": 1.642,
+            "identical": false
+          },
+          {
+            "case": "radio",
+            "pixels": 70400,
+            "changed_pixels": 1622,
+            "changed_percent": 2.304,
+            "over_8_percent": 1.885,
+            "mean_channel_error": 1.807,
+            "identical": false
+          },
+          {
+            "case": "select",
+            "pixels": 70400,
+            "changed_pixels": 2779,
+            "changed_percent": 3.947,
+            "over_8_percent": 1.777,
+            "mean_channel_error": 0.639,
+            "identical": false
+          },
+          {
+            "case": "skeleton",
+            "pixels": 70400,
+            "changed_pixels": 13440,
+            "changed_percent": 19.091,
+            "over_8_percent": 0.011,
+            "mean_channel_error": 0.192,
+            "identical": false
+          },
+          {
+            "case": "slider",
+            "pixels": 70400,
+            "changed_pixels": 5594,
+            "changed_percent": 7.946,
+            "over_8_percent": 7.294,
+            "mean_channel_error": 6.259,
+            "identical": false
+          },
+          {
+            "case": "switch",
+            "pixels": 70400,
+            "changed_pixels": 868,
+            "changed_percent": 1.233,
+            "over_8_percent": 0.977,
+            "mean_channel_error": 0.542,
+            "identical": false
+          },
+          {
+            "case": "table",
+            "pixels": 70400,
+            "changed_pixels": 16973,
+            "changed_percent": 24.109,
+            "over_8_percent": 12.264,
+            "mean_channel_error": 4.913,
+            "identical": false
+          },
+          {
+            "case": "tabs",
+            "pixels": 70400,
+            "changed_pixels": 2568,
+            "changed_percent": 3.648,
+            "over_8_percent": 2.845,
+            "mean_channel_error": 2.048,
+            "identical": false
+          },
+          {
+            "case": "textarea",
+            "pixels": 70400,
+            "changed_pixels": 4116,
+            "changed_percent": 5.847,
+            "over_8_percent": 2.778,
+            "mean_channel_error": 1.616,
+            "identical": false
+          },
+          {
+            "case": "tooltip",
+            "pixels": 70400,
+            "changed_pixels": 3148,
+            "changed_percent": 4.472,
+            "over_8_percent": 4.344,
+            "mean_channel_error": 1.421,
+            "identical": false
+          }
+        ]
+      },
+      "react": {
+        "aggregate": {
+          "pixels": 1548800,
+          "changed_pixels": 113590,
+          "changed_percent": 7.334,
+          "over_8_percent": 4.999,
+          "mean_channel_error": 2.532,
+          "identical": false
+        },
+        "cases": [
+          {
+            "case": "accordion",
+            "pixels": 70400,
+            "changed_pixels": 923,
+            "changed_percent": 1.311,
+            "over_8_percent": 1.291,
+            "mean_channel_error": 1.218,
+            "identical": false
+          },
+          {
+            "case": "alert",
+            "pixels": 70400,
+            "changed_pixels": 21710,
+            "changed_percent": 30.838,
+            "over_8_percent": 29.973,
+            "mean_channel_error": 6.338,
+            "identical": false
+          },
+          {
+            "case": "avatar",
+            "pixels": 70400,
+            "changed_pixels": 1328,
+            "changed_percent": 1.886,
+            "over_8_percent": 0.384,
+            "mean_channel_error": 0.435,
+            "identical": false
+          },
+          {
+            "case": "breadcrumb",
+            "pixels": 70400,
+            "changed_pixels": 788,
+            "changed_percent": 1.119,
+            "over_8_percent": 1.064,
+            "mean_channel_error": 0.877,
+            "identical": false
+          },
+          {
+            "case": "button-danger",
+            "pixels": 70400,
+            "changed_pixels": 2184,
+            "changed_percent": 3.102,
+            "over_8_percent": 3.062,
+            "mean_channel_error": 3.126,
+            "identical": false
+          },
+          {
+            "case": "button-disabled",
+            "pixels": 70400,
+            "changed_pixels": 2688,
+            "changed_percent": 3.818,
+            "over_8_percent": 3.438,
+            "mean_channel_error": 1.865,
+            "identical": false
+          },
+          {
+            "case": "button-primary",
+            "pixels": 70400,
+            "changed_pixels": 7177,
+            "changed_percent": 10.195,
+            "over_8_percent": 10.033,
+            "mean_channel_error": 5.73,
+            "identical": false
+          },
+          {
+            "case": "button-variants",
+            "pixels": 70400,
+            "changed_pixels": 3214,
+            "changed_percent": 4.565,
+            "over_8_percent": 2.193,
+            "mean_channel_error": 1.382,
+            "identical": false
+          },
+          {
+            "case": "card",
+            "pixels": 70400,
+            "changed_pixels": 7566,
+            "changed_percent": 10.747,
+            "over_8_percent": 5.807,
+            "mean_channel_error": 4.062,
+            "identical": false
+          },
+          {
+            "case": "checkbox",
+            "pixels": 70400,
+            "changed_pixels": 1319,
+            "changed_percent": 1.874,
+            "over_8_percent": 1.675,
+            "mean_channel_error": 1.77,
+            "identical": false
+          },
+          {
+            "case": "chip",
+            "pixels": 70400,
+            "changed_pixels": 1252,
+            "changed_percent": 1.778,
+            "over_8_percent": 0.903,
+            "mean_channel_error": 0.356,
+            "identical": false
+          },
+          {
+            "case": "input",
+            "pixels": 70400,
+            "changed_pixels": 10796,
+            "changed_percent": 15.335,
+            "over_8_percent": 13.053,
+            "mean_channel_error": 3.924,
+            "identical": false
+          },
+          {
+            "case": "progress",
+            "pixels": 70400,
+            "changed_pixels": 2238,
+            "changed_percent": 3.179,
+            "over_8_percent": 3.176,
+            "mean_channel_error": 1.693,
+            "identical": false
+          },
+          {
+            "case": "radio",
+            "pixels": 70400,
+            "changed_pixels": 1591,
+            "changed_percent": 2.26,
+            "over_8_percent": 1.811,
+            "mean_channel_error": 1.94,
+            "identical": false
+          },
+          {
+            "case": "select",
+            "pixels": 70400,
+            "changed_pixels": 2943,
+            "changed_percent": 4.18,
+            "over_8_percent": 1.868,
+            "mean_channel_error": 0.709,
+            "identical": false
+          },
+          {
+            "case": "skeleton",
+            "pixels": 70400,
+            "changed_pixels": 13436,
+            "changed_percent": 19.085,
+            "over_8_percent": 0.027,
+            "mean_channel_error": 0.954,
+            "identical": false
+          },
+          {
+            "case": "slider",
+            "pixels": 70400,
+            "changed_pixels": 5902,
+            "changed_percent": 8.384,
+            "over_8_percent": 7.607,
+            "mean_channel_error": 5.818,
+            "identical": false
+          },
+          {
+            "case": "switch",
+            "pixels": 70400,
+            "changed_pixels": 868,
+            "changed_percent": 1.233,
+            "over_8_percent": 0.966,
+            "mean_channel_error": 0.606,
+            "identical": false
+          },
+          {
+            "case": "table",
+            "pixels": 70400,
+            "changed_pixels": 16733,
+            "changed_percent": 23.768,
+            "over_8_percent": 12.121,
+            "mean_channel_error": 4.726,
+            "identical": false
+          },
+          {
+            "case": "tabs",
+            "pixels": 70400,
+            "changed_pixels": 2353,
+            "changed_percent": 3.342,
+            "over_8_percent": 2.645,
+            "mean_channel_error": 1.843,
+            "identical": false
+          },
+          {
+            "case": "textarea",
+            "pixels": 70400,
+            "changed_pixels": 3389,
+            "changed_percent": 4.814,
+            "over_8_percent": 2.395,
+            "mean_channel_error": 1.384,
+            "identical": false
+          },
+          {
+            "case": "tooltip",
+            "pixels": 70400,
+            "changed_pixels": 3192,
+            "changed_percent": 4.534,
+            "over_8_percent": 4.497,
+            "mean_channel_error": 4.94,
+            "identical": false
+          }
+        ]
+      },
+      "modal": {
+        "hero": {
+          "background": "oklch(1 0 0)",
+          "borderRadius": "24px",
+          "bottom": 561.015625,
+          "font": "16px / 24px Arial, sans-serif",
+          "height": 162.015625,
+          "viewport": {
+            "dpr": 1,
+            "height": 960,
+            "width": 1280
+          },
+          "width": 448,
+          "x": 408.5,
+          "y": 399
+        },
+        "vue": {
+          "background": "rgb(255, 255, 255)",
+          "borderRadius": "20px",
+          "bottom": 566,
+          "font": "14px / 22.001px Arial, sans-serif",
+          "height": 187,
+          "viewport": {
+            "dpr": 1,
+            "height": 960,
+            "width": 1280
+          },
+          "width": 520,
+          "x": 372.5,
+          "y": 379
+        },
+        "react": {
+          "background": "rgb(240, 240, 243)",
+          "borderRadius": "20px",
+          "bottom": 556,
+          "font": "14px / 22.001px Arial, sans-serif",
+          "height": 167,
+          "viewport": {
+            "dpr": 1,
+            "height": 960,
+            "width": 1280
+          },
+          "width": 520,
+          "x": 372.5,
+          "y": 389
+        }
+      }
+    },
+    "dark": {
+      "vue": {
+        "aggregate": {
+          "pixels": 1548800,
+          "changed_pixels": 199578,
+          "changed_percent": 12.886,
+          "over_8_percent": 12.766,
+          "mean_channel_error": 3.486,
+          "identical": false
+        },
+        "cases": [
+          {
+            "case": "accordion",
+            "pixels": 70400,
+            "changed_pixels": 16342,
+            "changed_percent": 23.213,
+            "over_8_percent": 23.158,
+            "mean_channel_error": 5.031,
+            "identical": false
+          },
+          {
+            "case": "alert",
+            "pixels": 70400,
+            "changed_pixels": 22308,
+            "changed_percent": 31.688,
+            "over_8_percent": 31.585,
+            "mean_channel_error": 8.302,
+            "identical": false
+          },
+          {
+            "case": "avatar",
+            "pixels": 70400,
+            "changed_pixels": 1324,
+            "changed_percent": 1.881,
+            "over_8_percent": 1.815,
+            "mean_channel_error": 0.889,
+            "identical": false
+          },
+          {
+            "case": "breadcrumb",
+            "pixels": 70400,
+            "changed_pixels": 871,
+            "changed_percent": 1.237,
+            "over_8_percent": 1.185,
+            "mean_channel_error": 0.992,
+            "identical": false
+          },
+          {
+            "case": "button-danger",
+            "pixels": 70400,
+            "changed_pixels": 2140,
+            "changed_percent": 3.04,
+            "over_8_percent": 3.04,
+            "mean_channel_error": 2.499,
+            "identical": false
+          },
+          {
+            "case": "button-disabled",
+            "pixels": 70400,
+            "changed_pixels": 2644,
+            "changed_percent": 3.756,
+            "over_8_percent": 3.756,
+            "mean_channel_error": 1.358,
+            "identical": false
+          },
+          {
+            "case": "button-primary",
+            "pixels": 70400,
+            "changed_pixels": 7072,
+            "changed_percent": 10.045,
+            "over_8_percent": 10.044,
+            "mean_channel_error": 8.49,
+            "identical": false
+          },
+          {
+            "case": "button-variants",
+            "pixels": 70400,
+            "changed_pixels": 3171,
+            "changed_percent": 4.504,
+            "over_8_percent": 4.277,
+            "mean_channel_error": 1.101,
+            "identical": false
+          },
+          {
+            "case": "card",
+            "pixels": 70400,
+            "changed_pixels": 36592,
+            "changed_percent": 51.977,
+            "over_8_percent": 51.864,
+            "mean_channel_error": 8.528,
+            "identical": false
+          },
+          {
+            "case": "checkbox",
+            "pixels": 70400,
+            "changed_pixels": 1005,
+            "changed_percent": 1.428,
+            "over_8_percent": 1.385,
+            "mean_channel_error": 1.37,
+            "identical": false
+          },
+          {
+            "case": "chip",
+            "pixels": 70400,
+            "changed_pixels": 1300,
+            "changed_percent": 1.847,
+            "over_8_percent": 1.847,
+            "mean_channel_error": 3.169,
+            "identical": false
+          },
+          {
+            "case": "input",
+            "pixels": 70400,
+            "changed_pixels": 11164,
+            "changed_percent": 15.858,
+            "over_8_percent": 15.79,
+            "mean_channel_error": 1.743,
+            "identical": false
+          },
+          {
+            "case": "progress",
+            "pixels": 70400,
+            "changed_pixels": 2238,
+            "changed_percent": 3.179,
+            "over_8_percent": 3.176,
+            "mean_channel_error": 1.91,
+            "identical": false
+          },
+          {
+            "case": "radio",
+            "pixels": 70400,
+            "changed_pixels": 1629,
+            "changed_percent": 2.314,
+            "over_8_percent": 2.253,
+            "mean_channel_error": 2.408,
+            "identical": false
+          },
+          {
+            "case": "select",
+            "pixels": 70400,
+            "changed_pixels": 11164,
+            "changed_percent": 15.858,
+            "over_8_percent": 15.788,
+            "mean_channel_error": 1.782,
+            "identical": false
+          },
+          {
+            "case": "skeleton",
+            "pixels": 70400,
+            "changed_pixels": 13440,
+            "changed_percent": 19.091,
+            "over_8_percent": 19.091,
+            "mean_channel_error": 1.72,
+            "identical": false
+          },
+          {
+            "case": "slider",
+            "pixels": 70400,
+            "changed_pixels": 5532,
+            "changed_percent": 7.858,
+            "over_8_percent": 7.858,
+            "mean_channel_error": 6.899,
+            "identical": false
+          },
+          {
+            "case": "switch",
+            "pixels": 70400,
+            "changed_pixels": 868,
+            "changed_percent": 1.233,
+            "over_8_percent": 1.233,
+            "mean_channel_error": 1.32,
+            "identical": false
+          },
+          {
+            "case": "table",
+            "pixels": 70400,
+            "changed_pixels": 36172,
+            "changed_percent": 51.381,
+            "over_8_percent": 50.497,
+            "mean_channel_error": 7.208,
+            "identical": false
+          },
+          {
+            "case": "tabs",
+            "pixels": 70400,
+            "changed_pixels": 3788,
+            "changed_percent": 5.381,
+            "over_8_percent": 5.351,
+            "mean_channel_error": 3.819,
+            "identical": false
+          },
+          {
+            "case": "textarea",
+            "pixels": 70400,
+            "changed_pixels": 15666,
+            "changed_percent": 22.253,
+            "over_8_percent": 21.392,
+            "mean_channel_error": 2.823,
+            "identical": false
+          },
+          {
+            "case": "tooltip",
+            "pixels": 70400,
+            "changed_pixels": 3148,
+            "changed_percent": 4.472,
+            "over_8_percent": 4.472,
+            "mean_channel_error": 3.331,
+            "identical": false
+          }
+        ]
+      },
+      "react": {
+        "aggregate": {
+          "pixels": 1548800,
+          "changed_pixels": 197948,
+          "changed_percent": 12.781,
+          "over_8_percent": 11.484,
+          "mean_channel_error": 3.49,
+          "identical": false
+        },
+        "cases": [
+          {
+            "case": "accordion",
+            "pixels": 70400,
+            "changed_pixels": 15519,
+            "changed_percent": 22.044,
+            "over_8_percent": 21.973,
+            "mean_channel_error": 4.394,
+            "identical": false
+          },
+          {
+            "case": "alert",
+            "pixels": 70400,
+            "changed_pixels": 21234,
+            "changed_percent": 30.162,
+            "over_8_percent": 6.801,
+            "mean_channel_error": 3.782,
+            "identical": false
+          },
+          {
+            "case": "avatar",
+            "pixels": 70400,
+            "changed_pixels": 1324,
+            "changed_percent": 1.881,
+            "over_8_percent": 0.408,
+            "mean_channel_error": 0.449,
+            "identical": false
+          },
+          {
+            "case": "breadcrumb",
+            "pixels": 70400,
+            "changed_pixels": 795,
+            "changed_percent": 1.129,
+            "over_8_percent": 1.097,
+            "mean_channel_error": 0.957,
+            "identical": false
+          },
+          {
+            "case": "button-danger",
+            "pixels": 70400,
+            "changed_pixels": 2184,
+            "changed_percent": 3.102,
+            "over_8_percent": 3.082,
+            "mean_channel_error": 1.837,
+            "identical": false
+          },
+          {
+            "case": "button-disabled",
+            "pixels": 70400,
+            "changed_pixels": 2688,
+            "changed_percent": 3.818,
+            "over_8_percent": 3.781,
+            "mean_channel_error": 1.908,
+            "identical": false
+          },
+          {
+            "case": "button-primary",
+            "pixels": 70400,
+            "changed_pixels": 7177,
+            "changed_percent": 10.195,
+            "over_8_percent": 10.186,
+            "mean_channel_error": 8.707,
+            "identical": false
+          },
+          {
+            "case": "button-variants",
+            "pixels": 70400,
+            "changed_pixels": 3218,
+            "changed_percent": 4.571,
+            "over_8_percent": 2.365,
+            "mean_channel_error": 1.609,
+            "identical": false
+          },
+          {
+            "case": "card",
+            "pixels": 70400,
+            "changed_pixels": 36452,
+            "changed_percent": 51.778,
+            "over_8_percent": 51.682,
+            "mean_channel_error": 8.994,
+            "identical": false
+          },
+          {
+            "case": "checkbox",
+            "pixels": 70400,
+            "changed_pixels": 1189,
+            "changed_percent": 1.689,
+            "over_8_percent": 1.683,
+            "mean_channel_error": 2.076,
+            "identical": false
+          },
+          {
+            "case": "chip",
+            "pixels": 70400,
+            "changed_pixels": 1252,
+            "changed_percent": 1.778,
+            "over_8_percent": 1.753,
+            "mean_channel_error": 0.378,
+            "identical": false
+          },
+          {
+            "case": "input",
+            "pixels": 70400,
+            "changed_pixels": 9988,
+            "changed_percent": 14.188,
+            "over_8_percent": 14.139,
+            "mean_channel_error": 4.845,
+            "identical": false
+          },
+          {
+            "case": "progress",
+            "pixels": 70400,
+            "changed_pixels": 2238,
+            "changed_percent": 3.179,
+            "over_8_percent": 3.175,
+            "mean_channel_error": 1.966,
+            "identical": false
+          },
+          {
+            "case": "radio",
+            "pixels": 70400,
+            "changed_pixels": 1599,
+            "changed_percent": 2.271,
+            "over_8_percent": 2.213,
+            "mean_channel_error": 2.61,
+            "identical": false
+          },
+          {
+            "case": "select",
+            "pixels": 70400,
+            "changed_pixels": 11216,
+            "changed_percent": 15.932,
+            "over_8_percent": 15.854,
+            "mean_channel_error": 1.914,
+            "identical": false
+          },
+          {
+            "case": "skeleton",
+            "pixels": 70400,
+            "changed_pixels": 13436,
+            "changed_percent": 19.085,
+            "over_8_percent": 19.062,
+            "mean_channel_error": 3.999,
+            "identical": false
+          },
+          {
+            "case": "slider",
+            "pixels": 70400,
+            "changed_pixels": 5532,
+            "changed_percent": 7.858,
+            "over_8_percent": 7.857,
+            "mean_channel_error": 6.53,
+            "identical": false
+          },
+          {
+            "case": "switch",
+            "pixels": 70400,
+            "changed_pixels": 868,
+            "changed_percent": 1.233,
+            "over_8_percent": 1.233,
+            "mean_channel_error": 1.351,
+            "identical": false
+          },
+          {
+            "case": "table",
+            "pixels": 70400,
+            "changed_pixels": 36184,
+            "changed_percent": 51.398,
+            "over_8_percent": 50.607,
+            "mean_channel_error": 7.822,
+            "identical": false
+          },
+          {
+            "case": "tabs",
+            "pixels": 70400,
+            "changed_pixels": 3807,
+            "changed_percent": 5.408,
+            "over_8_percent": 5.365,
+            "mean_channel_error": 3.665,
+            "identical": false
+          },
+          {
+            "case": "textarea",
+            "pixels": 70400,
+            "changed_pixels": 16856,
+            "changed_percent": 23.943,
+            "over_8_percent": 23.881,
+            "mean_channel_error": 3.074,
+            "identical": false
+          },
+          {
+            "case": "tooltip",
+            "pixels": 70400,
+            "changed_pixels": 3192,
+            "changed_percent": 4.534,
+            "over_8_percent": 4.446,
+            "mean_channel_error": 3.911,
+            "identical": false
+          }
+        ]
+      },
+      "modal": {
+        "hero": {
+          "background": "oklch(0.2103 0.0059 285.89)",
+          "borderRadius": "24px",
+          "bottom": 561.015625,
+          "font": "16px / 24px Arial, sans-serif",
+          "height": 162.015625,
+          "viewport": {
+            "dpr": 1,
+            "height": 960,
+            "width": 1280
+          },
+          "width": 448,
+          "x": 408.5,
+          "y": 399
+        },
+        "vue": {
+          "background": "rgb(36, 38, 46)",
+          "borderRadius": "20px",
+          "bottom": 566,
+          "font": "14px / 22.001px Arial, sans-serif",
+          "height": 187,
+          "viewport": {
+            "dpr": 1,
+            "height": 960,
+            "width": 1280
+          },
+          "width": 520,
+          "x": 372.5,
+          "y": 379
+        },
+        "react": {
+          "background": "rgb(37, 39, 48)",
+          "borderRadius": "20px",
+          "bottom": 556,
+          "font": "14px / 22.001px Arial, sans-serif",
+          "height": 167,
+          "viewport": {
+            "dpr": 1,
+            "height": 960,
+            "width": 1280
+          },
+          "width": 520,
+          "x": 372.5,
+          "y": 389
+        }
+      }
+    }
+  },
+  "reference_repeat": {
+    "pixels": 2360320,
+    "changed_pixels": 0,
+    "changed_percent": 0.0,
+    "over_8_percent": 0.0,
+    "mean_channel_error": 0.0,
+    "identical": true
+  }
+}

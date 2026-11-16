@@ -1,0 +1,15 @@
+{
+  "background": "rgb(240, 240, 243)",
+  "borderRadius": "20px",
+  "bottom": 556,
+  "font": "14px / 22.001px Arial, sans-serif",
+  "height": 167,
+  "viewport": {
+    "dpr": 1,
+    "height": 960,
+    "width": 1280
+  },
+  "width": 520,
+  "x": 372.5,
+  "y": 389
+}
