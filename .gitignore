@@ -8,3 +8,5 @@ lib/
 # 本地临时目录
 .dsh/
 .tmp/
+dist/
+docs/preview/dist/

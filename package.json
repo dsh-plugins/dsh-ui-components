@@ -1,53 +1,46 @@
 {
-  "name": "@dsh-plugin/dsh-ui-components",
-  "version": "0.1.0",
-  "description": "React component library that restyles Arco Design with dsh (DeepSeek Harness) design tokens, and exposes the full IconPark icon set by name.",
+  "name": "@dsh-plugin/dsh-ui-components-vue",
+  "version": "0.1.0-vue.0",
+  "description": "基于 Arco Design Vue、采用 HeroUI 风格的 DSH Vue 组件库",
   "type": "module",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
-    "./icons/*": {
-      "types": "./lib/icons/*.d.ts",
-      "default": "./lib/icons/*.js"
-    },
-    "./icons-index": {
-      "types": "./lib/icons-index.d.ts",
-      "default": "./lib/icons-index.js"
+    "./style.css": "./dist/style.css",
+    "./icons": {
+      "types": "./dist/vue/icons.d.ts",
+      "import": "./dist/icons.js"
     },
     "./package.json": "./package.json"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
-    "lib",
-    "src",
-    "!src/icons",
-    "scripts",
-    "docs/tokens.md",
+    "dist",
     "README.md",
     "README.zh_CN.md",
+    "docs/vue-coverage.md",
     "LICENSE",
     "NOTICE"
   ],
   "scripts": {
-    "gen:icons": "node scripts/gen-icons.mjs",
-    "gen:tokens": "node scripts/gen-host-tokens.mjs",
-    "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "build": "vite build && vue-tsc -p tsconfig.build.json",
     "test": "vitest run",
     "preview": "vite --config docs/preview/vite.config.ts",
     "preview:build": "vite build --config docs/preview/vite.config.ts",
-    "verify:tokens": "node scripts/verify-tokens.mjs",
-    "verify:icons": "node scripts/gen-icons.mjs --check",
-    "verify:colors": "node scripts/verify-no-literal-colors.mjs",
-    "verify:size": "node scripts/check-size.mjs",
-    "verify": "npm run verify:tokens && npm run verify:icons && npm run verify:colors && npm run verify:size",
-    "prepublishOnly": "npm run typecheck && npm run build && npm test && npm run verify"
+    "verify:arco": "node scripts/verify-arco.mjs",
+    "verify": "npm run typecheck && npm run build && npm test && npm run verify:arco && npm run preview:build && npm pack --dry-run",
+    "prepublishOnly": "npm run verify"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "tag": "vue"
   },
   "engines": {
     "node": ">=24.9.0"
@@ -56,49 +49,27 @@
     "type": "git",
     "url": "git+https://github.com/dsh-plugins/dsh-ui-components.git"
   },
-  "homepage": "https://github.com/dsh-plugins/dsh-ui-components",
-  "bugs": {
-    "url": "https://github.com/dsh-plugins/dsh-ui-components/issues"
-  },
+  "homepage": "https://github.com/dsh-plugins/dsh-ui-components/tree/vue",
   "license": "MIT",
   "keywords": [
     "dsh",
-    "deepseek-harness",
-    "plugin",
-    "ui",
-    "components",
+    "vue",
     "arco-design",
-    "react"
+    "components"
   ],
-  "dependencies": {
-    "@icon-park/react": "^1.4.2"
-  },
   "peerDependencies": {
-    "@dsh-plugin/dsh-loader": "^2.0.0-0",
-    "react": ">=18",
-    "react-dom": ">=18"
+    "vue": "^3.5.0"
   },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": false
-    },
-    "react-dom": {
-      "optional": false
-    }
+  "dependencies": {
+    "@arco-design/web-vue": "^2.59.0"
   },
   "devDependencies": {
-    "@arco-design/web-react": "^2.66.18",
-    "@dsh-plugin/dsh-loader": "^2.0.0-0",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.1.0",
-    "@types/node": "^26.6.6",
-    "@types/react": "^18.3.31",
-    "@types/react-dom": "^18.3.7",
-    "jsdom": "^25.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "typescript": "^7.0.2",
+    "@types/node": "^22.10.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "typescript": "~5.8.3",
     "vite": "^6.4.6",
-    "vitest": "^2.1.0"
+    "vitest": "^2.1.9",
+    "vue": "^3.5.45",
+    "vue-tsc": "^3.1.0"
   }
 }

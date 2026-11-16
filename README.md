@@ -1,136 +1,67 @@
-<div align="center">
+# DSH Vue 组件库
 
-# dsh-ui-components
+`@dsh-plugin/dsh-ui-components-vue` 在 `vue` 分支提供基于 Arco Design Vue 的组件库，使用 HeroUI 风格的表面、圆角、阴影、焦点环与交互状态。
 
-**A React component library that restyles Arco Design with DeepSeek Harness design tokens and exposes the full IconPark icon set by name.**
+验收基线为 `@arco-design/web-vue` 全部组件及子组件。组件参数、事件、`v-model` 和插槽沿用 Arco Vue；与 HeroUI 的逐项视觉对应、额外组件和迁移差异见 [组件对照](docs/vue-coverage.md)。React 版本使用独立的 `react` 分支及包名 `@dsh-plugin/dsh-ui-components`。
 
-English | [简体中文](README.zh_CN.md)
+## 使用
 
-</div>
+本地构建后可通过 `npm pack` 生成安装包。发布名称为 `@dsh-plugin/dsh-ui-components-vue`；当前工作区修改不代表已发布到 npm。
 
-## What this is
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DshProvider, Button, Input, FormItem, Select, Modal } from '@dsh-plugin/dsh-ui-components-vue'
+import '@dsh-plugin/dsh-ui-components-vue/style.css'
 
-Plugins in the DSH family each hand-roll their own buttons, inputs and dialogs, so the same product ends up with three different border radii. This package is the shared answer: the semantics and keyboard behavior of [Arco Design](https://arco.design), skinned with the DeepSeek Harness `--dsw-*` design tokens, plus the [IconPark](https://iconpark.oceanengine.com) icon set.
+const name = ref('')
+const mode = ref('standard')
+const visible = ref(false)
+</script>
 
-It ships as an unbundled ESM source library. Your plugin's bundler inlines it, so React and Arco stay the single instances the host already owns, and no CSS pipeline is needed on your side.
-
-## Install
-
-```sh
-npm install @dsh-plugin/dsh-ui-components
+<template>
+  <DshProvider theme="auto" radius="md">
+    <FormItem label="名称">
+      <Input v-model="name" />
+    </FormItem>
+    <Select v-model="mode" :options="['standard', 'custom']" />
+    <Button variant="primary" @click="visible = true">打开</Button>
+    <Modal v-model:visible="visible" title="设置">
+      {{ name }}
+    </Modal>
+  </DshProvider>
+</template>
 ```
 
-`react`, `react-dom` and `@dsh-plugin/dsh-loader` are peer dependencies; the host provides all three.
+## 主题与浮层
 
-## Use
+`DshProvider` 支持 `theme="auto|light|dark"`、`radius="none|sm|md|lg|full"`、`reducedMotion`、`locale` 与 `rtl`。`auto` 优先读取 DSH/Arco 宿主主题，再使用系统偏好；动画默认遵循系统的减少动画设置。
 
-Wrap your plugin's React root once, then import components from the package root.
+在 Provider 的 `style` 中覆盖 `--dsh-accent`、`--dsh-surface`、`--dsh-radius` 等变量即可调整局部主题。每个 Provider 拥有独立 body 浮层容器，复制根元素的最终 CSS 变量，并在卸载时回收。
 
-```tsx
-import { DshProvider, Card, Field, Input, Button, Switch } from '@dsh-plugin/dsh-ui-components'
+所有带浮层的组件应置于 Provider 内。Modal、Drawer 和 AlertDialog 的顶部和底部各保留 120px，内容使用 Arco Vue Scrollbar。弹窗支持 Escape、焦点限制、关闭后焦点恢复和 `trigger/header/footer` 插槽。Vue 运行环境直接复用 Arco Vue 滚动条。
 
-export function SettingsPage() {
-  return (
-    <DshProvider>
-      <Card title="Proxy">
-        <Field label="Host" description="Affects requests made through global fetch." htmlFor="host">
-          <Input id="host" mono placeholder="127.0.0.1" />
-        </Field>
-        <Field label="Enabled" layout="inline">
-          <Switch defaultChecked />
-        </Field>
-        <Button variant="primary">Save</Button>
-      </Card>
-    </DshProvider>
-  )
-}
-```
+命令式消息优先在 Provider 后代的 `setup` 中调用 `useFeedback()`，取得作用域内的 `message` 与 `notification`；`useToast()` 提供简化短提示。原生 `Message`、`Notification` 导出保留 Arco 全局语义，局部主题使用作用域接口。
 
-`DshProvider` injects the skin, mounts icon defaults, and routes every Arco overlay through a container that carries the same CSS variables. Components render without it, but popups would then attach to `body` and lose the skin.
+## 公开入口
 
-In your `tsdown` config, keep these three external:
+- 根入口包含全部 Arco Vue 组件及子组件，以及 HeroUI 风格的 Button、ProgressBar、ProgressCircle、Meter、TextField、SearchField、InputOTP、ListBox、ToggleButton、Toolbar 等补充组件。
+- `Arco` 命名空间保留原始 Arco Vue 的全部参数和组件，适合需要原生 Button、Link、InputGroup API 的调用方。局部主题浮层优先使用根入口包装组件。
+- `useDialog()` 返回当前 Provider 内的 `modal`、`drawer` 命令式接口，支持 `open`、`confirm`、`close` 与 `update`，用来替代原始静态弹窗调用。
+- `Button` 支持 `primary/secondary/tertiary/outline/ghost/danger/danger-soft` 变体与 `sm/md/lg` 尺寸；其余 Arco 控件保留 Arco 的尺寸命名。
+- 图标通过 `@dsh-plugin/dsh-ui-components-vue/icons` 以 Arco Vue 图标名导入，构建器可移除未使用图标。
+- 样式单独通过 `style.css` 导入；Vue 和 Arco 的 JavaScript 作为共享依赖，包中不包含 React 或 dsh-loader。
 
-```js
-const CLIENT_EXTERNALS = [
-  'react',
-  'react/jsx-runtime',
-  'react-dom',
-  'react-dom/client',
-  '@dsh-plugin/dsh-loader/client',
-]
-```
-
-## Theming
-
-Colours are not configurable props and do not need to be. The skin is a single CSS variable bridge that rebinds Arco's own variables onto DSH semantic tokens, so light and dark follow the host's `body[data-ds-dark-theme]` attribute with no JavaScript involved and no theme branching in component code.
-
-The bridge sits on a `.dsh-ui` class rather than on `body`, which keeps the host's own Arco theme untouched. `scripts/verify-tokens.mjs` checks every host variable referenced by this package against the host stylesheets, so a rename in DSH fails offline instead of silently dropping styles.
-
-## Icons
-
-Three channels, because inlining all 2658 icons into every plugin would be indefensible:
-
-```tsx
-// 1. Curated set, intent-named (~110 icons, tree-shaken to what you use)
-import { Icon, Icons } from '@dsh-plugin/dsh-ui-components'
-<Icon name="Settings" size={18} />
-<Icons.GitBranch />
-
-// 2. Any of the 2658 icons, by subpath — only that icon enters your bundle
-import Rocket from '@dsh-plugin/dsh-ui-components/icons/Rocket'
-<Icon of={Rocket} size={18} />
-
-// 3. Full metadata for pickers and search, imports no icon modules
-import { ICON_INDEX } from '@dsh-plugin/dsh-ui-components/icons-index'
-```
-
-Subpath names are the PascalCase form of the IconPark name: `a-cane` is `ACane`, `setting` is `Setting`. Every entry in `ICON_INDEX` carries `name`, `pascal`, `title`, `titleZh`, `category`, `tags` and `rtl`.
-
-Icons inherit `currentColor`, so they follow the surrounding text colour automatically.
-
-## Components
-
-| Group | Exports |
-|---|---|
-| Foundation | `DshProvider`, `Icon`, `Icons`, `ICON_NAMES`, `DshIconProvider`, `G`, `cx`, `ICON_INDEX` |
-| Buttons | `Button`, `IconButton` |
-| Inputs | `Input`, `Textarea`, `InputNumber`, `Select`, `AutoComplete` |
-| Toggles | `Checkbox`, `CheckboxGroup`, `Radio`, `RadioGroup`, `Switch`, `Slider`, `Rate` |
-| Form | `Form`, `FormItem`, `Field` |
-| Display | `Card`, `Tag`, `Pill`, `Avatar`, `Badge`, `Divider`, `Descriptions`, `Typography`, `Text`, `Paragraph`, `Empty`, `Skeleton`, `Spin`, `Tooltip`, `Popover`, `HoverCard`, `Collapse`, `CollapseItem` |
-| Feedback | `Alert`, `Progress`, `Result`, `Popconfirm`, `Modal`, `confirm`, `Drawer`, `Message`, `Notification`, `message`, `messageSuccess`, `messageError`, `messageWarning` |
-| Navigation | `Menu`, `MenuItem`, `Dropdown`, `Tabs`, `TabPane`, `Breadcrumb`, `BreadcrumbItem`, `Pagination`, `Steps`, `Step`, `SegmentedControl`, `DisclosureRow`, `StateDot` |
-| Data | `Table`, `List`, `ListItem`, `Tree`, `DatePicker`, `TimePicker`, `Cascader`, `TreeSelect`, `Transfer`, `Statistic`, `Timeline`, `TimelineItem`, `Calendar`, `Carousel`, `Image` |
-| DSH composites | `SettingsCard`, `SettingsRow`, `PanelShell`, `MenuSelect`, `JsonTree`, `CodeBlockShell`, `FileTypeBadge`, `StatusLine` |
-
-Every control forwards native props and `className`, so escaping the defaults never requires forking a component.
-
-`SettingsCard` + `SettingsRow` render the host's settings-page card. `PanelShell` is a plain overlay shell that already satisfies the 120px top and bottom margin rule and scrolls its body through the host's `Scrollbar`. `MenuSelect` is the self-drawn dropdown for settings pages, where a native `<select>` popup cannot follow the DSH theme.
-
-## Preview
-
-```sh
-npm run gen:tokens   # copy the host token sheets into docs/preview/
-npm run preview      # http://localhost:5178
-```
-
-The preview site renders every component against the host's own token values, with a light/dark switch and a searchable index over all 2658 icons. It reads the package source directly, so a change shows up on refresh without a build.
-
-## Development
+## 开发与验证
 
 ```sh
 npm install
-npm run gen:icons     # regenerate the 2658 icon modules and metadata
 npm run typecheck
 npm run build
 npm test
-npm run verify        # token names, icon channels, literal colours, package size
+npm run verify:arco
+npm run preview:build
+npm run preview
 ```
 
-`npm run verify:tokens` needs the DSH host stylesheets. Point `DSH_UI_THEME_DIR` at `packages/client/ui-theme/src/styles` of a DSH checkout, or keep one at `.dsh/temp/session-tree-harness` in the parent directory.
-
-See [PLAN.md](PLAN.md) for the batch scope and current progress, and [docs/tokens.md](docs/tokens.md) for the token mapping table.
-
-## License
-
-MIT. IconPark artwork is Apache-2.0; see [NOTICE](NOTICE).
+预览入口位于 `docs/preview/App.vue`，组件源码位于 `src/vue/`，根出口位于 `src/index.ts`。`verify:arco` 根据安装版本的官方声明核对发布入口，新增依赖组件时会同步进入核对范围。单元测试针对选择状态、验证码处理和进度归一化等自研规则；交互与视觉在预览中验收。

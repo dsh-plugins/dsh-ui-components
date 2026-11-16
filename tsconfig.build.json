@@ -3,11 +3,12 @@
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
-    "declarationMap": false,
-    "sourceMap": false,
-    "outDir": "lib",
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
-  "exclude": ["tests/**/*"]
+  "include": [
+    "src/index.ts",
+    "src/vue/**/*.ts"
+  ]
 }

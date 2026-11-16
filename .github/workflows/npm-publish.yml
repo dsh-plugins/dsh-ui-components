@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - vue
     tags:
       - 'v*'
   workflow_dispatch:
@@ -44,14 +45,10 @@ jobs:
         run: npm run build
       - name: Regression tests
         run: npm test
-      # 令牌校验需要宿主样式表。CI 上没有 DSH 源码副本，因此只跑与宿主无关
-      # 的三项；令牌校验在本地或带样式的环境里执行。
-      - name: Verify icon channels
-        run: npm run verify:icons
-      - name: Verify no literal colors
-        run: npm run verify:colors
-      - name: Check package size
-        run: npm run verify:size
+      - name: Verify Arco component coverage
+        run: npm run verify:arco
+      - name: Build Vue preview
+        run: npm run preview:build
       - name: Inspect npm package contents
         run: npm pack --dry-run
 
@@ -69,7 +66,6 @@ jobs:
       prepare-command: |
         npm run build
         npm test
-        npm run verify:icons
-        npm run verify:colors
-        npm run verify:size
+        npm run verify:arco
+        npm run preview:build
         npm pack --dry-run
