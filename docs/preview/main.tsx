@@ -13,10 +13,13 @@ import './preview.css'
 import { App } from './App.js'
 
 const container = document.getElementById('root')
-if (container === null) throw new Error('缺少 #root 容器')
+if (container === null) { throw new Error('缺少 #root 容器') }
 
-createRoot(container).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+const root = createRoot(container)
+if (new URLSearchParams(window.location.search).get('compare') === '1') {
+  void import('./Comparison.js').then(({ Comparison }) => {
+    root.render(<React.StrictMode><Comparison /></React.StrictMode>)
+  })
+} else {
+  root.render(<React.StrictMode><App /></React.StrictMode>)
+}
