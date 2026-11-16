@@ -3,8 +3,8 @@
  *
  * @module @dsh-plugin/dsh-ui-components/foundation
  */
-export { BRIDGE_CSS, BRIDGE_PALETTE } from './bridge.js'
-export { DshProvider, type DshProviderProps } from './provider.js'
+export { BRIDGE_CSS, BRIDGE_PALETTE, HERO_CSS } from './bridge.js'
+export { DshProvider, useDshPopupContainer, type DshProviderProps, type DshRadius, type DshTheme } from './provider.js'
 export { G, OVERLAY_MAX_HEIGHT, overlayMaxHeight } from './tokens.js'
 export { OWNER, PORTAL_ID, ROOT_CLASS, cx, injectUiStyle } from './style.js'
 export {

@@ -11,7 +11,9 @@
  */
 import * as React from 'react'
 import { Arco, Scrollbar } from '@dsh-plugin/dsh-loader/client'
-import { ensureOverlayContainer } from '../foundation/style.js'
+import { ensureOverlayContainer, injectUiStyle } from '../foundation/style.js'
+import { useDshPopupContainer } from '../foundation/provider.js'
+import { BRIDGE_CSS, HERO_CSS, HERO_COMPONENT_CSS } from '../foundation/bridge.js'
 import { injectFeedbackStyles } from './styles.js'
 
 /**
@@ -47,11 +49,12 @@ export type ModalProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Modal>,
  */
 export function Modal({ title, children, footer, scroll = true, getPopupContainer, ...rest }: ModalProps): React.ReactElement {
   injectFeedbackStyles()
-  const body = scroll === true ? <Scrollbar style={{ maxHeight: '100%' }}>{children}</Scrollbar> : children
+  const scopedContainer = useDshPopupContainer()
+  const body = scroll === true ? <Scrollbar style={{ flex: 1, minHeight: 0 }}>{children}</Scrollbar> : children
   return (
     <Arco.Modal
       {...rest}
-      getPopupContainer={getPopupContainer ?? overlayContainer}
+      getPopupContainer={getPopupContainer ?? scopedContainer}
       title={title}
       footer={footer}
       alignCenter
@@ -64,6 +67,18 @@ export function Modal({ title, children, footer, scroll = true, getPopupContaine
 /** {@link Modal.confirm} 的参数。 */
 export type ModalConfirmOptions = Parameters<typeof Arco.Modal.confirm>[0]
 
+/** 命令式弹窗共享主题容器和内容滚动，调用方的容器配置优先生效。 */
+export function prepareModalOptions(options: ModalConfirmOptions, container?: () => HTMLElement): ModalConfirmOptions {
+  injectUiStyle('foundation/bridge.css', BRIDGE_CSS)
+  injectFeedbackStyles()
+  injectUiStyle('foundation/hero.css', `${HERO_CSS}\n${HERO_COMPONENT_CSS}`)
+  return {
+    ...options,
+    getPopupContainer: options.getPopupContainer ?? container ?? overlayContainer,
+    content: <Scrollbar style={{ maxHeight: 'calc(100dvh - 400px)' }}>{options.content}</Scrollbar>,
+  }
+}
+
 /**
  * 打开一个确认弹窗。
  *
@@ -71,11 +86,7 @@ export type ModalConfirmOptions = Parameters<typeof Arco.Modal.confirm>[0]
  * @returns 可用于手动关闭的句柄。
  */
 export function confirm(options: ModalConfirmOptions): ReturnType<typeof Arco.Modal.confirm> {
-  injectFeedbackStyles()
-  return Arco.Modal.confirm({
-    getPopupContainer: overlayContainer,
-    ...options,
-  })
+  return Arco.Modal.confirm(prepareModalOptions(options))
 }
 
 /** {@link Drawer} 的 props。 */
@@ -87,7 +98,8 @@ export type DrawerProps = React.ComponentPropsWithoutRef<typeof Arco.Drawer>
  * @param props - 见 {@link DrawerProps}。
  * @returns 抽屉元素。
  */
-export function Drawer({ getPopupContainer, ...props }: DrawerProps): React.ReactElement {
+export function Drawer({ getPopupContainer, children, ...props }: DrawerProps): React.ReactElement {
   injectFeedbackStyles()
-  return <Arco.Drawer {...props} getPopupContainer={getPopupContainer ?? overlayContainer} />
+  const scopedContainer = useDshPopupContainer()
+  return <Arco.Drawer {...props} getPopupContainer={getPopupContainer ?? scopedContainer}><Scrollbar style={{ flex: 1, minHeight: 0 }}>{children}</Scrollbar></Arco.Drawer>
 }

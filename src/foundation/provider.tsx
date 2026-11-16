@@ -1,62 +1,122 @@
-/**
- * DSH 组件树的根提供器。
- *
- * 它做三件事：注入桥接样式表、把 Arco 的全部浮层挂到带同一套变量的容器
- * 上、并把 `.dsh-ui` 容器类交给子树。插件在自己的 React 树根部挂一次即可，
- * 组件本身不依赖它也能渲染（样式表会在首个组件渲染时补注入），但没有它时
- * 浮层会挂到 `body` 下而拿不到 `.dsh-ui` 的变量。
- *
- * @module @dsh-plugin/dsh-ui-components/foundation/provider
- */
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
-import { BRIDGE_CSS } from './bridge.js'
+import { BRIDGE_CSS, HERO_CSS, HERO_COMPONENT_CSS } from './bridge.js'
 import { ROOT_CLASS, ensureOverlayContainer, injectUiStyle } from './style.js'
+import { injectBasicStyles } from '../basic/styles.js'
+import { injectDisplayStyles } from '../display/styles.js'
+import { injectFeedbackStyles } from '../feedback/styles.js'
+import { injectNavigationStyles } from '../navigation/styles.js'
+import { injectDataStyles } from '../data/styles.js'
+import { injectCompositeStyles } from '../composites/styles.js'
 
-/** {@link DshProvider} 的 props。 */
+/** 主题源；host 跟随 DSH 的明暗状态，system 跟随操作系统。 */
+export type DshTheme = 'host' | 'system' | 'light' | 'dark'
+/** 控件圆角；full 仅将小控件设为胶囊，面板仍保留适合内容的圆角。 */
+export type DshRadius = 'none' | 'sm' | 'md' | 'lg' | 'full'
+
+/** React 组件主题、方向及浮层配置。 */
 export interface DshProviderProps {
-  /** 子树内容。 */
   children?: React.ReactNode
-  /** 追加到根容器的类名。 */
   className?: string
-  /** 追加到根容器的内联样式。 */
   style?: React.CSSProperties
+  theme?: DshTheme
+  radius?: DshRadius
+  reducedMotion?: boolean
+  direction?: 'ltr' | 'rtl'
 }
 
-/**
- * 取得或创建浮层容器。
- *
- * 容器挂在 `body` 下并带 `.dsh-ui-overlay`，因此浮层即使在 body 层也能读到
- * 同一套变量。多个 provider 共用同一个容器，卸载时只解除自己的引用。
- *
- * @returns 浮层容器元素；服务端渲染时返回 `null`。
- */
-function ensurePortal(): HTMLElement | null {
-  return ensureOverlayContainer()
+function defaultContainer(): HTMLElement {
+  return ensureOverlayContainer() ?? document.body
 }
 
-/**
- * 包裹子树，注入 DSH 皮肤并把 Arco 浮层收进统一容器。
- *
- * @param props - 见 {@link DshProviderProps}。
- * @returns 带 `.dsh-ui` 容器的 `ConfigProvider` 子树。
- */
-export function DshProvider({ children, className, style }: DshProviderProps): React.ReactElement {
-  // 注入放在渲染期：样式必须先于首帧存在，而 injectUiStyle 幂等。
+const PopupContext = React.createContext<() => HTMLElement>(defaultContainer)
+const useLayoutEffect = typeof document === 'undefined' ? React.useEffect : React.useLayoutEffect
+
+/** 供封装浮层使用，确保弹窗和触发器属于同一主题。 */
+export function useDshPopupContainer(): () => HTMLElement {
+  return React.useContext(PopupContext)
+}
+
+function resolveTheme(theme: DshTheme): 'light' | 'dark' {
+  if (theme === 'light' || theme === 'dark') { return theme }
+  if (typeof document === 'undefined') { return 'light' }
+  if (theme === 'host') { return document.body.hasAttribute('data-ds-dark-theme') ? 'dark' : 'light' }
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+/** 注入完整主题，以 body 级独立容器隔离浮层并避免父元素裁切。 */
+export function DshProvider({ children, className, style, theme = 'host', radius = 'md', reducedMotion, direction = 'ltr' }: DshProviderProps): React.ReactElement {
   injectUiStyle('foundation/bridge.css', BRIDGE_CSS)
+  injectBasicStyles()
+  injectDisplayStyles()
+  injectFeedbackStyles()
+  injectNavigationStyles()
+  injectDataStyles()
+  injectCompositeStyles()
+  injectUiStyle('foundation/hero.css', `${HERO_CSS}\n${HERO_COMPONENT_CSS}`)
 
-  const getPopupContainer = React.useCallback((node: HTMLElement): HTMLElement => {
-    // 浮层优先留在触发元素所在的滚动/裁剪上下文里，只有在它不在 `.dsh-ui`
-    // 子树内时才回退到 body 级容器。
-    const scope = node.closest(`.${ROOT_CLASS}`)
-    return scope instanceof HTMLElement ? scope : (ensurePortal() ?? document.body)
+  const [effectiveTheme, setEffectiveTheme] = React.useState(() => resolveTheme(theme))
+  const [systemReduced, setSystemReduced] = React.useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches))
+  const [portal] = React.useState(() => typeof document === 'undefined' ? null : document.createElement('div'))
+  const root = React.useRef<HTMLDivElement>(null)
+  const getPopupContainer = React.useCallback(() => portal ?? defaultContainer(), [portal])
+  const motion = (reducedMotion ?? systemReduced) ? 'reduced' : 'full'
+  const resolved = theme === 'light' || theme === 'dark' ? theme : effectiveTheme
+
+  useLayoutEffect(() => {
+    const update = () => setEffectiveTheme(resolveTheme(theme))
+    update()
+    if (theme === 'host') {
+      const observer = new MutationObserver(update)
+      observer.observe(document.body, { attributes: true, attributeFilter: ['data-ds-dark-theme'] })
+      return () => observer.disconnect()
+    }
+    const query = window.matchMedia?.('(prefers-color-scheme: dark)')
+    query?.addEventListener('change', update)
+    return () => query?.removeEventListener('change', update)
+  }, [theme])
+
+  React.useEffect(() => {
+    const query = window.matchMedia?.('(prefers-reduced-motion: reduce)')
+    const update = () => setSystemReduced(Boolean(query?.matches))
+    update()
+    query?.addEventListener('change', update)
+    return () => query?.removeEventListener('change', update)
   }, [])
 
+  useLayoutEffect(() => {
+    if (portal === null) { return }
+    document.body.appendChild(portal)
+    return () => portal.remove()
+  }, [portal])
+
+  useLayoutEffect(() => {
+    if (portal === null) { return }
+    portal.className = `${ROOT_CLASS} dsh-ui-overlay`
+    portal.dataset.theme = resolved
+    portal.dataset.radius = radius
+    portal.dataset.motion = motion
+    portal.dir = direction
+    portal.style.cssText = ''
+    if (root.current) {
+      const computed = getComputedStyle(root.current)
+      for (let index = 0; index < computed.length; index += 1) {
+        const key = computed.item(index)
+        if (key.startsWith('--')) { portal.style.setProperty(key, computed.getPropertyValue(key)) }
+      }
+    }
+    for (const [key, value] of Object.entries(style ?? {})) {
+      if (key.startsWith('--') && value !== undefined) { portal.style.setProperty(key, String(value)) }
+    }
+  }, [portal, className, resolved, radius, motion, direction, style])
+
   return (
-    <Arco.ConfigProvider getPopupContainer={getPopupContainer}>
-      <div className={[ROOT_CLASS, className].filter(Boolean).join(' ')} style={style}>
-        {children}
-      </div>
-    </Arco.ConfigProvider>
+    <PopupContext.Provider value={getPopupContainer}>
+      <Arco.ConfigProvider getPopupContainer={getPopupContainer} rtl={direction === 'rtl'}>
+        <div ref={root} className={[ROOT_CLASS, className].filter(Boolean).join(' ')} style={style} data-theme={resolved} data-radius={radius} data-motion={motion} dir={direction}>
+          {children}
+        </div>
+      </Arco.ConfigProvider>
+    </PopupContext.Provider>
   )
 }

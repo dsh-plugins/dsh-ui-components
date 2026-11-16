@@ -1,7 +1,7 @@
 {
   "name": "@dsh-plugin/dsh-ui-components",
   "version": "0.1.0",
-  "description": "React component library that restyles Arco Design with dsh (DeepSeek Harness) design tokens, and exposes the full IconPark icon set by name.",
+  "description": "基于宿主 Arco Design React、采用 HeroUI 风格并覆盖完整 Arco 组件的 DSH 组件库。",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -26,6 +26,7 @@
     "!src/icons",
     "scripts",
     "docs/tokens.md",
+    "docs/arco-coverage.md",
     "README.md",
     "README.zh_CN.md",
     "LICENSE",

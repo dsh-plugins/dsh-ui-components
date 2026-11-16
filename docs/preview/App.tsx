@@ -8,6 +8,7 @@
 import * as React from 'react'
 import {
   Alert,
+  Arco,
   Avatar,
   Badge,
   Breadcrumb,
@@ -99,7 +100,7 @@ const SECTIONS: Section[] = [
   {
     id: 'buttons',
     title: '按钮',
-    description: '四个层级、三档尺寸，主按钮走宿主的中性填充。',
+    description: '四个层级、三档尺寸，以 HeroUI 风格呈现明确的操作优先级。',
     render: () => (
       <div className="preview-stack">
         <div className="preview-row">
@@ -346,12 +347,74 @@ const SECTIONS: Section[] = [
     render: () => <OverlayDemo />,
   },
   {
+    id: 'arco-complete',
+    title: '完整 Arco 能力',
+    description: '日期、文件、层级数据与颜色等组件共享同一套 HeroUI 风格主题。',
+    render: () => <ArcoDemo />,
+  },
+  {
     id: 'icons',
     title: '图标',
     description: '策划命名集与全量元数据索引。',
     render: () => <IconDemo />,
   },
 ]
+
+/** 保留 Arco 原始 API 的组件在当前主题下展示。 */
+function FeedbackDemo(): React.ReactElement {
+  const [message, messageHolder] = Arco.Message.useMessage()
+  const [notification, notificationHolder] = Arco.Notification.useNotification()
+  const [modal, modalHolder] = Arco.Modal.useModal()
+  return (
+    <Card title="命令式反馈">
+      {messageHolder}{notificationHolder}{modalHolder}
+      <div className="preview-row">
+        <Button onClick={() => message.success('消息已显示')}>显示消息</Button>
+        <Button variant="outline" onClick={() => notification.info({ title: '通知', content: '独立主题通知', id: 'preview-notification' })}>显示通知</Button>
+        <Button variant="outline" onClick={() => modal.confirm({
+          title: '确认批量更新',
+          content: <div>{Array.from({ length: 18 }, (_, index) => <p key={index}>配置项 {index + 1}：更新工作区主题与组件设置，确认后应用这些更改。</p>)}</div>,
+        })}>打开长确认</Button>
+      </div>
+    </Card>
+  )
+}
+
+function ArcoDemo(): React.ReactElement {
+  const [transfer, setTransfer] = React.useState<string[]>(['one'])
+  return (
+    <div className="preview-grid preview-grid-arco">
+      <FeedbackDemo />
+      <Card title="日期与时间">
+        <div className="preview-stack">
+          <Arco.DatePicker style={{ width: '100%' }} />
+          <Arco.DatePicker.RangePicker style={{ width: '100%' }} />
+          <Arco.TimePicker style={{ width: '100%' }} />
+          <Arco.ColorPicker defaultValue="#2563eb" />
+        </div>
+      </Card>
+      <Card title="文件与输入">
+        <div className="preview-stack">
+          <Arco.Upload autoUpload={false} multiple />
+          <Arco.InputTag placeholder="输入标签后按 Enter" />
+          <Arco.Mentions options={['设计师', '开发者', '审查者']} placeholder="输入 @ 提及成员" />
+        </div>
+      </Card>
+      <Card title="层级数据">
+        <div className="preview-stack">
+          <Arco.TreeSelect treeData={[{ key: 'workspace', title: '工作区', children: [{ key: 'src', title: 'src' }, { key: 'docs', title: 'docs' }] }]} placeholder="选择目录" />
+          <Arco.Cascader options={[{ value: 'tools', label: '工具', children: [{ value: 'code', label: '代码' }, { value: 'search', label: '搜索' }] }]} placeholder="选择工具" />
+          <Arco.Tree treeData={[{ key: 'root', title: '组件库', children: [{ key: 'button', title: '按钮' }, { key: 'input', title: '输入' }] }]} defaultExpandAll checkable />
+        </div>
+      </Card>
+      <Card title="穿梭选择">
+        <Arco.Transfer dataSource={[{ key: 'one', value: '界面设计' }, { key: 'two', value: '代码审查' }, { key: 'three', value: '文档维护' }]} targetKeys={transfer} onChange={setTransfer} />
+      </Card>
+      <Card title="日历"><Arco.Calendar panel /></Card>
+      <Card title="结果与评论"><Arco.Result status="success" title="配置已完成" subTitle="工作区可以开始使用。" /><Arco.Comment author="示例成员" content="所有更改已保存。" datetime="刚刚" /></Card>
+    </div>
+  )
+}
 
 /** 浮层示例，用状态控制展开。 */
 function OverlayDemo(): React.ReactElement {
@@ -478,15 +541,11 @@ const ICON_MODULES = import.meta.glob('../../src/icons/*.ts') as Record<
 /** 演示站根组件。 */
 export function App(): React.ReactElement {
   const [dark, setDark] = React.useState(false)
-
-  React.useEffect(() => {
-    if (dark) document.body.setAttribute('data-ds-dark-theme', '')
-    else document.body.removeAttribute('data-ds-dark-theme')
-    return () => document.body.removeAttribute('data-ds-dark-theme')
-  }, [dark])
+  const [radius, setRadius] = React.useState<'none' | 'sm' | 'md' | 'lg' | 'full'>('md')
+  const [reducedMotion, setReducedMotion] = React.useState(false)
 
   return (
-    <DshProvider>
+    <DshProvider theme={dark ? 'dark' : 'light'} radius={radius} reducedMotion={reducedMotion} className="preview-app">
       <div className="preview-shell">
         <nav className="preview-nav">
           <h1 className="preview-nav__title">dsh-ui-components</h1>
@@ -496,11 +555,18 @@ export function App(): React.ReactElement {
         </nav>
         <main className="preview-main">
           <div className="preview-toolbar">
-            <Text type="secondary">深色主题随宿主 body 属性切换</Text>
+            <Text type="secondary">HeroUI 风格 · Arco Design 全量能力</Text>
             <div className="preview-row">
+              <Select aria-label="圆角" value={radius} onChange={setRadius} options={[{ label: '无圆角', value: 'none' }, { label: '小圆角', value: 'sm' }, { label: '标准圆角', value: 'md' }, { label: '大圆角', value: 'lg' }, { label: '胶囊圆角', value: 'full' }]} style={{ width: 130 }} />
+              <Checkbox checked={reducedMotion} onChange={setReducedMotion} label="减少动画" />
               <Text type="secondary">{dark ? '深色' : '浅色'}</Text>
               <Switch checked={dark} onChange={setDark} />
             </div>
+          </div>
+          <div className="preview-intro">
+            <div className="preview-intro__eyebrow">DSH UI COMPONENTS · REACT</div>
+            <h1>让每一次交互，<br />都有清晰的回应。</h1>
+            <p>柔和的层次、明确的状态与流畅的操作。使用 HeroUI 的视觉语言，组合 Arco Design 的完整能力。</p>
           </div>
           {SECTIONS.map(section => (
             <section className="preview-section" id={section.id} key={section.id}>

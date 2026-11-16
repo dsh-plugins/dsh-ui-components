@@ -42,12 +42,17 @@ export const OVERLAY_CLASS = `${ROOT_CLASS}-overlay`
  * @returns 容器元素；服务端渲染时返回 `null`。
  */
 export function ensureOverlayContainer(): HTMLElement | null {
-  if (typeof document === 'undefined') return null
+  if (typeof document === 'undefined') { return null }
   const existing = document.getElementById(PORTAL_ID)
-  if (existing !== null) return existing
+  if (existing !== null) {
+    existing.dataset.theme = 'host'
+    return existing
+  }
   const host = document.createElement('div')
   host.id = PORTAL_ID
-  host.className = OVERLAY_CLASS
+  host.className = `${ROOT_CLASS} ${OVERLAY_CLASS}`
+  host.dataset.theme = 'host'
+  host.dataset.radius = 'md'
   document.body.appendChild(host)
   return host
 }

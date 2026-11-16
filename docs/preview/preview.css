@@ -14,6 +14,37 @@ body {
   background-color: var(--dsw-alias-bg-base);
 }
 
+.preview-app:not(.dsh-ui-overlay) {
+  min-height: 100dvh;
+  color: var(--dsh-foreground);
+  background: var(--dsh-background);
+}
+
+.preview-intro {
+  padding: 20px 0 12px;
+}
+
+.preview-intro__eyebrow {
+  color: var(--dsh-accent);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.preview-intro h1 {
+  margin: 16px 0;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.2;
+  letter-spacing: -1.4px;
+}
+
+.preview-intro p {
+  max-width: 600px;
+  color: var(--dsh-muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
 .preview-shell {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
@@ -96,12 +127,30 @@ body {
 
 .preview-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
   gap: 16px;
+}
+
+.preview-grid-arco {
+  grid-template-columns: repeat(auto-fit, minmax(min(410px, 100%), 1fr));
+}
+
+.preview-grid > * {
+  min-width: 0;
+}
+
+.preview-grid-arco .arco-transfer {
+  display: flex;
+}
+
+.preview-grid-arco .arco-transfer-view {
+  min-width: 0;
+  flex: 1;
 }
 
 .preview-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -138,4 +187,22 @@ body {
   border-radius: var(--dsw-radius-sm, 8px);
   border: 0.5px solid var(--dsw-alias-border-l2);
   flex: none;
+}
+
+@media (max-width: 760px) {
+  .preview-shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 24px 16px 48px;
+  }
+
+  .preview-nav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .preview-nav__title {
+    flex-basis: 100%;
+  }
 }

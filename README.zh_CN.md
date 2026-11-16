@@ -1,44 +1,27 @@
-<div align="center">
-
 # dsh-ui-components
 
-**一套用 DeepSeek Harness 设计令牌重塑 Arco Design 外观、并按名暴露全量 IconPark 图标的 React 组件库。**
+`@dsh-plugin/dsh-ui-components` 将 HeroUI 的视觉语言应用于完整 Arco Design React 组件能力，并提供 DSH 设置页组合组件和 IconPark 图标。
 
-[English](README.md) | 简体中文
-
-</div>
-
-## 这是什么
-
-DSH 生态里的插件各自手写按钮、输入框与弹窗，同一个产品最后会出现三种圆角。本包是这些控件的统一实现：交互与键盘行为来自 [Arco Design](https://arco.design)，外观由 DeepSeek Harness 的 `--dsw-*` 设计令牌驱动，图标取自 [IconPark](https://iconpark.oceanengine.com)。
-
-产物是不打包的 ESM 源码库。插件自己的构建器把它内联进产物，因此运行期 React 与 Arco 仍是宿主持有的唯一实例，插件侧也不需要任何 CSS 处理管线。
-
-## 安装
+## 安装与集成
 
 ```sh
 npm install @dsh-plugin/dsh-ui-components
 ```
 
-`react`、`react-dom` 与 `@dsh-plugin/dsh-loader` 是 peer 依赖，三者都由宿主提供。
-
-## 使用
-
-在插件的 React 树根部挂一次 `DshProvider`，随后从包根导入组件。
+`react`、`react-dom` 与 `@dsh-plugin/dsh-loader` 为 peer dependencies，由 DSH 宿主提供。本包以逐文件 ESM 和类型声明发布，由消费方打包器内联；组件样式通过 loader 按需注入，消费方无需增加 CSS 编译管线。
 
 ```tsx
-import { DshProvider, Card, Field, Input, Button, Switch } from '@dsh-plugin/dsh-ui-components'
+import { Arco, Button, Card, DshProvider, Field, Input, Switch } from '@dsh-plugin/dsh-ui-components'
 
 export function SettingsPage() {
   return (
-    <DshProvider>
-      <Card title="代理">
-        <Field label="地址" description="仅影响走全局 fetch 的请求。" htmlFor="host">
-          <Input id="host" mono placeholder="127.0.0.1" />
+    <DshProvider theme="host" radius="md">
+      <Card title="工作区设置">
+        <Field label="名称" description="用于区分工作区。" htmlFor="workspace-name">
+          <Input id="workspace-name" placeholder="输入名称" />
         </Field>
-        <Field label="启用" layout="inline">
-          <Switch defaultChecked />
-        </Field>
+        <Field label="自动保存" layout="inline"><Switch defaultChecked /></Field>
+        <Arco.DatePicker />
         <Button variant="primary">保存</Button>
       </Card>
     </DshProvider>
@@ -46,9 +29,7 @@ export function SettingsPage() {
 }
 ```
 
-`DshProvider` 注入皮肤、统一图标默认值，并把 Arco 的全部浮层收进持有同一套 CSS 变量的容器。不挂它组件也能渲染，但浮层会挂到 `body` 下而丢掉皮肤。
-
-打包配置里把这三项保持为 external：
+消费方打包时保持下列模块为外部依赖：
 
 ```js
 const CLIENT_EXTERNALS = [
@@ -62,75 +43,54 @@ const CLIENT_EXTERNALS = [
 
 ## 主题
 
-颜色不是可配置的 props，也不需要是。皮肤是一张把 Arco 自身变量整体改指 DSH 语义令牌的 CSS 变量桥，因此深浅色跟随宿主的 `body[data-ds-dark-theme]` 属性自动切换，不涉及任何 JavaScript，组件代码里也没有主题分支。
+| Provider 属性 | 作用 |
+| --- | --- |
+| `theme` | `host` 跟随 DSH 明暗，`system` 跟随操作系统，或指定 `light` / `dark` |
+| `radius` | `none`、`sm`、`md`、`lg`、`full`，默认 `md` |
+| `reducedMotion` | 减少动画；同时遵循系统减少动画设置 |
+| `direction` | `ltr` / `rtl` |
+| `className`、`style` | 作用于当前组件根容器 |
 
-桥接表挂在 `.dsh-ui` 类上而不是 `body` 上，宿主自己的 Arco 主题因此不受影响。`scripts/verify-tokens.mjs` 会把本包引用的每个宿主变量与宿主样式表比对，DSH 改名时在离线阶段直接报错，而不是等到样式静默失效。
+浅色使用柔和背景和分层表面，深色采用更亮的浮层及低强度阴影。按钮、输入、卡片、菜单、表格、树、上传区等共享语义颜色和几何变量。焦点环、悬停、按下、禁用和错误状态均在当前主题内处理。
+
+主题限定在 `.dsh-ui` 和当前 Provider 的浮层容器中，避免改变宿主其他组件。多个 Provider 可分别设置主题。DSH 组合件沿用已有语义令牌映射。
+
+静态 `Message`、`Notification` 与 `confirm` 默认跟随宿主明暗。局部主题使用 Provider 后代中的 `Arco.Message.useMessage()`、`Arco.Notification.useNotification()`、`Arco.Modal.useModal()`，并渲染返回的 holder。消息和通知使用独立实例，其静态配置不会修改宿主的消息列表；更换挂载容器、类名前缀或方向会清理本库已有通知并应用新配置。
+
+## 组件能力
+
+根入口保留 Button、Input、Select、Checkbox、Radio、Switch、Form、Card、Tag、Avatar、Badge、Typography、Tooltip、Popover、Collapse、Alert、Progress、Modal、Drawer、Menu、Tabs、Breadcrumb、Pagination、Steps、Table、List、Tree、DatePicker、TimePicker、Cascader、TreeSelect、Transfer、Statistic、Timeline、Calendar、Carousel 和 Image 等 DSH 包装组件。
+
+`Arco` 命名空间提供宿主 Arco Design 的完整组件与功能 API，包括 Upload、InputTag、Mentions、ColorPicker、Anchor、Affix、BackTop、Grid、Layout、Space、ResizeBox、PageHeader、Comment、Result、Watermark 等。原始组件遵循 Arco React 的 props、事件和子组件结构。
+
+DSH 组合组件包括 `SettingsCard`、`SettingsRow`、`PanelShell`、`MenuSelect`、`JsonTree`、`CodeBlockShell`、`FileTypeBadge`、`StatusLine`、`SegmentedControl`、`DisclosureRow` 与 `StateDot`。Modal、Drawer 和 PanelShell 保留上下 120px 留白，并在内部使用宿主 Scrollbar。
+
+完整对照与迁移差异见 [Arco 能力与 HeroUI 样式](docs/arco-coverage.md)。Vue 独立包 `@dsh-plugin/dsh-ui-components-vue` 位于 `vue` 分支。
 
 ## 图标
 
-三条通道，因为把 2658 个图标全量内联进每个插件并不合理：
-
 ```tsx
-// 1. 策划命名集（约 110 个，未使用的会被 tree-shaking 移除）
 import { Icon, Icons } from '@dsh-plugin/dsh-ui-components'
+import Rocket from '@dsh-plugin/dsh-ui-components/icons/Rocket'
+import { ICON_INDEX } from '@dsh-plugin/dsh-ui-components/icons-index'
+
 <Icon name="Settings" size={18} />
 <Icons.GitBranch />
-
-// 2. 全量 2658 个，按子路径引入 —— 只有该图标进入产物
-import Rocket from '@dsh-plugin/dsh-ui-components/icons/Rocket'
 <Icon of={Rocket} size={18} />
-
-// 3. 全量元数据，供选择器与搜索使用，不导入任何图标模块
-import { ICON_INDEX } from '@dsh-plugin/dsh-ui-components/icons-index'
 ```
 
-子路径名是 IconPark 名字的 PascalCase 形式：`a-cane` 对应 `ACane`，`setting` 对应 `Setting`。`ICON_INDEX` 的每条记录带 `name`、`pascal`、`title`、`titleZh`、`category`、`tags` 与 `rtl` 七个字段。
+根入口提供常用命名集；`icons/<PascalName>` 按子路径导入全量 2658 个图标中的单项；`ICON_INDEX` 提供元数据，不导入图标模块。图标继承 `currentColor`。
 
-图标继承 `currentColor`，颜色跟随周围文字。
+## 预览与验证
 
-## 组件
-
-| 分组 | 导出 |
-|---|---|
-| 基础层 | `DshProvider`、`Icon`、`Icons`、`ICON_NAMES`、`DshIconProvider`、`G`、`cx`、`ICON_INDEX` |
-| 按钮 | `Button`、`IconButton` |
-| 输入 | `Input`、`Textarea`、`InputNumber`、`Select`、`AutoComplete` |
-| 选择 | `Checkbox`、`CheckboxGroup`、`Radio`、`RadioGroup`、`Switch`、`Slider`、`Rate` |
-| 表单 | `Form`、`FormItem`、`Field` |
-| 展示 | `Card`、`Tag`、`Pill`、`Avatar`、`Badge`、`Divider`、`Descriptions`、`Typography`、`Text`、`Paragraph`、`Empty`、`Skeleton`、`Spin`、`Tooltip`、`Popover`、`HoverCard`、`Collapse`、`CollapseItem` |
-| 反馈 | `Alert`、`Progress`、`Result`、`Popconfirm`、`Modal`、`confirm`、`Drawer`、`Message`、`Notification`、`message`、`messageSuccess`、`messageError`、`messageWarning` |
-| 导航 | `Menu`、`MenuItem`、`Dropdown`、`Tabs`、`TabPane`、`Breadcrumb`、`BreadcrumbItem`、`Pagination`、`Steps`、`Step`、`SegmentedControl`、`DisclosureRow`、`StateDot` |
-| 数据 | `Table`、`List`、`ListItem`、`Tree`、`DatePicker`、`TimePicker`、`Cascader`、`TreeSelect`、`Transfer`、`Statistic`、`Timeline`、`TimelineItem`、`Calendar`、`Carousel`、`Image` |
-| DSH 组合件 | `SettingsCard`、`SettingsRow`、`PanelShell`、`MenuSelect`、`JsonTree`、`CodeBlockShell`、`FileTypeBadge`、`StatusLine` |
-
-所有控件都透传原生 props 与 `className`，因此想脱离默认样式时不必 fork 组件。
-
-`SettingsCard` 加 `SettingsRow` 组成宿主设置页的卡片结构。`PanelShell` 是自带 120px 上下留白、内容区走宿主 `Scrollbar` 的浮层外壳。`MenuSelect` 是设置页用的自绘下拉，因为原生 `<select>` 的弹层无法跟随 DSH 主题。
-
-## 预览
+运行 `npm run preview` 启动预览页，可切换明暗、圆角和减少动画，检查基础组件、完整 Arco 能力、DSH 组合件、浮层和图标。
 
 ```sh
-npm run gen:tokens   # 把宿主令牌样式表复制到 docs/preview/
-npm run preview      # http://localhost:5178
-```
-
-预览站用宿主自己的令牌取值渲染全部组件，带深浅主题切换与覆盖 2658 个图标的可搜索索引。它直接读包源码，改完刷新即可看到效果，不必先构建。
-
-## 开发
-
-```sh
-npm install
-npm run gen:icons     # 重新生成 2658 个图标模块与元数据
 npm run typecheck
 npm run build
 npm test
-npm run verify        # 令牌名、图标通道、字面颜色、包体积
+npm run verify
+npm run preview:build
 ```
 
-`npm run verify:tokens` 需要宿主样式表。把 `DSH_UI_THEME_DIR` 指向 DSH 检出里的 `packages/client/ui-theme/src/styles`，或在上级目录保留一份 `.dsh/temp/session-tree-harness`。
-
-分批范围与当前进度见 [PLAN.md](PLAN.md)，令牌对照表见 [docs/tokens.md](docs/tokens.md)。
-
-## 许可
-
-MIT。IconPark 图形为 Apache-2.0，详见 [NOTICE](NOTICE)。
+`verify` 检查主题令牌、图标通道、字面颜色和发布体积。图标重新生成使用 `npm run gen:icons`。宿主令牌参考与生成规则见 [docs/tokens.md](docs/tokens.md)。
