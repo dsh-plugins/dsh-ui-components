@@ -6,7 +6,7 @@ import {
   ScrollShadow, SearchField, Select, Tooltip, Dropdown, Tag, TagGroup, ProgressCircle, Avatar, Surface, Toast, parseColor, ToggleButton, ToggleButtonGroup,
 } from '@heroui/react'
 import { parseDate } from '@internationalized/date'
-import states from '../../comparison/states.json'
+import states from '.././states.json'
 
 const date = parseDate('2026-11-16')
 const start = parseDate('2026-11-12')

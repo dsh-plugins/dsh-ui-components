@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted } from 'vue'
 import enUS from '@arco-design/web-vue/es/locale/lang/en-us'
 import * as UI from '../../src/index'
-import statesText from '../comparison/states.json?raw'
+import statesText from './states.json?raw'
 import ComparisonFeedback from './ComparisonFeedback.vue'
 
 const props = defineProps<{ panel: string; theme: 'light' | 'dark' }>()

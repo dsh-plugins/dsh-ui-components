@@ -8,7 +8,7 @@
 - 深色：`http://127.0.0.1:5180/?theme=dark`
 - 标准弹窗：`http://127.0.0.1:5180/?theme=light&state=modal`
 
-样本顺序与标签使用相邻 `../comparison/cases.json`，固定画布、字体和动画规则使用 `../comparison/fixture.css`。页面通过 `html[data-theme]` 启用官方主题，通过 `html[data-reduce-motion="true"]` 禁用内置动画。组件颜色、圆角、阴影、边框和间距来自官方默认样式。
+样本顺序与标签使用相邻 `./cases.json`，固定画布、字体和动画规则使用 `./fixture.css`。页面通过 `html[data-theme]` 启用官方主题，通过 `html[data-reduce-motion="true"]` 禁用内置动画。组件颜色、圆角、阴影、边框和间距来自官方默认样式。
 
 当前 API 中，Button 使用 `isDisabled` 与 `onPress`；Checkbox、Radio、Switch 使用 `Content` 包裹 `Control` 和标签；Select 使用 Trigger、Value、Popover 与 ListBox 组合；Modal 使用 Backdrop、Container、Dialog、Header、Body 和 Footer。默认 Modal 的布局由 HeroUI 决定。
 

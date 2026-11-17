@@ -4,7 +4,7 @@ import {
   Label, ListBox, Modal, ProgressBar, Radio, RadioGroup, Select, Skeleton,
   Slider, Switch, Table, Tabs, TextArea, Tooltip,
 } from '@heroui/react'
-import cases from '../../comparison/cases.json'
+import cases from '.././cases.json'
 
 function sample(id: string): ReactNode {
   switch (id) {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import * as UI from '../../src/index'
-import casesText from '../comparison/cases.json?raw'
+import casesText from './cases.json?raw'
 import ComparisonPanel from './ComparisonPanel.vue'
 
 const parameters = new URLSearchParams(window.location.search)
