@@ -40,8 +40,7 @@
     "prepublishOnly": "npm run verify"
   },
   "publishConfig": {
-    "access": "public",
-    "tag": "vue"
+    "access": "public"
   },
   "engines": {
     "node": ">=24.9.0"
