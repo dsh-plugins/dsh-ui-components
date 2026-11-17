@@ -1,0 +1,18 @@
+.dsh-ui :is(.dsh-progress, .dsh-meter) { display: grid; gap: 8px; color: var(--dsh-foreground); }
+.dsh-ui .dsh-progress__track { height: 8px; overflow: hidden; border-radius: 999px; background: var(--dsh-surface-tertiary); }
+.dsh-ui .dsh-progress__fill { height: 100%; border-radius: inherit; background: var(--dsh-accent); transition: width 180ms ease; }
+.dsh-ui .dsh-progress[data-indeterminate] .dsh-progress__fill { width: 35% !important; animation: dsh-progress-travel 1.2s ease-in-out infinite; }
+.dsh-ui .dsh-progress-circle { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; color: var(--dsh-foreground); font-size: 12px; }
+.dsh-ui .dsh-progress-circle svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.dsh-ui .dsh-progress-circle circle { fill: none; stroke-width: 3; }
+.dsh-ui .dsh-progress-circle__track { stroke: var(--dsh-surface-tertiary); }
+.dsh-ui .dsh-progress-circle__fill { stroke: var(--dsh-accent); stroke-linecap: round; transition: stroke-dasharray 180ms ease; }
+.dsh-ui .dsh-progress-circle > span { position: absolute; }
+.dsh-ui .dsh-progress-circle[data-indeterminate] svg { animation: dsh-progress-rotate 1s linear infinite; }
+.dsh-ui .dsh-switch-group { display: flex; gap: 12px; margin: 0; padding: 0; border: 0; }
+.dsh-ui .dsh-switch-group[data-orientation="vertical"] { flex-direction: column; }
+.dsh-ui .dsh-switch-group legend { margin-bottom: 8px; font-weight: 500; }
+@keyframes dsh-progress-travel { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
+@keyframes dsh-progress-rotate { to { transform: rotate(270deg); } }
+@media (prefers-reduced-motion: reduce) { .dsh-ui :is(.dsh-progress__fill, .dsh-progress-circle svg) { animation: none; transition: none; } }
+.dsh-ui[data-motion="reduced"] :is(.dsh-progress__fill, .dsh-progress-circle svg) { animation: none; transition: none; }
