@@ -32,6 +32,6 @@ export function SettingsPage() {
 - [Arco 全量能力与 HeroUI 对照](docs/arco-coverage.md)
 - [设计令牌](docs/tokens.md)
 
-Vue 版本使用独立包 `@dsh-plugin/dsh-ui-components-vue`。主分支的 [packages/vue](packages/vue/README.md) 保留一份源码，npm 开发版由 `vue` 分支发布。
+Vue 版本使用独立包 `@dsh-plugin/dsh-ui-components-vue`，源码位于仓库的 `vue` 分支。
 
 运行 `npm run preview` 查看组件预览；交付前执行 `npm run typecheck`、`npm run build`、`npm test`、`npm run verify` 和 `npm run preview:build`。
