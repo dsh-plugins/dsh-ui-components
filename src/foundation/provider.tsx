@@ -8,6 +8,10 @@ import { injectFeedbackStyles } from '../feedback/styles.js'
 import { injectNavigationStyles } from '../navigation/styles.js'
 import { injectDataStyles } from '../data/styles.js'
 import { injectCompositeStyles } from '../composites/styles.js'
+import { injectHeroOverlayStyles } from './overlay-style.js'
+import { PICKER_OVERLAY_CSS } from './picker-overlay-style.js'
+import { SELECTION_OVERLAY_CSS } from './selection-overlay-style.js'
+import { COLOR_OVERLAY_CSS } from './color-overlay-style.js'
 
 /** 主题源；host 跟随 DSH 的明暗状态，system 跟随操作系统。 */
 export type DshTheme = 'host' | 'system' | 'light' | 'dark'
@@ -54,10 +58,15 @@ export function DshProvider({ children, className, style, theme = 'host', radius
   injectDataStyles()
   injectCompositeStyles()
   injectUiStyle('foundation/hero.css', `${HERO_CSS}\n${HERO_COMPONENT_CSS}`)
+  injectHeroOverlayStyles()
+  injectUiStyle('foundation/hero-pickers.css', PICKER_OVERLAY_CSS)
+  injectUiStyle('foundation/hero-selection.css', SELECTION_OVERLAY_CSS)
+  injectUiStyle('foundation/hero-colors.css', COLOR_OVERLAY_CSS)
 
   const [effectiveTheme, setEffectiveTheme] = React.useState(() => resolveTheme(theme))
   const [systemReduced, setSystemReduced] = React.useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches))
   const [portal] = React.useState(() => typeof document === 'undefined' ? null : document.createElement('div'))
+  const [portalReady, setPortalReady] = React.useState(false)
   const root = React.useRef<HTMLDivElement>(null)
   const getPopupContainer = React.useCallback(() => portal ?? defaultContainer(), [portal])
   const motion = (reducedMotion ?? systemReduced) ? 'reduced' : 'full'
@@ -87,8 +96,10 @@ export function DshProvider({ children, className, style, theme = 'host', radius
   useLayoutEffect(() => {
     if (portal === null) { return }
     document.body.appendChild(portal)
+    setPortalReady(true)
     return () => portal.remove()
   }, [portal])
+
 
   useLayoutEffect(() => {
     if (portal === null) { return }
@@ -114,7 +125,7 @@ export function DshProvider({ children, className, style, theme = 'host', radius
     <PopupContext.Provider value={getPopupContainer}>
       <Arco.ConfigProvider getPopupContainer={getPopupContainer} rtl={direction === 'rtl'}>
         <div ref={root} className={[ROOT_CLASS, className].filter(Boolean).join(' ')} style={style} data-theme={resolved} data-radius={radius} data-motion={motion} dir={direction}>
-          {children}
+          {portalReady ? children : null}
         </div>
       </Arco.ConfigProvider>
     </PopupContext.Provider>

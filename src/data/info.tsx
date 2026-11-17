@@ -6,6 +6,7 @@
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { injectDataStyles } from './styles.js'
+import { HeroCalendar } from './hero-picker.js'
 
 /** {@link Statistic} 的 props。 */
 export type StatisticProps = React.ComponentPropsWithoutRef<typeof Arco.Statistic>
@@ -57,7 +58,7 @@ export type CalendarProps = React.ComponentPropsWithoutRef<typeof Arco.Calendar>
  */
 export function Calendar(props: CalendarProps): React.ReactElement {
   injectDataStyles()
-  return <Arco.Calendar {...props} />
+  return <HeroCalendar {...props} />
 }
 
 /** {@link Carousel} 的 props。 */

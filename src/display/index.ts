@@ -42,3 +42,4 @@ export {
   type TooltipProps,
 } from './overlay.js'
 export { DISPLAY_CSS, injectDisplayStyles } from './styles.js'
+export { ScrollShadow, type ScrollShadowProps } from './scroll-shadow.js'

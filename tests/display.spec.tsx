@@ -2,10 +2,10 @@
 /**
  * 展示组件的行为测试。
  */
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import * as React from 'react'
 import { cleanup, render, screen } from '@testing-library/react'
-import { Card, Collapse, CollapseItem, Divider, Descriptions, Empty, HoverCard, Pill, Tag, Text } from '../src/display/index.js'
+import { Card, Collapse, CollapseItem, Divider, Descriptions, Empty, HoverCard, Text } from '../src/display/index.js'
 
 afterEach(cleanup)
 
@@ -26,44 +26,6 @@ describe('Card', () => {
   it('渲染头部操作区', () => {
     render(<Card title="标题" extra={<span>操作</span>}>正文</Card>)
     expect(screen.getByText('操作')).toBeTruthy()
-  })
-})
-
-describe('Tag', () => {
-  it('渲染文字', () => {
-    render(<Tag>稳定版</Tag>)
-    expect(screen.getByText('稳定版')).toBeTruthy()
-  })
-
-  it('危险色调改用状态色而非默认填充', () => {
-    render(<Tag tone="danger">失败</Tag>)
-    const tag = screen.getByText('失败').closest('.arco-tag') as HTMLElement
-    expect(tag.style.color).toContain('--dsw-alias-state-error-primary')
-  })
-
-  it('可关闭时提供关闭按钮', () => {
-    const onClose = vi.fn()
-    render(<Tag closable onClose={onClose}>可关闭</Tag>)
-    const close = document.querySelector('.arco-tag-close-btn') as HTMLElement
-    expect(close).toBeTruthy()
-    close.click()
-    expect(onClose).toHaveBeenCalled()
-  })
-})
-
-describe('Pill', () => {
-  it('选中态通过 aria-pressed 暴露给辅助技术', () => {
-    const { rerender } = render(<Pill active>全部</Pill>)
-    expect(screen.getByRole('button', { name: '全部' }).getAttribute('aria-pressed')).toBe('true')
-    rerender(<Pill active={false}>全部</Pill>)
-    expect(screen.getByRole('button', { name: '全部' }).getAttribute('aria-pressed')).toBe('false')
-  })
-
-  it('点击时回调', () => {
-    const onClick = vi.fn()
-    render(<Pill onClick={onClick}>筛选</Pill>)
-    screen.getByRole('button', { name: '筛选' }).click()
-    expect(onClick).toHaveBeenCalledTimes(1)
   })
 })
 

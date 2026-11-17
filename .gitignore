@@ -8,3 +8,7 @@ lib/
 # 本地临时目录
 .dsh/
 .tmp/
+
+docs/comparison/
+dist/
+docs/hero-reference/dist/

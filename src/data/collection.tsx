@@ -5,6 +5,7 @@
  */
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
+import { HeroTree } from './hero-tree.js'
 import { injectDataStyles } from './styles.js'
 
 /** {@link Table} 的 props。 */
@@ -67,5 +68,5 @@ export type TreeProps = React.ComponentPropsWithoutRef<typeof Arco.Tree>
  */
 export function Tree(props: TreeProps): React.ReactElement {
   injectDataStyles()
-  return <Arco.Tree {...props} />
+  return <HeroTree {...props} />
 }

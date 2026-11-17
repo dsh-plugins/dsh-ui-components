@@ -1,7 +1,7 @@
 /**
  * 徽标类小组件：标签、可选中胶囊、头像、徽标数。
  *
- * `Tag` 与 `Pill` 的区别与宿主一致：`Tag` 是只读徽章（固定 11px 胶囊），
+ * `Tag` 是只读徽章（默认 12px 字号、24px 高胶囊），
  * `Pill` 是可选中胶囊（24px 高、带激活态），用于视图切换与筛选。
  *
  * @module @dsh-plugin/dsh-ui-components/display/label
@@ -10,6 +10,7 @@ import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { cx } from '../foundation/style.js'
 import { injectDisplayStyles } from './styles.js'
+import { HeroTag } from './hero-tag.js'
 
 /** 标签的色调。 */
 export type TagTone =
@@ -57,20 +58,20 @@ const TONE_STYLE: Record<TagTone, React.CSSProperties | undefined> = {
     color: 'var(--dsw-alias-label-tertiary)',
   },
   success: {
-    backgroundColor: 'color-mix(in srgb, var(--dsw-alias-state-success-primary) 10%, transparent)',
-    color: 'var(--dsw-alias-state-success-primary)',
+    backgroundColor: 'var(--default)',
+    color: 'var(--success-soft-foreground)',
   },
   info: {
-    backgroundColor: 'color-mix(in srgb, var(--dsw-alias-state-business-primary) 10%, transparent)',
-    color: 'var(--dsw-alias-state-business-primary)',
+    backgroundColor: 'var(--default)',
+    color: 'var(--accent-soft-foreground)',
   },
   warning: {
-    backgroundColor: 'color-mix(in srgb, var(--dsw-alias-state-warn-primary) 12%, transparent)',
-    color: 'var(--dsw-alias-state-warn-primary)',
+    backgroundColor: 'var(--default)',
+    color: 'var(--warning-soft-foreground)',
   },
   danger: {
-    backgroundColor: 'color-mix(in srgb, var(--dsw-alias-state-error-primary) 10%, transparent)',
-    color: 'var(--dsw-alias-state-error-primary)',
+    backgroundColor: 'var(--default)',
+    color: 'var(--danger-soft-foreground)',
   },
 }
 
@@ -90,15 +91,15 @@ const ARCO_SIZE: Record<'sm' | 'md' | 'lg', 'small' | 'default' | 'large'> = {
 export function Tag({ tone = 'neutral', size = 'md', closable, onClose, className, style, children }: TagProps): React.ReactElement {
   injectDisplayStyles()
   return (
-    <Arco.Tag
+    <HeroTag
       size={ARCO_SIZE[size]}
       closable={closable}
       onClose={onClose}
       className={className}
       style={{ ...TONE_STYLE[tone], ...style }}
     >
-      {children}
-    </Arco.Tag>
+      <span className="dsh-tag-label">{children}</span>
+    </HeroTag>
   )
 }
 

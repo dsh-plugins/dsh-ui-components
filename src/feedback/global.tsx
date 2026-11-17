@@ -6,6 +6,9 @@ import { ensureOverlayContainer, injectUiStyle } from '../foundation/style.js'
 import { BRIDGE_CSS, HERO_CSS, HERO_COMPONENT_CSS } from '../foundation/bridge.js'
 import { useDshPopupContainer } from '../foundation/provider.js'
 import { injectFeedbackStyles } from './styles.js'
+import { statusIcons } from './hero-result.js'
+import { observeToastLayout } from './toast-layout.js'
+import { HeroSpin } from '../display/hero-spin.js'
 
 type MessageOptions = Parameters<typeof Arco.Message.info>[0]
 type NotificationOptions = Parameters<typeof Arco.Notification.info>[0]
@@ -24,6 +27,7 @@ interface NoticeGroup {
   instance: NoticeInstance | null
   items: Map<string, NoticeEntry>
   closing: Set<NoticeEntry>
+  stopLayout: () => void
 }
 
 interface NoticeEntry {
@@ -31,6 +35,12 @@ interface NoticeEntry {
   options: NoticeOptions
   notifyClose: boolean
   closed: boolean
+}
+
+interface NoticeHookGroup {
+  instance: InstanceType<typeof Arco.Message> | InstanceType<typeof Arco.Notification> | null
+  pending: Map<string, NoticeOptions>
+  items: Map<string, NoticeEntry>
 }
 
 function injectNoticeStyles(): void {
@@ -49,6 +59,7 @@ function createChannel(kind: 'message' | 'notification') {
     queueMicrotask(() => {
       if (group.items.size === 0 && group.closing.size === 0 && groups.get(position) === group) {
         groups.delete(position)
+        group.stopLayout()
         group.root.unmount()
         group.element.remove()
       }
@@ -73,6 +84,7 @@ function createChannel(kind: 'message' | 'notification') {
       groups.delete(position)
       group.items.clear()
       group.closing.clear()
+      group.stopLayout()
       queueMicrotask(() => { group.root.unmount(); group.element.remove() })
     }
     for (const item of items) { item.options.onClose?.() }
@@ -86,7 +98,7 @@ function createChannel(kind: 'message' | 'notification') {
       const element = document.createElement('div')
       const container = config.getContainer?.() ?? ensureOverlayContainer() ?? document.body
       container.appendChild(element)
-      group = { element, root: createRoot(element), instance: null, items: new Map(), closing: new Set() }
+      group = { element, root: createRoot(element), instance: null, items: new Map(), closing: new Set(), stopLayout: observeToastLayout(element) }
       groups.set(position, group)
       const owner = group
       const ref = (instance: NoticeInstance | null) => {
@@ -121,7 +133,7 @@ function createChannel(kind: 'message' | 'notification') {
       closed: false,
       options: {
         duration: config.duration ?? 3000,
-        ...(config.closable === undefined ? {} : { closable: config.closable }),
+        closable: config.closable ?? true,
         ...options,
         position,
         id: renderId,
@@ -165,29 +177,120 @@ function createChannel(kind: 'message' | 'notification') {
 const messages = createChannel('message')
 const notifications = createChannel('notification')
 
+function useNoticeLayout(getContainer: () => HTMLElement): void {
+  React.useEffect(() => observeToastLayout(getContainer()), [getContainer])
+}
+
+function useNoticeHolder(kind: 'message' | 'notification', config: NoticeConfig = {}) {
+  const getContainer = useDshPopupContainer()
+  const context = React.useContext(Arco.ConfigProvider.ConfigContext)
+  const [, refresh] = React.useReducer(value => value + 1, 0)
+  const groups = React.useRef(new Map<string, NoticeHookGroup>())
+  const sequence = React.useRef(0)
+  const disposed = React.useRef(false)
+  const settings = React.useRef(config)
+  settings.current = config
+  React.useEffect(() => {
+    disposed.current = false
+    return () => {
+      disposed.current = true
+      for (const group of groups.current.values()) { group.pending.clear(); group.items.clear() }
+      groups.current.clear()
+    }
+  }, [])
+  useNoticeLayout(config.getContainer ?? getContainer)
+  const closeEntry = React.useCallback((group: NoticeHookGroup, id: string, entry: NoticeEntry) => {
+    if (group.items.get(id) !== entry) { return }
+    group.items.delete(id)
+    if (group.pending.delete(entry.renderId)) { entry.options.onClose?.() }
+    else { group.instance?.remove(entry.renderId) }
+  }, [])
+  const remove = React.useCallback((id: string) => {
+    for (const group of groups.current.values()) {
+      const entry = group.items.get(id)
+      if (entry) { closeEntry(group, id, entry) }
+    }
+  }, [closeEntry])
+  const add = React.useCallback((type: NoticeKind, options: NoticeOptions) => {
+    if (disposed.current) { throw new Error('消息 holder 已卸载，无法显示消息') }
+    const current = settings.current
+    const position = options.position ?? (kind === 'message' ? 'top' : (current.rtl ?? context.rtl) ? 'topLeft' : 'topRight')
+    let group = groups.current.get(position)
+    if (!group) { group = { instance: null, pending: new Map(), items: new Map() }; groups.current.set(position, group) }
+    const owner = group
+    const renderId = `dsh-hook-${++sequence.current}`
+    const id = options.id ?? renderId
+    const previous = group.items.get(id)
+    if (previous) { previous.notifyClose = false; closeEntry(group, id, previous) }
+    const maximum = Math.max(1, current.maxCount ?? Infinity)
+    const oldestId = group.items.keys().next().value
+    if (group.items.size >= maximum && oldestId !== undefined) {
+      const oldest = group.items.get(oldestId)
+      if (oldest) { closeEntry(group, oldestId, oldest) }
+    }
+    const entry: NoticeEntry = {
+      renderId, notifyClose: true, closed: false,
+      options: noticeIcon({ duration: current.duration ?? 3000, closable: current.closable ?? true, ...options, id: renderId, position, type,
+        onClose: () => {
+          if (entry.closed) { return }
+          entry.closed = true
+          if (owner.items.get(id) === entry) { owner.items.delete(id) }
+          if (entry.notifyClose) { options.onClose?.() }
+        },
+      } as NoticeOptions, type),
+    }
+    group.items.set(id, entry)
+    if (group.instance) { group.instance.add(entry.options) }
+    else { group.pending.set(renderId, entry.options); refresh() }
+    return { close: () => closeEntry(owner, id, entry), instance: group.instance }
+  }, [context.rtl, kind, closeEntry])
+  const holder = <>{Array.from(groups.current, ([position, group]) => {
+    const ref = (instance: InstanceType<typeof Arco.Message> | InstanceType<typeof Arco.Notification> | null) => {
+      group.instance = instance
+      if (instance) { for (const options of group.pending.values()) { instance.add(options) }; group.pending.clear() }
+    }
+    const props = { ref, prefixCls: config.prefixCls ?? context.prefixCls, rtl: config.rtl ?? context.rtl }
+    return kind === 'message' ? <Arco.Message key={position} {...props} /> : <Arco.Notification key={position} {...props} />
+  })}</>
+  return { add, remove, holder: typeof document === 'undefined' ? holder : createPortal(holder, config.getContainer?.() ?? getContainer()) }
+}
+
+function noticeIcon<T extends NoticeOptions>(options: T, type: NoticeKind): T {
+  const path = type in statusIcons ? statusIcons[type as keyof typeof statusIcons] : undefined
+  return {
+    ...options,
+    ...(type === 'loading' && options.icon === undefined ? { icon: <HeroSpin size={16} /> } : {}),
+    ...(path && options.icon === undefined ? { icon: <svg className="dsh-notice-icon" viewBox="0 0 16 16" fill="none" aria-hidden><path d={path} fill="currentColor" fillRule="evenodd" clipRule="evenodd" /></svg> } : {}),
+    ...(options.closeIcon === undefined ? { closeIcon: <svg className="dsh-notice-close-icon" viewBox="0 0 16 16" fill="none" aria-hidden><path d="M3.47 3.47a.75.75 0 0 1 1.06 0L8 6.94l3.47-3.47a.75.75 0 1 1 1.06 1.06L9.06 8l3.47 3.47a.75.75 0 1 1-1.06 1.06L8 9.06l-3.47 3.47a.75.75 0 0 1-1.06-1.06L6.94 8 3.47 4.53a.75.75 0 0 1 0-1.06Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd" /></svg> } : {}),
+  }
+}
+
 function addMessage(type: NoticeKind, options: MessageOptions): ReturnType<typeof Arco.Message.info> {
-  return messages.add({ ...(typeof options === 'string' ? { content: options } : options), type }).close
+  return messages.add(noticeIcon({ ...(typeof options === 'string' ? { content: options } : options), type }, type)).close
 }
 
 function addNotification(type: NoticeKind, options: NotificationOptions): ReturnType<typeof Arco.Notification.info> {
-  return notifications.add({ ...options, type }).element
+  return notifications.add(noticeIcon({ ...options, type }, type)).element
 }
 
 /** 消息类保留 Arco 的静态操作和内联组件用法，实例与宿主消息相互独立。 */
 export class Message extends Arco.Message {
-  static override success(options: MessageOptions) { return addMessage('success', options) }
-  static override info(options: MessageOptions) { return addMessage('info', options) }
-  static override error(options: MessageOptions) { return addMessage('error', options) }
-  static override warning(options: MessageOptions) { return addMessage('warning', options) }
-  static override normal(options: MessageOptions) { return addMessage('normal', options) }
-  static override loading(options: MessageOptions) { return addMessage('loading', options) }
+  static override success(options: MessageOptions): ReturnType<typeof Arco.Message.success> { return addMessage('success', options) }
+  static override info(options: MessageOptions): ReturnType<typeof Arco.Message.info> { return addMessage('info', options) }
+  static override error(options: MessageOptions): ReturnType<typeof Arco.Message.error> { return addMessage('error', options) }
+  static override warning(options: MessageOptions): ReturnType<typeof Arco.Message.warning> { return addMessage('warning', options) }
+  static override normal(options: MessageOptions): ReturnType<typeof Arco.Message.normal> { return addMessage('normal', options) }
+  static override loading(options: MessageOptions): ReturnType<typeof Arco.Message.loading> { return addMessage('loading', options) }
   static override config(options?: NoticeConfig) { messages.configure(options) }
   static override clear() { messages.clear() }
-  static override addInstance(options: Exclude<MessageOptions, string>) { return messages.add(options).close }
+  static override addInstance(options: Exclude<MessageOptions, string>) { return messages.add(noticeIcon(options, options.type as NoticeKind ?? 'info')).close }
   static override useMessage(config?: Parameters<typeof Arco.Message.useMessage>[0]): ReturnType<typeof Arco.Message.useMessage> {
-    const getContainer = useDshPopupContainer()
-    const [api, holder] = Arco.Message.useMessage(config)
-    return [api, <>{typeof document === 'undefined' ? holder : createPortal(holder, config?.getContainer?.() ?? getContainer())}</>]
+    const { add, holder } = useNoticeHolder('message', config)
+    const styledApi: ReturnType<typeof Arco.Message.useMessage>[0] = {}
+    for (const type of ['info', 'success', 'error', 'warning', 'normal'] as const) {
+      styledApi[type] = options => add(type, typeof options === 'string' ? { content: options } : options).close
+    }
+    return [styledApi, holder]
   }
 }
 
@@ -201,10 +304,15 @@ export class Notification extends Arco.Notification {
   static override config(options?: Parameters<typeof Arco.Notification.config>[0]) { notifications.configure(options) }
   static override clear() { notifications.clear() }
   static override remove(id: string) { notifications.remove(id) }
-  static override addInstance(options: NotificationOptions) { return notifications.add(options).element }
+  static override addInstance(options: NotificationOptions) { return notifications.add(noticeIcon(options, options.type as NoticeKind ?? 'info')).element }
   static override useNotification(config?: Parameters<typeof Arco.Notification.useNotification>[0]): ReturnType<typeof Arco.Notification.useNotification> {
-    const getContainer = useDshPopupContainer()
-    return Arco.Notification.useNotification({ getContainer, ...config })
+    const { add, remove, holder } = useNoticeHolder('notification', config)
+    const styledApi: ReturnType<typeof Arco.Notification.useNotification>[0] = { remove }
+    for (const type of ['info', 'success', 'error', 'warning', 'normal'] as const) {
+      // 与 Arco 一致，首次创建的实例在 holder 提交后可用。
+      styledApi[type] = options => add(type, options).instance!
+    }
+    return [styledApi, holder]
   }
 }
 

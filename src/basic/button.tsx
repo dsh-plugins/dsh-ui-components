@@ -19,7 +19,7 @@ export type ButtonSize = 'md' | 'sm' | 'lg'
 
 /** {@link Button} 的 props。 */
 export type ButtonProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Button>, 'type' | 'size' | 'status'> & {
-  /** 视觉层级，默认 `secondary`。 */
+  /** 视觉层级，默认 `primary`。 */
   variant?: ButtonVariant
   /** 尺寸，默认 `md`。 */
   size?: ButtonSize
@@ -55,7 +55,7 @@ const ARCO_SIZE: Record<ButtonSize, 'default' | 'small' | 'large'> = {
  */
 export const Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>> =
   React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-    { variant = 'secondary', size = 'md', danger, icon, block, children, htmlType, ...rest },
+    { variant = 'primary', size = 'md', danger, icon, block, children, htmlType, ...rest },
     ref,
   ) {
     injectBasicStyles()
@@ -70,7 +70,7 @@ export const Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttr
         htmlType={htmlType ?? 'button'}
       >
         {icon === undefined || icon === null ? null : icon}
-        {children}
+        <>{children}</>
       </Arco.Button>
     )
   })

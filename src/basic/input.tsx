@@ -12,6 +12,7 @@
  */
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
+import { HeroInputNumber } from '../data/hero-input-number.js'
 import { cx } from '../foundation/style.js'
 import { injectBasicStyles } from './styles.js'
 
@@ -136,5 +137,5 @@ export const InputNumber: React.ForwardRefExoticComponent<InputNumberProps & Rea
     ref,
   ) {
     injectBasicStyles()
-    return <Arco.InputNumber {...rest} ref={ref} size={ARCO_SIZE[size]} />
+    return <HeroInputNumber {...rest} ref={ref} size={ARCO_SIZE[size]} />
   })

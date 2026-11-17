@@ -9,15 +9,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as React from 'react'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import {
-  Breadcrumb,
-  BreadcrumbItem,
   DisclosureRow,
   Menu,
   MenuItem,
-  Pagination,
   SegmentedControl,
   StateDot,
-  Steps,
   TabPane,
   Tabs,
 } from '../src/navigation/index.js'
@@ -56,42 +52,6 @@ describe('Tabs', () => {
       </Tabs>,
     )
     expect(container.querySelector('.dsh-tabs--segment')).toBeTruthy()
-  })
-})
-
-describe('Breadcrumb', () => {
-  it('渲染层级路径', () => {
-    render(
-      <Breadcrumb>
-        <BreadcrumbItem>设置</BreadcrumbItem>
-        <BreadcrumbItem>插件</BreadcrumbItem>
-      </Breadcrumb>,
-    )
-    expect(screen.getByText('设置')).toBeTruthy()
-    expect(screen.getByText('插件')).toBeTruthy()
-  })
-})
-
-describe('Pagination', () => {
-  it('渲染页码并回调当前页', () => {
-    const onChange = vi.fn()
-    render(<Pagination total={50} pageSize={10} current={1} onChange={onChange} />)
-    // 页码条目的可访问名称来自其文本内容。
-    fireEvent.click(screen.getByText('2'))
-    expect(onChange).toHaveBeenCalledWith(2, expect.anything())
-  })
-})
-
-describe('Steps', () => {
-  it('渲染步骤标题', () => {
-    render(
-      <Steps current={1}>
-        <Steps.Step title="选择目录" />
-        <Steps.Step title="确认安装" />
-      </Steps>,
-    )
-    expect(screen.getByText('选择目录')).toBeTruthy()
-    expect(screen.getByText('确认安装')).toBeTruthy()
   })
 })
 

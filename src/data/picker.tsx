@@ -8,6 +8,7 @@
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { injectDataStyles } from './styles.js'
+import { HeroDatePicker, HeroRangePicker } from './hero-picker.js'
 
 /** {@link DatePicker} 的 props。 */
 export type DatePickerProps = React.ComponentPropsWithoutRef<typeof Arco.DatePicker>
@@ -20,7 +21,7 @@ export type DatePickerProps = React.ComponentPropsWithoutRef<typeof Arco.DatePic
  */
 function DatePickerBase(props: DatePickerProps): React.ReactElement {
   injectDataStyles()
-  return <Arco.DatePicker {...props} />
+  return <HeroDatePicker {...props} />
 }
 
 /** 月份选择。 */
@@ -32,7 +33,7 @@ export const QuarterPicker: typeof Arco.DatePicker.QuarterPicker = Arco.DatePick
 /** 周选择。 */
 export const WeekPicker: typeof Arco.DatePicker.WeekPicker = Arco.DatePicker.WeekPicker
 /** 日期区间选择。 */
-export const RangePicker: typeof Arco.DatePicker.RangePicker = Arco.DatePicker.RangePicker
+export const RangePicker: typeof Arco.DatePicker.RangePicker = HeroRangePicker
 
 /** 带静态子组件的日期选择导出。 */
 export const DatePicker: typeof DatePickerBase & {
@@ -46,7 +47,7 @@ export const DatePicker: typeof DatePickerBase & {
   YearPicker: Arco.DatePicker.YearPicker,
   QuarterPicker: Arco.DatePicker.QuarterPicker,
   WeekPicker: Arco.DatePicker.WeekPicker,
-  RangePicker: Arco.DatePicker.RangePicker,
+  RangePicker: HeroRangePicker,
 })
 
 /** {@link TimePicker} 的 props。 */

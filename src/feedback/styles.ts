@@ -1,15 +1,11 @@
 /**
- * 反馈与浮层组件追加样式。
- *
- * 弹窗与抽屉按全局规范处理：与窗口上下各留至少 120px，最大高度
- * `calc(100dvh - 240px)`，超出部分在内部滚动，标题与操作行保持可见。
+ * 页面内反馈和全局消息的追加样式。
  *
  * @module @dsh-plugin/dsh-ui-components/feedback/styles
  */
 import { injectUiStyle } from '../foundation/style.js'
-import { G } from '../foundation/tokens.js'
 
-/** 反馈与浮层样式表。 */
+/** 页面内反馈和全局消息样式表。 */
 export const FEEDBACK_CSS = `
 /* ── 提示条 ─────────────────────────────────────────────────────── */
 .dsh-ui .arco-alert {
@@ -54,90 +50,6 @@ export const FEEDBACK_CSS = `
   font-size: 13px;
   line-height: 20px;
   color: var(--dsw-alias-label-secondary);
-}
-
-/* ── 弹窗 ───────────────────────────────────────────────────────── */
-.dsh-ui-overlay .arco-modal-mask,
-.dsh-ui .arco-modal-mask {
-  background-color: var(--dsw-alias-bg-mask-1);
-  backdrop-filter: none;
-}
-
-.dsh-ui-overlay .arco-modal,
-.dsh-ui .arco-modal {
-  border-radius: var(--dsw-radius-panel, 28px);
-  border: 0;
-  box-shadow: var(--dsw-elevation-prominent);
-  background-color: var(--dsw-alias-bg-layer-2);
-  max-height: calc(100dvh - ${G.overlayMargin * 2}px);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.dsh-ui-overlay .arco-modal-header,
-.dsh-ui .arco-modal-header {
-  border-bottom: 0.5px solid var(--dsw-alias-border-l1);
-  padding: 20px 24px 14px;
-  flex: none;
-}
-
-.dsh-ui-overlay .arco-modal-title,
-.dsh-ui .arco-modal-title {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 500;
-  color: var(--dsw-alias-label-primary);
-  text-align: left;
-}
-
-.dsh-ui-overlay .arco-modal-content,
-.dsh-ui .arco-modal-content {
-  padding: 16px 24px;
-  font-size: 14px;
-  line-height: 22px;
-  color: var(--dsw-alias-label-primary);
-  overflow: auto;
-  min-height: 0;
-}
-
-.dsh-ui-overlay .arco-modal-footer,
-.dsh-ui .arco-modal-footer {
-  border-top: 0.5px solid var(--dsw-alias-border-l1);
-  padding: 14px 24px;
-  flex: none;
-}
-
-/* ── 抽屉 ───────────────────────────────────────────────────────── */
-.dsh-ui-overlay .arco-drawer,
-.dsh-ui .arco-drawer {
-  background-color: var(--dsw-alias-bg-layer-2);
-  border: 0;
-  max-height: calc(100dvh - ${G.overlayMargin * 2}px);
-}
-
-.dsh-ui-overlay .arco-drawer-header,
-.dsh-ui .arco-drawer-header {
-  border-bottom: 0.5px solid var(--dsw-alias-border-l1);
-  height: auto;
-  padding: 18px 24px;
-}
-
-.dsh-ui-overlay .arco-drawer-title,
-.dsh-ui .arco-drawer-title {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 500;
-  color: var(--dsw-alias-label-primary);
-}
-
-.dsh-ui-overlay .arco-drawer-content,
-.dsh-ui .arco-drawer-content {
-  padding: 20px 24px;
-  font-size: 14px;
-  line-height: 22px;
-  color: var(--dsw-alias-label-primary);
-  overflow: auto;
 }
 
 /* ── 全局消息 ───────────────────────────────────────────────────── */

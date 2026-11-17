@@ -19,3 +19,12 @@
  *    令牌名称与取值来自 DSH 源码 packages/client/ui-theme/src/styles/。
  *    本包只引用变量名并附带回退值，不内联其样式表。
  */
+
+HeroUI 3.2.7 第三方声明
+
+本包的主题令牌、组件视觉规则和 SVG 图形改编自 @heroui/styles 与 @heroui/react 3.2.7。
+原项目：https://github.com/heroui-inc/heroui
+Copyright 2025 NextUI Inc.
+许可：Apache License, Version 2.0，全文随包提供于 licenses/HeroUI-Apache-2.0.txt。
+
+改编内容包括：将官方主题变量限定于 DshProvider，将组件选择器映射到 Arco Design 的公开渲染结构，以及通过公开图标与面板插槽复用官方图形和视觉布局。

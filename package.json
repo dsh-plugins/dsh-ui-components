@@ -30,7 +30,8 @@
     "README.md",
     "README.zh_CN.md",
     "LICENSE",
-    "NOTICE"
+    "NOTICE",
+    "licenses"
   ],
   "scripts": {
     "gen:icons": "node scripts/gen-icons.mjs",
@@ -72,7 +73,8 @@
     "react"
   ],
   "dependencies": {
-    "@icon-park/react": "^1.4.2"
+    "@icon-park/react": "^1.4.2",
+    "dayjs": "1.11.23"
   },
   "peerDependencies": {
     "@dsh-plugin/dsh-loader": "^2.0.0-0",

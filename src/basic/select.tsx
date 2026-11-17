@@ -10,6 +10,11 @@ import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { injectBasicStyles } from './styles.js'
 import { type FieldSize } from './input.js'
+import { HeroChevronDown } from '../foundation/hero-icons.js'
+import { wrapScopedPopup } from '../foundation/scoped-popup.js'
+
+const ScopedSelect = wrapScopedPopup(Arco.Select, {}, true)
+const ScopedAutoComplete = wrapScopedPopup(Arco.AutoComplete)
 
 /** DSH 尺寸到 Arco 尺寸的映射。 */
 const ARCO_SIZE: Record<FieldSize, 'default' | 'small' | 'large'> = {
@@ -84,9 +89,10 @@ export function Select({
 }: SelectProps): React.ReactElement {
   injectBasicStyles()
   return (
-    <Arco.Select
+    <ScopedSelect
       options={options as SelectOption[]}
-      value={value}
+      arrowIcon={<HeroChevronDown />}
+      {...(value === undefined ? {} : { value })}
       defaultValue={defaultValue}
       onChange={onChange as (value: unknown) => void}
       mode={multiple === true ? 'multiple' : undefined}
@@ -116,5 +122,5 @@ export type AutoCompleteProps = React.ComponentPropsWithoutRef<typeof Arco.AutoC
  */
 export function AutoComplete(props: AutoCompleteProps): React.ReactElement {
   injectBasicStyles()
-  return <Arco.AutoComplete {...props} />
+  return <ScopedAutoComplete {...props} />
 }

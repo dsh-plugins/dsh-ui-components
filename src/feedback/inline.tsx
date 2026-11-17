@@ -6,6 +6,9 @@
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { injectFeedbackStyles } from './styles.js'
+import { HeroSuccess } from '../foundation/hero-icons.js'
+import { HeroProgress } from './hero-progress.js'
+import { HeroResult } from './hero-result.js'
 
 /** {@link Alert} 的 props。 */
 export type AlertProps = React.ComponentPropsWithoutRef<typeof Arco.Alert>
@@ -18,7 +21,7 @@ export type AlertProps = React.ComponentPropsWithoutRef<typeof Arco.Alert>
  */
 export function Alert(props: AlertProps): React.ReactElement {
   injectFeedbackStyles()
-  return <Arco.Alert {...props} />
+  return <Arco.Alert icon={props.type === 'success' ? <HeroSuccess /> : undefined} {...props} />
 }
 
 /** {@link Progress} 的 props。 */
@@ -32,7 +35,7 @@ export type ProgressProps = React.ComponentPropsWithoutRef<typeof Arco.Progress>
  */
 export function Progress(props: ProgressProps): React.ReactElement {
   injectFeedbackStyles()
-  return <Arco.Progress {...props} />
+  return <HeroProgress strokeWidth={props.type === 'circle' ? undefined : props.size === 'small' ? 4 : props.size === 'large' ? 12 : 8} {...props} />
 }
 
 /** {@link Result} 的 props。 */
@@ -46,5 +49,5 @@ export type ResultProps = React.ComponentPropsWithoutRef<typeof Arco.Result>
  */
 export function Result(props: ResultProps): React.ReactElement {
   injectFeedbackStyles()
-  return <Arco.Result {...props} />
+  return <HeroResult {...props} />
 }

@@ -6,6 +6,7 @@
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { injectNavigationStyles } from './styles.js'
+import { HeroChevronRight } from '../foundation/hero-icons.js'
 
 /** {@link Breadcrumb} 的 props。 */
 export type BreadcrumbProps = React.ComponentPropsWithoutRef<typeof Arco.Breadcrumb>
@@ -18,7 +19,7 @@ export type BreadcrumbProps = React.ComponentPropsWithoutRef<typeof Arco.Breadcr
  */
 export function Breadcrumb(props: BreadcrumbProps): React.ReactElement {
   injectNavigationStyles()
-  return <Arco.Breadcrumb {...props} />
+  return <Arco.Breadcrumb separator={<HeroChevronRight width={12} height={12} />} {...props} />
 }
 
 /** {@link BreadcrumbItem} 的 props。 */

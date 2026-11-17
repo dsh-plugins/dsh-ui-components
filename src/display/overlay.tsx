@@ -9,7 +9,13 @@
  */
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
+import { wrapScopedPopup } from '../foundation/scoped-popup.js'
 import { injectDisplayStyles } from './styles.js'
+import { HeroChevronDown } from '../foundation/hero-icons.js'
+import { injectHeroOverlayStyles } from '../foundation/overlay-style.js'
+
+const ScopedTooltip = wrapScopedPopup(Arco.Tooltip, { showArrow: false, popupAlign: { top: 3, bottom: 3, left: 3, right: 3 } })
+const ScopedPopover = wrapScopedPopup(Arco.Popover, { showArrow: false })
 
 /** {@link Tooltip} 的 props。 */
 export type TooltipProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Tooltip>, 'position'> & {
@@ -28,7 +34,8 @@ export type TooltipProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Toolt
  */
 export function Tooltip({ position = 'bottom', ...rest }: TooltipProps): React.ReactElement {
   injectDisplayStyles()
-  return <Arco.Tooltip {...rest} position={position} />
+  injectHeroOverlayStyles()
+  return <ScopedTooltip {...rest} position={position} />
 }
 
 /** {@link Popover} 的 props。 */
@@ -42,7 +49,8 @@ export type PopoverProps = React.ComponentPropsWithoutRef<typeof Arco.Popover>
  */
 export function Popover(props: PopoverProps): React.ReactElement {
   injectDisplayStyles()
-  return <Arco.Popover {...props} />
+  injectHeroOverlayStyles()
+  return <ScopedPopover {...props} />
 }
 
 /** {@link HoverCard} 的 props。 */
@@ -66,7 +74,7 @@ export type HoverCardProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Pop
 export function HoverCard({ delayMs = 120, triggerProps, ...rest }: HoverCardProps): React.ReactElement {
   injectDisplayStyles()
   return (
-    <Arco.Popover
+    <ScopedPopover
       {...rest}
       trigger="hover"
       triggerProps={{ ...triggerProps, mouseEnterDelay: delayMs, mouseLeaveDelay: 80 }}
@@ -85,7 +93,7 @@ export type CollapseProps = React.ComponentPropsWithoutRef<typeof Arco.Collapse>
  */
 export function Collapse(props: CollapseProps): React.ReactElement {
   injectDisplayStyles()
-  return <Arco.Collapse {...props} />
+  return <Arco.Collapse expandIconPosition="right" expandIcon={<HeroChevronDown />} {...props} />
 }
 
 /** {@link CollapseItem} 的 props。 */

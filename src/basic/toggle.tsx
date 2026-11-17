@@ -23,9 +23,9 @@ export type CheckboxProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Chec
  * @param props - 见 {@link CheckboxProps}。
  * @returns 复选框元素。
  */
-export function Checkbox({ label, ...rest }: CheckboxProps): React.ReactElement {
+export function Checkbox({ label, icon, ...rest }: CheckboxProps): React.ReactElement {
   injectBasicStyles()
-  return <Arco.Checkbox {...rest}>{label}</Arco.Checkbox>
+  return <Arco.Checkbox {...rest} icon={icon ?? <svg aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 17 18"><polyline points="1 9 7 14 15 4" /></svg>}>{label}</Arco.Checkbox>
 }
 
 /** {@link CheckboxGroup} 的 props。 */
