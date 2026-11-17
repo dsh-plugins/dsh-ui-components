@@ -1,5 +1,5 @@
 import {
-  Teleport, computed, defineComponent, h, inject, nextTick, onBeforeUnmount, onMounted,
+  Teleport, TransitionGroup, computed, defineComponent, h, inject, nextTick, onBeforeUnmount, onMounted,
   onUpdated, provide, shallowReactive, ref, shallowRef, watch, type InjectionKey, type PropType,
   type ShallowRef, type VNodeChild, type CSSProperties, type Ref,
 } from 'vue'
@@ -229,7 +229,8 @@ export const DshProvider = defineComponent({
         }, slots.default?.()),
         ...overlays.map(entry => h('div', { key: entry.id, style: { display: 'contents' } }, [entry.content()])),
         container.value ? h(Teleport, { to: container.value },
-          (['top', 'bottom', 'topLeft', 'topRight', 'bottomLeft', 'bottomRight'] as const).map(position => h('div', {
+          (['top', 'bottom', 'topLeft', 'topRight', 'bottomLeft', 'bottomRight'] as const).map(position => h(TransitionGroup, {
+            tag: 'div', name: 'dsh-toast-slide',
             class: 'dsh-toast-region', 'data-position': position, 'aria-label': '通知',
             style: {
               top: position.startsWith('top') ? '16px' : 'auto',
@@ -238,7 +239,7 @@ export const DshProvider = defineComponent({
               right: position.endsWith('Right') ? '16px' : 'auto',
               transform: position.endsWith('Left') || position.endsWith('Right') ? 'none' : 'translateX(-50%)',
             },
-          }, entries.filter(entry => (entry.position ?? 'top') === position).map(entry =>
+          }, { default: () => entries.filter(entry => (entry.position ?? 'top') === position).map(entry =>
             h('div', {
               key: entry.internalId, class: ['dsh-toast', entry.class], 'data-type': entry.type ?? 'info', style: entry.style,
               role: entry.type === 'error' ? 'alert' : 'status',
@@ -270,7 +271,7 @@ export const DshProvider = defineComponent({
                 d: 'M3.47 3.47a.75.75 0 0 1 1.06 0L8 6.94l3.47-3.47a.75.75 0 1 1 1.06 1.06L9.06 8l3.47 3.47a.75.75 0 1 1-1.06 1.06L8 9.06l-3.47 3.47a.75.75 0 0 1-1.06-1.06L6.94 8 3.47 4.53a.75.75 0 0 1 0-1.06Z', fill: 'currentColor', 'fill-rule': 'evenodd', 'clip-rule': 'evenodd',
               }))]) : null,
             ]),
-          ))),
+          ) })),
         ) : null,
       ],
     })

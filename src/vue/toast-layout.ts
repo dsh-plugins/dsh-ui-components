@@ -29,7 +29,7 @@ function startLayout(container: HTMLElement): () => void {
     const current = new Set<Element>()
     for (const region of container.querySelectorAll<HTMLElement>(regions)) {
       const items = Array.from(region.querySelectorAll<HTMLElement>(notices)).reverse()
-      const active = items.filter(item => item.style.opacity !== '0' && !item.parentElement?.className.includes('-exit'))
+      const active = items.filter(item => item.style.opacity !== '0' && !item.classList.contains('dsh-toast-slide-leave-active') && !item.parentElement?.className.includes('-exit'))
       const expanded = active.length > 1 && (region.matches(':hover') || region.contains(document.activeElement))
       region.dataset.dshToastStack = String(active.length)
       region.dataset.dshToastDirection = region.className.includes('bottom') || region.dataset.position?.startsWith('bottom') ? 'bottom' : 'top'

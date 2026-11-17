@@ -1,6 +1,6 @@
-import { defineComponent, h, inject, mergeProps, onMounted, onUpdated, shallowRef, useId, type App, type Component, type ComponentPublicInstance } from 'vue'
+import { defineComponent, h, inject, mergeProps, onBeforeUnmount, onMounted, onUpdated, shallowRef, useId, type App, type Component, type ComponentPublicInstance } from 'vue'
 import { configProviderInjectionKey } from '@arco-design/web-vue/es/config-provider/context.js'
-import { Alert as ArcoAlert, Progress as ArcoProgress, Spin as ArcoSpin, InputNumber as ArcoInputNumber, InputTag as ArcoInputTag, Tag as ArcoTag, Result as ArcoResult, Tree as ArcoTree } from '@arco-design/web-vue'
+import { Alert as ArcoAlert, Progress as ArcoProgress, Spin as ArcoSpin, InputNumber as ArcoInputNumber, InputTag as ArcoInputTag, Tag as ArcoTag, Result as ArcoResult, Tree as ArcoTree, Table as ArcoTable } from '@arco-design/web-vue'
 
 const progress = defineComponent({
   name: 'DshProgress',
@@ -40,6 +40,29 @@ function installComponent<C extends InstallableComponent>(wrapped: Component, or
 
 /** 保留 Arco 进度组件参数，线性进度采用 HeroUI 的默认轨道厚度。 */
 export const Progress = installComponent(progress, ArcoProgress)
+
+/** 表格滚动时临时显示滑块，保留 Arco 的参数、插槽和公开实例方法。 */
+export const Table = installComponent(defineComponent({
+  name: 'DshTable', inheritAttrs: false,
+  setup(_, { attrs, slots, expose }) {
+    const instance = shallowRef<ComponentPublicInstance>()
+    const scrolling = shallowRef(false)
+    let hideTimer: ReturnType<typeof setTimeout> | undefined
+    expose(new Proxy({}, {
+      get: (_, key) => (instance.value as unknown as Record<string | symbol, unknown> | undefined)?.[key],
+      has: (_, key) => instance.value !== undefined && key in instance.value,
+    }))
+    onBeforeUnmount(() => clearTimeout(hideTimer))
+    return () => h(ArcoTable, mergeProps(attrs, {
+      ref: instance, class: 'dsh-scroll-table', 'data-scrolling': scrolling.value || undefined,
+      onScrollCapture() {
+        scrolling.value = true
+        clearTimeout(hideTimer)
+        hideTimer = setTimeout(() => { scrolling.value = false }, 900)
+      },
+    }), slots)
+  },
+}), ArcoTable)
 
 /** 标签输入单独标记主题范围，避免修改选择器内部复用的 Arco 标签输入。 */
 export const InputTag = installComponent(defineComponent({
