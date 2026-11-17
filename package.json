@@ -1,6 +1,6 @@
 {
   "name": "@dsh-plugin/dsh-ui-components-vue",
-  "version": "0.1.0-vue.0",
+  "version": "0.1.0",
   "description": "基于 Arco Design Vue、采用 HeroUI 风格的 DSH Vue 组件库",
   "type": "module",
   "main": "dist/index.js",
@@ -26,7 +26,8 @@
     "README.zh_CN.md",
     "docs/vue-coverage.md",
     "LICENSE",
-    "NOTICE"
+    "NOTICE",
+    "licenses"
   ],
   "scripts": {
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
@@ -61,7 +62,8 @@
     "vue": "^3.5.0"
   },
   "dependencies": {
-    "@arco-design/web-vue": "^2.59.0"
+    "@arco-design/web-vue": "^2.59.0",
+    "dayjs": "1.11.23"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

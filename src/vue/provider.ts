@@ -1,9 +1,11 @@
 import {
   Teleport, computed, defineComponent, h, inject, nextTick, onBeforeUnmount, onMounted,
   onUpdated, provide, shallowReactive, ref, shallowRef, watch, type InjectionKey, type PropType,
-  type ShallowRef, type VNodeChild, type CSSProperties,
+  type ShallowRef, type VNodeChild, type CSSProperties, type Ref,
 } from 'vue'
-import { Alert, ConfigProvider, Spin } from '@arco-design/web-vue'
+import { ConfigProvider } from '@arco-design/web-vue'
+import { Spin, alertIcons } from './basic.js'
+import { observeToastLayout } from './toast-layout.js'
 
 /** 主题范围同时覆盖组件树及其独立浮层。 */
 export type DshTheme = 'auto' | 'light' | 'dark'
@@ -44,6 +46,7 @@ export interface ToastApi {
 /** 普通浮层包装通过此上下文取得独立容器。 */
 export interface DshThemeContext {
   container: ShallowRef<HTMLElement | undefined>
+  readonly locale: Readonly<Ref<string>>
   toast: ToastApi
   mountOverlay: (content: () => VNodeChild) => () => void
 }
@@ -151,7 +154,7 @@ export const DshProvider = defineComponent({
         }
       }
     }
-    provide(themeKey, { container, toast, mountOverlay })
+    provide(themeKey, { container, toast, mountOverlay, locale: computed(() => props.locale?.locale ?? 'zh-CN') })
 
     const syncPortal = () => {
       const portal = container.value
@@ -179,6 +182,7 @@ export const DshProvider = defineComponent({
       portal.className = 'dsh-ui dsh-ui-portal'
       document.body.appendChild(portal)
       container.value = portal
+      const stopToastLayout = observeToastLayout(portal)
       entries.forEach(arm)
       const color = window.matchMedia('(prefers-color-scheme: dark)')
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -197,6 +201,7 @@ export const DshProvider = defineComponent({
       color.addEventListener('change', update)
       reduced.addEventListener('change', update)
       disconnect = () => {
+        stopToastLayout()
         observer.disconnect()
         color.removeEventListener('change', update)
         reduced.removeEventListener('change', update)
@@ -215,7 +220,7 @@ export const DshProvider = defineComponent({
       container.value?.remove()
       container.value = undefined
     })
-    return () => h(ConfigProvider, { locale: props.locale, rtl: props.rtl, global: false }, {
+    return () => h(ConfigProvider, { locale: props.locale, rtl: props.rtl, updateAtScroll: true, global: false }, {
       default: () => [
         h('div', {
           ...attrs, ref: root, class: ['dsh-ui', attrs.class],
@@ -227,15 +232,15 @@ export const DshProvider = defineComponent({
           (['top', 'bottom', 'topLeft', 'topRight', 'bottomLeft', 'bottomRight'] as const).map(position => h('div', {
             class: 'dsh-toast-region', 'data-position': position, 'aria-label': '通知',
             style: {
-              top: position.startsWith('top') ? '24px' : 'auto',
-              bottom: position.startsWith('bottom') ? '24px' : 'auto',
-              left: position.endsWith('Left') ? '24px' : position.endsWith('Right') ? 'auto' : '50%',
-              right: position.endsWith('Right') ? '24px' : 'auto',
+              top: position.startsWith('top') ? '16px' : 'auto',
+              bottom: position.startsWith('bottom') ? '16px' : 'auto',
+              left: position.endsWith('Left') ? '16px' : position.endsWith('Right') ? 'auto' : '50%',
+              right: position.endsWith('Right') ? '16px' : 'auto',
               transform: position.endsWith('Left') || position.endsWith('Right') ? 'none' : 'translateX(-50%)',
             },
           }, entries.filter(entry => (entry.position ?? 'top') === position).map(entry =>
             h('div', {
-              key: entry.internalId, class: ['dsh-toast', entry.class], style: entry.style,
+              key: entry.internalId, class: ['dsh-toast', entry.class], 'data-type': entry.type ?? 'info', style: entry.style,
               role: entry.type === 'error' ? 'alert' : 'status',
               onMouseenter: () => {
                 if (entry.resetOnHover !== false) {
@@ -248,18 +253,23 @@ export const DshProvider = defineComponent({
                 }
               },
               onFocusin: () => clearTimeout(timers.get(entry.internalId)), onFocusout: () => arm(entry),
-            }, [h(Alert, {
-              type: entry.type === 'loading' || entry.type === 'normal' ? 'info' : entry.type ?? 'info',
-              closable: false, showIcon: entry.showIcon ?? entry.type !== 'normal', role: 'presentation',
-            }, {
-              title: entry.title ? () => typeof entry.title === 'function' ? entry.title() : entry.title : undefined,
-              icon: entry.icon ?? (entry.type === 'loading' ? () => h(Spin, { size: 16 }) : undefined),
-              action: entry.closable !== false ? () => h('button', {
-                type: 'button', class: 'dsh-button dsh-toast-close', 'data-variant': 'ghost', 'data-size': 'sm',
-                'aria-label': '关闭通知', onClick: () => close(entry.internalId),
-              }, (entry.closeIconElement ?? entry.closeIcon)?.() ?? '×') : undefined,
-              default: () => [typeof entry.content === 'function' ? entry.content() : entry.content, entry.footer?.()],
-            })]),
+            }, [
+              (entry.showIcon ?? entry.type !== 'normal') ? h('div', { class: 'dsh-toast-indicator', 'aria-hidden': true }, [
+                entry.icon ? entry.icon() : (entry.type === 'loading' ? h(Spin, { size: 16 }) : h('svg', { class: 'dsh-toast-default-icon', viewBox: '0 0 16 16', fill: 'none' }, h('path', {
+                  d: alertIcons[entry.type && entry.type in alertIcons ? entry.type as keyof typeof alertIcons : 'info'], fill: 'currentColor', 'fill-rule': 'evenodd', 'clip-rule': 'evenodd',
+                }))),
+              ]) : null,
+              h('div', { class: 'dsh-toast-content' }, [
+                entry.title ? h('div', { class: 'dsh-toast-title' }, [typeof entry.title === 'function' ? entry.title() : entry.title]) : null,
+                h('div', { class: entry.title ? 'dsh-toast-description' : 'dsh-toast-title' }, [typeof entry.content === 'function' ? entry.content() : entry.content]),
+                entry.footer?.(),
+              ]),
+              entry.closable !== false ? h('button', {
+                type: 'button', class: 'dsh-toast-close', 'aria-label': '关闭通知', onClick: () => close(entry.internalId),
+              }, [(entry.closeIconElement ?? entry.closeIcon) ? (entry.closeIconElement ?? entry.closeIcon)!() : h('svg', { class: 'dsh-toast-default-close-icon', viewBox: '0 0 16 16', fill: 'none', 'aria-hidden': true }, h('path', {
+                d: 'M3.47 3.47a.75.75 0 0 1 1.06 0L8 6.94l3.47-3.47a.75.75 0 1 1 1.06 1.06L9.06 8l3.47 3.47a.75.75 0 1 1-1.06 1.06L8 9.06l-3.47 3.47a.75.75 0 0 1-1.06-1.06L6.94 8 3.47 4.53a.75.75 0 0 1 0-1.06Z', fill: 'currentColor', 'fill-rule': 'evenodd', 'clip-rule': 'evenodd',
+              }))]) : null,
+            ]),
           ))),
         ) : null,
       ],

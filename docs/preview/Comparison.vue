@@ -2,9 +2,11 @@
 import { ref } from 'vue'
 import * as UI from '../../src/index'
 import casesText from '../comparison/cases.json?raw'
+import ComparisonPanel from './ComparisonPanel.vue'
 
 const parameters = new URLSearchParams(window.location.search)
 const theme = parameters.get('theme') === 'dark' ? 'dark' : 'light'
+const panel = parameters.get('panel')
 const cases: [string, string][] = JSON.parse(casesText)
 const modal = ref(parameters.get('state') === 'modal')
 const sizes = ['sm', 'md', 'lg'] as const
@@ -22,7 +24,8 @@ const rows = [
 </script>
 
 <template>
-  <UI.DshProvider :theme="theme" :reduced-motion="true">
+  <ComparisonPanel v-if="panel" :panel="panel" :theme="theme" />
+  <UI.DshProvider v-else :theme="theme" :reduced-motion="true">
     <main id="comparison" class="comparison" :data-theme="theme">
       <h1 class="comparison-heading">组件像素对照</h1>
       <p class="comparison-note">默认组件样式 · 相同内容与画布</p>

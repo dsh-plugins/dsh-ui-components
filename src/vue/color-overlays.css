@@ -1,0 +1,42 @@
+/* HeroUI 3.2.7 ColorPicker 视觉适配，Arco 保留拖拽、输入和受控值。 */
+.dsh-ui .dsh-color-trigger { display: inline-flex; vertical-align: top; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker { background: transparent; border-radius: 4px; padding: 0; height: 32px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker > .arco-color-picker-preview { width: 32px; height: 32px; border: 0; border-radius: 16px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker > .arco-color-picker-preview { background-image: linear-gradient(var(--dsh-color-current), var(--dsh-color-current)), repeating-conic-gradient(#efefef 0% 25%, #f7f7f7 0% 50%); background-position: 0 0, center; background-size: auto, 16px 16px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-panel {
+  box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
+  overflow: hidden; transform: translateZ(0);
+  width: 248px; padding: 8px 8px 12px; border: 0; border-radius: min(32px, calc(var(--radius) * 2.5));
+  color: var(--foreground); background: var(--overlay); box-shadow: var(--overlay-shadow); font-size: 16px; line-height: 24px;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-palette { width: 224px; height: 224px; flex-shrink: 0; overflow: visible; border: 0; border-radius: 16px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-palette .arco-color-picker-handler { left: var(--dsh-color-x) !important; top: var(--dsh-color-y) !important; width: 16px; height: 16px; border: 3px solid white; border-radius: 12px; background: var(--dsh-color); box-shadow: 0 0 0 1px rgb(0 0 0 / .1), inset 0 0 0 1px rgb(0 0 0 / .1); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-panel-control { padding: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-wrapper { display: block; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-wrapper > div:first-child { display: flex; flex-direction: column; gap: 12px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar-bg { background: transparent; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar { width: 212px; height: 20px; margin: 0 10px; border: 0; border-radius: 0; box-shadow: inset 0 1px 0 rgb(0 0 0 / .1), inset 0 -1px 0 rgb(0 0 0 / .1); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar::before,
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar::after { content: ''; position: absolute; top: 0; width: 10px; height: 20px; z-index: 0; pointer-events: none; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar::before { left: -10px; border-radius: 16px 0 0 16px; background: linear-gradient(var(--dsh-track-start), var(--dsh-track-start)), repeating-conic-gradient(#efefef 0% 25%, #f7f7f7 0% 50%) 50% / 16px 16px; box-shadow: inset 1px 0 0 rgb(0 0 0 / .1), inset 0 1px 0 rgb(0 0 0 / .1), inset 0 -1px 0 rgb(0 0 0 / .1); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar::after { right: -10px; border-radius: 0 16px 16px 0; background: var(--dsh-track-end); box-shadow: inset -1px 0 0 rgb(0 0 0 / .1), inset 0 1px 0 rgb(0 0 0 / .1), inset 0 -1px 0 rgb(0 0 0 / .1); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar-hue { --dsh-track-start: red; --dsh-track-end: red; background: linear-gradient(to right, red, #ff0, lime, cyan, blue, #f0f, red), repeating-conic-gradient(#efefef 0% 25%, #f7f7f7 0% 50%) 50% / 16px 16px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar-alpha { --dsh-track-start: var(--dsh-color-transparent); --dsh-track-end: var(--dsh-color); background: linear-gradient(to right, var(--dsh-color-transparent), var(--dsh-color)), repeating-conic-gradient(#efefef 0% 25%, #f7f7f7 0% 50%) 50% / 16px 16px !important; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar .arco-color-picker-handler { z-index: 1; top: 50%; width: 16px; height: 16px; border: 3px solid white; border-radius: 16px; background: var(--dsh-color); transform: translate(-50%, -50%); box-shadow: var(--overlay-shadow); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar-hue .arco-color-picker-handler { left: var(--dsh-color-hue-x) !important; background: var(--dsh-color-hue); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar-alpha .arco-color-picker-handler { left: var(--dsh-color-alpha-x) !important; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar .arco-color-picker-handler::before,
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-control-bar .arco-color-picker-handler::after { display: none; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-input-wrapper { margin-top: 12px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) :is(.arco-color-picker-select,.arco-color-picker-select-type,.arco-color-picker-input-alpha,.arco-color-picker-control-wrapper > .arco-color-picker-preview) { display: none; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) .arco-color-picker-group-wrapper { margin-left: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) .arco-color-picker-input-hex { width: 100%; height: 36px; min-height: 36px; padding: 8px 12px; border: 0; border-radius: 12px; background: var(--field-background); color: var(--field-foreground); box-shadow: var(--field-shadow); font-size: 14px; line-height: 20px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-input-hex :is(.arco-input,.arco-input-inner-wrapper) { height: 20px; min-height: 20px; padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; box-shadow: none; font-size: 14px; line-height: 20px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-input-hex :is(.arco-input-prefix,.arco-input-group-prefix) { padding: 0; color: inherit; font-size: 14px; line-height: 20px; }
+
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-handler-center { display: none; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) .arco-color-picker-input-wrapper { display: flex; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) .arco-color-picker-group-wrapper { flex: 1; width: 100%; }
+
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) .arco-color-picker-input-group { width: 100%; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-input-hex :is(.arco-input-prefix,.arco-input-group-prefix) { overflow: clip; }

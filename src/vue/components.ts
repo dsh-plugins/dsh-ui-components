@@ -1,5 +1,8 @@
 import { defineComponent, h, type PropType } from 'vue'
-import { Collapse, Spin } from '@arco-design/web-vue'
+import { Collapse } from '@arco-design/web-vue'
+import { Spin } from './basic.js'
+export { InputNumber as NumberField } from './basic.js'
+export { Tag as Chip } from './basic.js'
 
 /** Arco Vue 全量入口保留原有组件、子组件、实例类型与功能 API。 */
 export * from '@arco-design/web-vue'
@@ -13,9 +16,7 @@ export {
   CollapseItem as Disclosure,
   Empty as EmptyState,
   Divider as Separator,
-  Tag as Chip,
   Textarea as TextArea,
-  InputNumber as NumberField,
   RangePicker as DateRangePicker,
   TypographyText as Text,
 } from '@arco-design/web-vue'

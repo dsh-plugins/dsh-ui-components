@@ -10,3 +10,4 @@ lib/
 .tmp/
 dist/
 docs/preview/dist/
+docs/comparison/

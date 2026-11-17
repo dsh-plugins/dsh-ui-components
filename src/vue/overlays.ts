@@ -1,5 +1,5 @@
 import {
-  computed, defineComponent, h, nextTick, onBeforeUnmount, ref, shallowRef, shallowReactive, useId, watch,
+  cloneVNode, computed, defineComponent, h, isVNode, nextTick, onBeforeUnmount, ref, shallowRef, shallowReactive, useId, watch,
   type DefineComponent, type PropType,
 } from 'vue'
 import {
@@ -86,6 +86,7 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
           return
         }
         const element = dialog
+        element.id = id
         openDialogs.push(element)
         element.setAttribute('role', alert ? 'alertdialog' : 'dialog')
         element.setAttribute('aria-modal', 'true')
@@ -142,7 +143,7 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
           element.removeEventListener('keydown', keydown)
           document.removeEventListener('focusin', focusin)
         }
-        const initialFocus = element.querySelector<HTMLElement>('[autofocus]') ?? candidates()[0] ?? element
+        const initialFocus = element.querySelector<HTMLElement>('[autofocus]') ?? element
         initialFocus.focus()
       }
       watch(visible, async value => {
@@ -184,14 +185,24 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
             ? () => h('span', { id: titleId }, slots.header?.(state) ?? slots.title?.(state) ?? props.title)
             : undefined,
           header: drawer && slots.header ? () => h('div', { id: titleId }, slots.header?.(state)) : undefined,
-          default: () => h(Scrollbar, { outerClass: 'dsh-overlay-scroll', style: { maxHeight: 'calc(100dvh - 400px)', overflow: 'auto' } }, {
+          default: () => h(Scrollbar, { outerClass: 'dsh-overlay-scroll', style: { maxHeight: 'inherit', overflow: 'auto' } }, {
             default: () => slots.default?.(state),
           }),
           footer: slots.footer ? () => slots.footer?.(state) : undefined,
         }
-        return [slots.trigger?.(state), theme.container.value ? (
+        const triggers = slots.trigger?.(state)?.map(node => isVNode(node) ? cloneVNode(node, {
+          'aria-haspopup': 'dialog', 'aria-expanded': visible.value, 'aria-controls': id,
+          class: { 'dsh-overlay-trigger-open': visible.value },
+          onClick: (event: MouseEvent) => { if (!event.defaultPrevented) { open() } },
+        }) : node)
+        return [triggers, theme.container.value ? (
           drawer
-            ? h(ArcoDrawer, { ...shared, class: ['dsh-drawer', id, attrs.class] }, contentSlots)
+            ? h(ArcoDrawer, {
+              ...shared,
+              width: typeof attrs.width === 'string' || typeof attrs.width === 'number' ? attrs.width : 'var(--dsh-drawer-width)',
+              height: typeof attrs.height === 'string' || typeof attrs.height === 'number' ? attrs.height : 'auto',
+              class: ['dsh-drawer', `dsh-drawer-${attrs.placement === 'top' || attrs.placement === 'bottom' ? attrs.placement : 'side'}`, id, attrs.class],
+            }, contentSlots)
             : h(ArcoModal, { ...shared, alignCenter: true, modalClass: ['dsh-modal', id, attrs.modalClass] }, contentSlots)
         ) : null]
       }
@@ -201,7 +212,7 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
 
 /** 带焦点限制、焦点恢复和独立滚动区的模态对话框。 */
 export const Modal = createOverlay('DshModal', false, false) as DefineComponent<ModalProps>
-/** 保持窗口上下留白的侧边面板。 */
+/** 侧边抽屉占满窗口高度，上下抽屉按内容高度展开。 */
 export const Drawer = createOverlay('DshDrawer', true, false) as DefineComponent<DrawerProps>
 /** 默认禁止点击遮罩关闭的确认对话框。 */
 export const AlertDialog = createOverlay('DshAlertDialog', false, true) as DefineComponent<ModalProps>
