@@ -1,6 +1,14 @@
 /** HeroUI 3.2.7 选择与菜单视觉，保留 Arco 交互状态。 */
 export const SELECTION_OVERLAY_CSS = `
 /* HeroUI 3.2.7 ListBox 与菜单的尺寸；沿用 Arco 的键盘、过滤及选中状态。 */
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:not(.arco-select-disabled,.arco-select-error) > .arco-select-view {
+  background: var(--surface-secondary); border: 1px solid var(--border); border-radius: calc(var(--radius) * 3);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:not(.arco-select-disabled,.arco-select-error) > .arco-select-view:is(:focus-visible,:focus-within),
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-focused:not(.arco-select-disabled,.arco-select-error) > .arco-select-view {
+  border-color: var(--focus); box-shadow: 0 0 0 1px var(--focus); outline: none;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-view-input:focus-visible { outline: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-select-dropdown,.arco-select-popup) {
   padding: 0; border: 0; border-radius: min(32px, calc(var(--radius) * 2 + 6px));
   color: var(--foreground); background: var(--overlay); box-shadow: var(--overlay-shadow);
@@ -12,18 +20,25 @@ export const SELECTION_OVERLAY_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option {
   position: relative; display: flex; align-items: center; flex-shrink: 0;
   min-height: 36px; height: auto; width: 100%; padding: 6px 28px 6px 10px;
-  margin: 0; border: 0; border-radius: calc(var(--radius) * 2);
+  margin: 0; border: 0; border-radius: var(--field-radius);
   font-size: 14px; line-height: 20px; font-weight: 400; color: inherit; background: transparent;
 }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option + .arco-select-option { margin-top: 4px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-select-dropdown-list,.arco-select-popup-inner) :is(.arco-select-option:first-child:not(.arco-select-option-wrapper > .arco-select-option),.arco-select-option-wrapper:first-child > .arco-select-option) {
+  border-start-start-radius: calc(var(--radius) * 2); border-start-end-radius: calc(var(--radius) * 2);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-select-dropdown-list,.arco-select-popup-inner) :is(.arco-select-option:last-child:not(.arco-select-option-wrapper > .arco-select-option),.arco-select-option-wrapper:last-child > .arco-select-option) {
+  border-end-start-radius: calc(var(--radius) * 2); border-end-end-radius: calc(var(--radius) * 2);
+}
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option-content { line-height: 20px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option:hover { background: var(--default); }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option-selected:not(.arco-select-option-selected ~ .arco-select-option-selected) { box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--focus); }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-open .arco-select-view { box-shadow: var(--field-shadow); border-color: var(--field-border); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option:not(.arco-select-option-disabled,.arco-select-option-selected):is(:hover,.arco-select-option-active,.arco-select-option-hover) { background: var(--default); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option.arco-select-option-selected:not(.arco-select-option-disabled) {
+  background: var(--accent); color: var(--accent-foreground); box-shadow: none;
+}
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option-disabled { opacity: .5; color: inherit; pointer-events: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option-selected::after {
   content: ''; position: absolute; inset-inline-end: 11px; top: calc(50% - 5px); width: 10px; height: 10px;
-  background: var(--default-foreground);
+  background: currentColor;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 18'%3E%3Cpolyline points='1 9 7 14 15 4' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 10px 10px no-repeat;
 }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option-checkbox { display: flex; padding: 0; margin: 0; color: inherit; font: inherit; }
@@ -50,16 +65,27 @@ export const SELECTION_OVERLAY_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-dropdown-option,.arco-dropdown-menu-item,.arco-dropdown-menu .arco-menu-item,.arco-dropdown-menu .arco-dropdown-menu-pop-header) + :is(.arco-dropdown-option,.arco-dropdown-menu-item,.arco-dropdown-menu .arco-menu-item,.arco-dropdown-menu-pop-header) { margin-top: 2px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-dropdown-option-disabled,.arco-dropdown-menu-item-disabled,.arco-menu-disabled) { opacity: .5; color: inherit; }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-dropdown-option,.arco-dropdown-menu-item,.arco-dropdown-menu .arco-menu-item,.arco-dropdown-menu .arco-dropdown-menu-pop-header):hover { background: var(--default); }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal):not(.arco-menu-collapsed):not(.arco-dropdown-menu .arco-menu) { padding: 4px; border: 0; background: transparent; color: var(--foreground); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal):not(.arco-menu-collapsed):not(.arco-dropdown-menu .arco-menu) { padding: 4px 12px; border: 0; background: transparent; color: var(--foreground); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal) .arco-menu-item {
   position: relative; display: flex; align-items: center; min-height: 36px; height: auto;
   padding: 6px 8px; margin: 0; border: 0; border-radius: calc(var(--radius) * 2);
   font-size: 14px; line-height: 20px; font-weight: 400; color: inherit; background: transparent;
 }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal) .arco-menu-item + .arco-menu-item { margin-top: 4px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal):not(.arco-dropdown-menu .arco-menu) .arco-menu-item + .arco-menu-item { margin-top: 10px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu-inner { padding: 0; overflow: visible; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu-selected::after { display: none; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu-item:hover { background: var(--default); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu-selected::after,
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu-selected-label { display: none; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-dropdown-menu .arco-menu) :is(.arco-menu-item,.arco-menu-inline-header,.arco-menu-pop-header) {
+  border-radius: calc(var(--radius) * 3);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu-horizontal :is(.arco-menu-item,.arco-menu-pop-header) { background: transparent; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-dropdown-menu .arco-menu) :is(.arco-menu-item,.arco-menu-inline-header,.arco-menu-pop-header):not(.arco-menu-disabled,.arco-menu-selected):hover {
+  background: var(--default-hover);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-dropdown-menu .arco-menu) :is(.arco-menu-item,.arco-menu-inline-header,.arco-menu-pop-header).arco-menu-selected {
+  background: var(--accent); color: var(--accent-foreground);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu :is(.arco-menu-icon,.arco-icon) { color: inherit; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-summary { display: inline; white-space: pre; font-size: 14px; line-height: 20px; color: var(--field-foreground); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:has(.dsh-select-summary) { height: 36px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:has(.dsh-select-summary) :is(.arco-select-view-inner,.arco-select-view,.arco-input-tag-inner) { display: flex; align-items: center; flex-wrap: nowrap; gap: 0; height: 36px; margin: 0; padding-block: 0; }
@@ -70,7 +96,6 @@ export const SELECTION_OVERLAY_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:has(.dsh-select-summary) .arco-select-suffix { padding: 0; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-open:focus-visible { outline: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-view-input::placeholder { color: var(--muted); opacity: 1; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-option-wrapper-selected ~ .arco-select-option-wrapper-selected .arco-select-option { box-shadow: none; }
 
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:has(.dsh-select-summary) .arco-select-view-tag { display: contents; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:has(.dsh-select-summary) .arco-select-view-tag .arco-tag-close-btn { display: none; }
@@ -92,9 +117,6 @@ export const SELECTION_OVERLAY_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:has(.dsh-select-summary) .arco-input-tag-view { display: inline-flex; align-items: center; line-height: 20px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-dropdown .arco-dropdown-menu { min-width: 208px; padding: 0; border-radius: 0; box-shadow: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-dropdown-menu-disabled { opacity: .5; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal) .arco-menu-item:has(~.arco-menu-item-selected),
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal):has(.arco-menu-selected) .arco-menu-item { padding-left: 28px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal) .arco-menu-selected::before { content: ''; position: absolute; width: 16px; height: 16px; left: 8px; top: 10px; background: var(--muted); mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 18'%3E%3Cpolyline points='1 9 7 14 15 4' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px 16px no-repeat; }
 
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search { padding: 12px 12px 4px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search input { display: block; box-sizing: border-box; width: 100%; height: 36px; border: 0; border-radius: 12px; padding: 8px 12px; background: var(--field-background); color: var(--field-foreground); font-size: 14px; line-height: 20px; box-shadow: var(--field-shadow); outline: none; }
@@ -112,9 +134,8 @@ export const SELECTION_OVERLAY_CSS = `
 
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-select-view-opened,.arco-select-view-open) .arco-select-view-icon { transform: rotate(180deg); }
 
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal):not(.arco-dropdown-menu .arco-menu) .arco-menu-item { font-size: 16px; line-height: 24px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu:not(.arco-menu-horizontal):not(.arco-dropdown-menu .arco-menu) .arco-menu-item { padding-inline: 16px; font-size: 16px; line-height: 24px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-dropdown-menu .arco-menu-item { padding-left: 10px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-menu-selected::before { mask-size: 10px 10px !important; }
 
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-view-opened .arco-select-view-arrow-icon { transform: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-open .arco-select-arrow-icon > svg { transform: none; }

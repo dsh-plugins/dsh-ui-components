@@ -741,7 +741,7 @@ const HERO_REFERENCE_CSS = `
 .dsh-ui[data-theme][data-radius] .arco-collapse-item-content { border: 0; background: transparent; }
 .dsh-ui[data-theme][data-radius] .arco-collapse-item-content-box { padding: 0 16px 16px; }
 .dsh-ui[data-theme][data-radius] .arco-table { border: 0; padding: 0 4px 4px; border-radius: min(32px, calc(var(--radius) * 2.5)); background: var(--surface-secondary); box-shadow: none; overflow: hidden; }
-.dsh-ui[data-theme][data-radius] .arco-table-container { border: 0; border-radius: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table-container { border: 0; overflow: clip; border-radius: calc(var(--radius) * 2); }
 .dsh-ui[data-theme][data-radius] .arco-table-container::before { display: none; }
 .dsh-ui[data-theme][data-radius] .arco-table th,
 .dsh-ui[data-theme][data-radius] .arco-table td { border-left: 0; border-right: 0; }
@@ -754,6 +754,16 @@ const HERO_REFERENCE_CSS = `
 .dsh-ui[data-theme][data-radius] .arco-table tbody tr:first-child td:last-child { border-top-right-radius: var(--radius-2xl); }
 .dsh-ui[data-theme][data-radius] .arco-table tbody tr:last-child td:first-child { border-bottom-left-radius: var(--radius-2xl); }
 .dsh-ui[data-theme][data-radius] .arco-table tbody tr:last-child td:last-child { border-bottom-right-radius: var(--radius-2xl); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr { --dsh-table-row-background: var(--surface); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table-stripe .arco-table-tr:nth-child(even) { --dsh-table-row-background: var(--surface-secondary); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table-hover .arco-table-tr:is(:hover,.arco-table-tr-hover) { --dsh-table-row-background: var(--surface-hover); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr.arco-table-row-checked { --dsh-table-row-background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table-hover .arco-table-tr.arco-table-row-checked:is(:hover,.arco-table-tr-hover) { --dsh-table-row-background: color-mix(in srgb, var(--accent) 20%, var(--surface)); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr:not(.arco-table-empty-row,.arco-table-expand-content) > .arco-table-td { background: var(--dsh-table-row-background); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr:not(.arco-table-empty-row,.arco-table-expand-content) > .arco-table-td::before { background: var(--dsh-table-row-background); border-radius: inherit; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-checkbox:not(.arco-checkbox-checked,.arco-checkbox-indeterminate) .arco-checkbox-icon { border: 1px solid var(--muted); background: var(--surface-secondary); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table :is(.arco-table-content-scroll,.arco-table-body) { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table:is(:hover,:focus-within) :is(.arco-table-content-scroll,.arco-table-body) { scrollbar-color: var(--muted) transparent; }
 .dsh-ui[data-theme][data-radius] .arco-skeleton-header .arco-skeleton-image { margin: 0; background: color-mix(in oklab, var(--surface-tertiary) 70%, transparent); border-radius: var(--radius-sm); }
 .dsh-ui[data-theme][data-radius] .arco-breadcrumb { gap: 6px; }
 .dsh-ui[data-theme][data-radius] .arco-breadcrumb-item { padding: 0; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--muted); }
@@ -1070,6 +1080,11 @@ body[data-ds-dark-theme] .dsh-ui[data-theme="host"][data-radius] {
 .dsh-ui[data-theme][data-radius] :is(.arco-input, .arco-textarea) { color: var(--dsh-foreground); }
 .dsh-ui[data-theme][data-radius] :is(.arco-input-error, .arco-textarea-error, .arco-select-view-error) { border-color: var(--dsh-danger); }
 .dsh-ui[data-theme][data-radius] .arco-input-wrapper .arco-input:focus-visible, .dsh-ui[data-theme][data-radius] .arco-textarea:focus-visible { outline: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input:not(.arco-input-wrapper .arco-input,.arco-input-error):not(:focus),
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper:not(.arco-input-inner-wrapper-error):not(:focus-within) { border-color: var(--border); background: var(--surface-secondary); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea:focus { border-color: var(--focus); box-shadow: inset 0 0 0 1px var(--focus); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-btn-icon-only.arco-btn-loading { color: var(--button-fg); background: var(--button-bg); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-btn-icon-only.arco-btn-loading::before { display: none; }
 .dsh-ui[data-theme][data-radius] .arco-switch { min-width: 40px; height: 24px; border-radius: 999px; }
 .dsh-ui[data-theme][data-radius] .arco-switch-dot { width: 18px; height: 18px; top: 3px; }
 .dsh-ui[data-theme][data-radius] .arco-checkbox-icon { width: 18px; height: 18px; border-radius: 6px; }
@@ -1206,7 +1221,8 @@ body[data-ds-dark-theme] .dsh-ui[data-theme="host"][data-radius] {
 
 
 /* 默认垂直字段采用 TextField 排版，直属选择器保留嵌套表单和复合控件的布局。 */
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-form:is(.arco-form-layout-vertical,.arco-form-vertical):not(.arco-form-size-mini,.arco-form-size-small,.arco-form-size-large) > .arco-form-item:not(.arco-form-item-layout-horizontal,.arco-form-layout-horizontal) { display:flex; flex-direction:column; align-items:stretch; gap:4px; margin:0; padding:0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-form:is(.arco-form-layout-vertical,.arco-form-vertical):not(.arco-form-size-mini,.arco-form-size-small,.arco-form-size-large) { display:flex; flex-direction:column; gap:16px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-form:is(.arco-form-layout-vertical,.arco-form-vertical):not(.arco-form-size-mini,.arco-form-size-small,.arco-form-size-large) > .arco-form-item:not(.arco-form-item-layout-horizontal,.arco-form-layout-horizontal) { display:flex; flex-direction:column; align-items:stretch; gap:8px; margin:0; padding:0; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-form:is(.arco-form-layout-vertical,.arco-form-vertical):not(.arco-form-size-mini,.arco-form-size-small,.arco-form-size-large) > .arco-form-item:not(.arco-form-item-layout-horizontal,.arco-form-layout-horizontal) > :is(.arco-form-item-label-col,.arco-form-label-item) { width:100%; min-height:0; margin:0; padding:0; line-height:20px; text-align:start; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-form:is(.arco-form-layout-vertical,.arco-form-vertical):not(.arco-form-size-mini,.arco-form-size-small,.arco-form-size-large) > .arco-form-item:not(.arco-form-item-layout-horizontal,.arco-form-layout-horizontal) > :is(.arco-form-item-label-col,.arco-form-label-item) > label { padding:0; margin:0; color:var(--foreground); font-size:14px; line-height:20px; font-weight:500; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-form:is(.arco-form-layout-vertical,.arco-form-vertical):not(.arco-form-size-mini,.arco-form-size-small,.arco-form-size-large) > .arco-form-item:not(.arco-form-item-layout-horizontal,.arco-form-layout-horizontal) > :is(.arco-form-item-wrapper-col,.arco-form-item-wrapper) { width:100%; display:flex; flex-direction:column; gap:4px; }
@@ -1328,6 +1344,10 @@ body[data-ds-dark-theme] .dsh-ui[data-theme="host"][data-radius] {
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-message-wrapper > div { display: flex; flex-direction: column; align-items: center; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-message-wrapper-top { top: 16px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-message-wrapper-bottom { bottom: 16px; }
+.dsh-ui[data-theme][data-radius] .arco-message-wrapper .fadeMessage-enter,
+.dsh-ui[data-theme][data-radius] .arco-message-wrapper .fadeMessage-exit-active { opacity: 0; translate: 0 -24px; }
+.dsh-ui[data-theme][data-radius] .arco-message-wrapper .fadeMessage-enter-active { opacity: 1; translate: 0 0; transition: translate 100ms ease, opacity 100ms ease; }
+.dsh-ui[data-theme][data-radius] .arco-message-wrapper .fadeMessage-exit-active { transition: translate 220ms ease, opacity 220ms ease, height 220ms ease; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-notification-wrapper { width: min(460px, calc(100vw - 32px)); }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-notification-wrapper-topLeft,.arco-notification-wrapper-topRight) { top: 16px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-notification-wrapper-bottomLeft,.arco-notification-wrapper-bottomRight) { bottom: 16px; }
