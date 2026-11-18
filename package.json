@@ -1,0 +1,35 @@
+{
+  "name": "dsh-ui-components-docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DSH UI Components 官方文档站点（Vue & React）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@arco-design/web-react": "^2.66.18",
+    "@arco-design/web-vue": "^2.59.0",
+    "@dsh-plugin/dsh-ui-components": "latest",
+    "@dsh-plugin/dsh-ui-components-vue": "latest",
+    "dayjs": "1.11.23",
+    "highlight.js": "^11.11.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vue": "^3.5.45",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "typescript": "~5.8.3",
+    "vite": "^6.4.6",
+    "vue-tsc": "^3.1.0"
+  }
+}
