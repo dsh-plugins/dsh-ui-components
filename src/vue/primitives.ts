@@ -296,9 +296,11 @@ export const InputOTP = defineComponent({
 /** 滚动内容使用 Arco Scrollbar，边缘状态供主题绘制阴影。 */
 export const ScrollShadow = defineComponent({
   name: 'DshScrollShadow',
-  props: { maxHeight: { type: [Number, String], default: 240 } },
+  props: { maxHeight: { type: [Number, String], default: 240 }, variant: String as PropType<'page'> },
   setup(props, { slots }) {
     const root = ref<HTMLElement | null>(null)
+    const scrolling = ref(false)
+    let hideTimer: ReturnType<typeof setTimeout> | undefined
     const edges = ref({ top: false, bottom: false, left: false, right: false })
     let resize: ResizeObserver | undefined
     let mutations: MutationObserver | undefined
@@ -327,11 +329,18 @@ export const ScrollShadow = defineComponent({
         if (content) { mutations.observe(content, { childList: true, subtree: true, characterData: true }) }
       }
     })
-    onBeforeUnmount(() => { resize?.disconnect(); mutations?.disconnect() })
+    onBeforeUnmount(() => { resize?.disconnect(); mutations?.disconnect(); clearTimeout(hideTimer) })
     return () => h('div', {
       ref: root,
-      class: 'dsh-scroll-shadow',
-      onScrollCapture: measure,
+      class: ['dsh-scroll-shadow', { 'dsh-scroll-shadow--page': props.variant === 'page' }],
+      'data-scrolling': scrolling.value || undefined,
+      onScrollCapture() {
+        measure()
+        if (props.variant !== 'page') { return }
+        scrolling.value = true
+        clearTimeout(hideTimer)
+        hideTimer = setTimeout(() => { scrolling.value = false }, 900)
+      },
       'data-top': edges.value.top || undefined,
       'data-bottom': edges.value.bottom || undefined,
       'data-left': edges.value.left || undefined,

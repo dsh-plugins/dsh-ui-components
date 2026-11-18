@@ -10,9 +10,9 @@ import {
 import { provideDshPopupScope, useDshTheme, type ToastApi } from './provider.js'
 
 /** 保留 Arco 的事件与异步确认接口，并提供初始显示状态。 */
-export type ModalProps = InstanceType<typeof ArcoModal>['$props'] & { label?: string }
+export type ModalProps = InstanceType<typeof ArcoModal>['$props'] & { label?: string; scrollGutter?: boolean }
 /** 抽屉沿用 Arco 的位置和尺寸接口。 */
-export type DrawerProps = InstanceType<typeof ArcoDrawer>['$props'] & { label?: string }
+export type DrawerProps = InstanceType<typeof ArcoDrawer>['$props'] & { label?: string; scrollGutter?: boolean }
 
 const focusableSelector = 'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
 const openDialogs: HTMLElement[] = []
@@ -26,6 +26,7 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
       defaultVisible: Boolean,
       title: String,
       label: String,
+      scrollGutter: Boolean,
       escToClose: { type: Boolean, default: true },
       maskClosable: { type: Boolean, default: undefined },
       popupContainer: { type: [String, Object] as PropType<string | HTMLElement> },
@@ -185,7 +186,7 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
             ? () => h('span', { id: titleId }, slots.header?.(state) ?? slots.title?.(state) ?? props.title)
             : undefined,
           header: drawer && slots.header ? () => h('div', { id: titleId }, slots.header?.(state)) : undefined,
-          default: () => h(Scrollbar, { outerClass: 'dsh-overlay-scroll', style: { maxHeight: 'inherit', overflow: 'auto' } }, {
+          default: () => h(Scrollbar, { outerClass: props.scrollGutter ? 'dsh-overlay-scroll dsh-overlay-scroll--gutter' : 'dsh-overlay-scroll', style: { maxHeight: 'inherit', overflow: 'auto' } }, {
             default: () => slots.default?.(state),
           }),
           footer: slots.footer ? () => slots.footer?.(state) : undefined,

@@ -1,5 +1,6 @@
-import { Fragment, Teleport, cloneVNode, createTextVNode, defineComponent, h, isVNode, nextTick, ref, shallowRef, type App, type Component, type ComponentPublicInstance, type CSSProperties, type VNode } from 'vue'
+import { Fragment, Teleport, getCurrentInstance, cloneVNode, createTextVNode, defineComponent, h, isVNode, nextTick, ref, shallowRef, type App, type Component, type ComponentPublicInstance, type CSSProperties, type VNode } from 'vue'
 import * as Arco from '@arco-design/web-vue'
+import IconInfoCircleFill from '@arco-design/web-vue/es/icon/icon-info-circle-fill/index.js'
 import { useDshTheme } from './provider.js'
 
 const scopedComponents = new Map<Component, Component>()
@@ -25,6 +26,14 @@ function scopedPopup<C extends Component>(component: C, name: string, nested?: '
         // Trigger 在首次打开时缓存挂载点，等待 Provider 建好容器再创建实例。
         if (!container.value) { return null }
         const forwarded = { ...attrs }
+        if (name === 'Menu') {
+          const itemWidth = attrs.itemWidth ?? attrs['item-width']
+          forwarded.class = [attrs.class, { 'dsh-menu--centered': attrs.centered === true || attrs.centered === '' }]
+          forwarded.style = [attrs.style, typeof itemWidth === 'string' || typeof itemWidth === 'number' ? { '--dsh-menu-item-width': typeof itemWidth === 'number' ? itemWidth + 'px' : itemWidth } : undefined]
+          delete forwarded.centered
+          delete forwarded.itemWidth
+          delete forwarded['item-width']
+        }
         if (name === 'Popconfirm') {
           for (const [key, kebab] of [['cancelButtonProps', 'cancel-button-props'], ['okButtonProps', 'ok-button-props']] as const) {
             forwarded[key] = { size: 'small', ...(attrs[key] ?? attrs[kebab] ?? {}) as Record<string, unknown> }
@@ -220,7 +229,47 @@ export const Popover: typeof Arco.Popover = scopedPopup(Arco.Popover, 'Popover')
 export const Popconfirm: typeof Arco.Popconfirm = scopedPopup(Arco.Popconfirm, 'Popconfirm')
 export const Trigger: typeof Arco.Trigger = scopedPopup(Arco.Trigger, 'Trigger')
 export const Mention: typeof Arco.Mention = scopedPopup(Arco.Mention, 'Mention')
-export const Menu: typeof Arco.Menu = scopedPopup(Arco.Menu, 'Menu', 'triggerProps')
+export type MenuOptions = { centered?: boolean; itemWidth?: number | string }
+
+export const MenuItem = defineComponent({
+  name: 'DshMenuItem', inheritAttrs: false,
+  props: Arco.MenuItem.props,
+  setup(props, { attrs, slots }) {
+    const instance = getCurrentInstance()
+    return () => h(Arco.MenuItem, { ...attrs, ...props, key: instance?.vnode.key }, slots.action ? {
+      ...slots,
+      default: () => h('div', { class: 'dsh-menu-item-content' }, [
+        h('span', null, slots.default?.()),
+        h('span', {
+          class: 'dsh-menu-item-action',
+          inert: props.disabled || undefined,
+          onClick: (event: Event) => event.stopPropagation(),
+          onKeydown: (event: Event) => event.stopPropagation(),
+        }, slots.action?.()),
+      ]),
+    } : slots)
+  },
+})
+
+scopedComponents.set(Arco.MenuItem, MenuItem)
+
+export const Menu = scopedPopup(Arco.Menu, 'Menu', 'triggerProps') as typeof Arco.Menu
+  & (new () => Omit<InstanceType<typeof Arco.Menu>, '$props'> & { $props: InstanceType<typeof Arco.Menu>['$props'] & MenuOptions })
+  & { Item: typeof MenuItem }
+
+export const HintIcon = defineComponent({
+  name: 'DshHintIcon', inheritAttrs: false,
+  props: { content: String, label: String },
+  setup(props, { attrs, slots }) {
+    return () => h(Tooltip, { content: props.content, trigger: ['hover', 'focus'] }, {
+      ...(slots.content ? { content: slots.content } : {}),
+      default: () => h('button', {
+        ...attrs, type: 'button', class: ['dsh-hint-icon', attrs.class], 'aria-label': props.label ?? props.content ?? 'Info',
+        onClick: (event: Event) => event.stopPropagation(),
+      }, [h(IconInfoCircleFill, { 'aria-hidden': true })]),
+    })
+  },
+})
 export const Image: typeof Arco.Image = scopedPopup(Arco.Image, 'Image', 'previewProps')
 export const ImagePreview: typeof Arco.ImagePreview = scopedPopup(Arco.ImagePreview, 'ImagePreview')
 export const ImagePreviewGroup: typeof Arco.ImagePreviewGroup = scopedPopup(Arco.ImagePreviewGroup, 'ImagePreviewGroup')
@@ -229,5 +278,5 @@ Object.assign(Cascader, { CascaderPanel: Arco.CascaderPanel })
 Object.assign(DatePicker, { MonthPicker, QuarterPicker, WeekPicker, YearPicker, RangePicker })
 Object.assign(Dropdown, { Option: Arco.Doption, Group: Arco.Dgroup, Submenu: Dsubmenu, Button: DropdownButton })
 Object.assign(Select, { Option: Arco.Option, OptGroup: Arco.Optgroup })
-Object.assign(Menu, { Item: Arco.MenuItem, ItemGroup: Arco.MenuItemGroup, SubMenu: Arco.SubMenu })
+Object.assign(Menu, { Item: MenuItem, ItemGroup: Arco.MenuItemGroup, SubMenu: Arco.SubMenu })
 Object.assign(Image, { Preview: ImagePreview, PreviewGroup: ImagePreviewGroup })

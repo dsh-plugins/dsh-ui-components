@@ -1,6 +1,6 @@
-import { defineComponent, h, inject, mergeProps, onBeforeUnmount, onMounted, onUpdated, shallowRef, useId, type App, type Component, type ComponentPublicInstance } from 'vue'
+import { defineComponent, h, inject, mergeProps, onBeforeUnmount, onMounted, onUpdated, shallowRef, useId, type App, type Component, type ComponentPublicInstance, type PropType } from 'vue'
 import { configProviderInjectionKey } from '@arco-design/web-vue/es/config-provider/context.js'
-import { Alert as ArcoAlert, Progress as ArcoProgress, Spin as ArcoSpin, InputNumber as ArcoInputNumber, InputTag as ArcoInputTag, Tag as ArcoTag, Result as ArcoResult, Tree as ArcoTree, Table as ArcoTable } from '@arco-design/web-vue'
+import { Alert as ArcoAlert, Progress as ArcoProgress, Spin as ArcoSpin, InputNumber as ArcoInputNumber, InputTag as ArcoInputTag, Tag as ArcoTag, Result as ArcoResult, Tree as ArcoTree, Table as ArcoTable, Card as ArcoCard } from '@arco-design/web-vue'
 
 const progress = defineComponent({
   name: 'DshProgress',
@@ -41,10 +41,18 @@ function installComponent<C extends InstallableComponent>(wrapped: Component, or
 /** 保留 Arco 进度组件参数，线性进度采用 HeroUI 的默认轨道厚度。 */
 export const Progress = installComponent(progress, ArcoProgress)
 
+export type TableOptions = { contentSized?: boolean; loadingStyle?: 'blur' }
+export type SpinOptions = { loadingStyle?: 'blur' }
+export type CardOptions = { variant?: 'glass'; glassOpacity?: number }
+
+type WithOptions<C extends abstract new (...args: never[]) => { $props: object }, Options> =
+  C & (new () => Omit<InstanceType<C>, '$props'> & { $props: InstanceType<C>['$props'] & Options })
+
 /** 表格滚动时临时显示滑块，保留 Arco 的参数、插槽和公开实例方法。 */
 export const Table = installComponent(defineComponent({
   name: 'DshTable', inheritAttrs: false,
-  setup(_, { attrs, slots, expose }) {
+  props: { contentSized: Boolean, loadingStyle: String as PropType<TableOptions['loadingStyle']> },
+  setup(props, { attrs, slots, expose }) {
     const instance = shallowRef<ComponentPublicInstance>()
     const scrolling = shallowRef(false)
     let hideTimer: ReturnType<typeof setTimeout> | undefined
@@ -53,16 +61,41 @@ export const Table = installComponent(defineComponent({
       has: (_, key) => instance.value !== undefined && key in instance.value,
     }))
     onBeforeUnmount(() => clearTimeout(hideTimer))
-    return () => h(ArcoTable, mergeProps(attrs, {
-      ref: instance, class: 'dsh-scroll-table', 'data-scrolling': scrolling.value || undefined,
-      onScrollCapture() {
-        scrolling.value = true
-        clearTimeout(hideTimer)
-        hideTimer = setTimeout(() => { scrolling.value = false }, 900)
-      },
+    return () => {
+      const blur = props.loadingStyle === 'blur'
+      const loading = attrs.loading
+      const spin = typeof loading === 'object' && loading !== null ? loading as InstanceType<typeof ArcoSpin>['$props'] : { loading: loading === true || loading === '' }
+      const busy = blur && spin.loading === true
+      const table = h(ArcoTable, mergeProps(attrs, {
+          ...(props.contentSized ? { scroll: { x: 'max-content', minWidth: '100%', ...attrs.scroll as object } } : {}),
+          ...(blur ? { loading: false, inert: busy || undefined } : {}),
+        ref: instance, class: ['dsh-scroll-table', { 'dsh-table--content-sized': props.contentSized }], 'data-scrolling': scrolling.value || undefined,
+        onScrollCapture() {
+          scrolling.value = true
+          clearTimeout(hideTimer)
+          hideTimer = setTimeout(() => { scrolling.value = false }, 900)
+        },
+      }), slots)
+      return blur ? h('div', { class: 'dsh-table-loading', 'aria-busy': busy || undefined }, [
+        table,
+        busy && h('div', { class: 'dsh-table-loading__indicator' }, h(Spin, { ...spin, loading: true }, { element: slots['loading-icon'] })),
+      ]) : table
+    }
+  },
+}), ArcoTable) as WithOptions<typeof ArcoTable, TableOptions>
+
+/** Optional translucent glass surface. */
+export const Card = Object.assign(installComponent(defineComponent({
+  name: 'DshCard',
+  inheritAttrs: false,
+  props: { variant: String as PropType<CardOptions['variant']>, glassOpacity: Number },
+  setup(props, { attrs, slots }) {
+    return () => h(ArcoCard, mergeProps(attrs, {
+      class: { 'dsh-card--glass': props.variant === 'glass' },
+      style: props.variant === 'glass' && Number.isFinite(props.glassOpacity) ? { '--dsh-glass-opacity': props.glassOpacity } : undefined,
     }), slots)
   },
-}), ArcoTable)
+}), ArcoCard), { Meta: ArcoCard.Meta, Grid: ArcoCard.Grid }) as WithOptions<typeof ArcoCard, CardOptions>
 
 /** 标签输入单独标记主题范围，避免修改选择器内部复用的 Arco 标签输入。 */
 export const InputTag = installComponent(defineComponent({
@@ -124,11 +157,11 @@ export const Result = installComponent(defineComponent({
 
 /** 默认加载图标采用 HeroUI 渐变圆环，显式图标、点阵和元素插槽保留 Arco 行为。 */
 export const Spin = installComponent(defineComponent({
-  name: 'DshSpin', inheritAttrs: false, props: ArcoSpin.props,
+  name: 'DshSpin', inheritAttrs: false, props: { ...ArcoSpin.props, loadingStyle: String as PropType<SpinOptions['loadingStyle']> },
   setup(props, { attrs, slots }) {
     const id = useId()
     const config = inject(configProviderInjectionKey, undefined)
-    const spinProps = props as InstanceType<typeof ArcoSpin>['$props']
+    const spinProps = props as InstanceType<typeof ArcoSpin>['$props'] & SpinOptions
     const icon = () => h('svg', { class: 'dsh-spinner-icon', viewBox: '0 0 24 24', 'aria-hidden': true, style: spinProps.size ? { width: `${spinProps.size}px`, height: `${spinProps.size}px` } : undefined }, [
       h('defs', {}, [
         h('linearGradient', { id: `${id}-1`, x1: '50%', x2: '50%', y1: '5.271%', y2: '91.793%' }, [h('stop', { offset: '0%', 'stop-color': 'currentColor' }), h('stop', { offset: '100%', 'stop-color': 'currentColor', 'stop-opacity': .55 })]),
@@ -137,9 +170,20 @@ export const Spin = installComponent(defineComponent({
       h('path', { d: 'M8.749.021a1.5 1.5 0 0 1 .497 2.958A7.5 7.5 0 0 0 3 10.375a7.5 7.5 0 0 0 7.5 7.5v3c-5.799 0-10.5-4.7-10.5-10.5C0 5.23 3.726.865 8.749.021', fill: `url(#${id}-1)`, transform: 'translate(1.5 1.625)' }),
       h('path', { d: 'M15.392 2.673a1.5 1.5 0 0 1 2.119-.115A10.48 10.48 0 0 1 21 10.375c0 5.8-4.701 10.5-10.5 10.5v-3a7.5 7.5 0 0 0 5.007-13.084a1.5 1.5 0 0 1-.115-2.118', fill: `url(#${id}-2)`, transform: 'translate(1.5 1.625)' }),
     ])
-    return () => h(ArcoSpin, { ...props, ...attrs }, spinProps.dot || slots.icon || slots.element || config?.slots.loading ? slots : { ...slots, element: icon })
+    return () => {
+      const { loadingStyle, ...forwarded } = spinProps
+      const blur = loadingStyle === 'blur' && slots.default
+      const iconSlots = spinProps.dot || slots.icon || slots.element || config?.slots.loading ? slots : { ...slots, element: icon }
+      return h(ArcoSpin, mergeProps(forwarded, attrs, {
+        class: { 'dsh-spin--blur': blur },
+        'aria-busy': blur && spinProps.loading ? true : undefined,
+      }), blur ? {
+        ...iconSlots,
+        default: () => h('div', { class: 'dsh-spin-content', inert: spinProps.loading || undefined }, slots.default?.()),
+      } : iconSlots)
+    }
   },
-}), ArcoSpin)
+}), ArcoSpin) as WithOptions<typeof ArcoSpin, SpinOptions>
 
 /** 按钮模式缺少图标插槽，通过组件自身 SVG 节点保留 Arco 数值与长按步进逻辑。 */
 export const InputNumber = installComponent(defineComponent({

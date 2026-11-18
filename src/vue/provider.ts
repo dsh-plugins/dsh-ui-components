@@ -74,6 +74,8 @@ export const DshProvider = defineComponent({
   inheritAttrs: false,
   props: {
     theme: { type: String as PropType<DshTheme>, default: 'auto' },
+    overlayInset: [Number, String],
+    overlayRadius: [Number, String],
     radius: { type: String as PropType<DshRadius>, default: 'md' },
     reducedMotion: { type: Boolean, default: undefined },
     locale: ConfigProvider.props.locale,
@@ -166,6 +168,9 @@ export const DshProvider = defineComponent({
       portal.dataset.radius = props.radius
       portal.dataset.motion = motion.value
       portal.dataset.hostTheme = String(props.theme === 'auto' && hostTheme.value)
+      const framed = props.overlayInset !== undefined || props.overlayRadius !== undefined
+      if (framed) { portal.dataset.overlayFrame = '' }
+      else { delete portal.dataset.overlayFrame }
       portal.dir = props.rtl ? 'rtl' : 'ltr'
       // 自定义属性在声明元素处求值，独立 portal 必须复制根节点的最终值。
       portal.removeAttribute('style')
@@ -175,6 +180,9 @@ export const DshProvider = defineComponent({
         if (name.startsWith('--')) {
           portal.style.setProperty(name, styles.getPropertyValue(name))
         }
+      }
+      for (const [name, value] of [['inset', props.overlayInset], ['radius', props.overlayRadius]] as const) {
+        if (value !== undefined) { portal.style.setProperty('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
       }
     }
     onMounted(() => {
@@ -208,7 +216,7 @@ export const DshProvider = defineComponent({
       }
       update()
     })
-    watch([resolvedTheme, motion, () => props.radius, () => props.rtl], syncPortal, { flush: 'post' })
+    watch([resolvedTheme, motion, () => props.radius, () => props.rtl, () => props.overlayInset, () => props.overlayRadius], syncPortal, { flush: 'post' })
     onUpdated(syncPortal)
     onBeforeUnmount(() => {
       disposed = true
@@ -233,10 +241,10 @@ export const DshProvider = defineComponent({
             tag: 'div', name: 'dsh-toast-slide',
             class: 'dsh-toast-region', 'data-position': position, 'aria-label': '通知',
             style: {
-              top: position.startsWith('top') ? '16px' : 'auto',
-              bottom: position.startsWith('bottom') ? '16px' : 'auto',
-              left: position.endsWith('Left') ? '16px' : position.endsWith('Right') ? 'auto' : '50%',
-              right: position.endsWith('Right') ? '16px' : 'auto',
+              top: position.startsWith('top') ? 'calc(16px + var(--dsh-overlay-inset, 0px))' : 'auto',
+              bottom: position.startsWith('bottom') ? 'calc(16px + var(--dsh-overlay-inset, 0px))' : 'auto',
+              left: position.endsWith('Left') ? 'calc(16px + var(--dsh-overlay-inset, 0px))' : position.endsWith('Right') ? 'auto' : '50%',
+              right: position.endsWith('Right') ? 'calc(16px + var(--dsh-overlay-inset, 0px))' : 'auto',
               transform: position.endsWith('Left') || position.endsWith('Right') ? 'none' : 'translateX(-50%)',
             },
           }, { default: () => entries.filter(entry => (entry.position ?? 'top') === position).map(entry =>
