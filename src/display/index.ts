@@ -35,6 +35,8 @@ export {
   HoverCard,
   Popover,
   Tooltip,
+  HintIcon,
+  type HintIconProps,
   type CollapseItemProps,
   type CollapseProps,
   type HoverCardProps,

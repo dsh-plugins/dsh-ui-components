@@ -355,6 +355,9 @@ const HERO_REFERENCE_CSS = `
     color-scheme: light;
     --background: oklch(0.9702 0 0);
     --foreground: var(--eclipse);
+    --dsh-markdown-quote-light: #ddd;
+    --dsh-markdown-quote-dark: #1f1f20;
+    --dsh-markdown-important: rgb(var(--purple-6));
     --surface: var(--white);
     --surface-foreground: var(--foreground);
     --surface-secondary: oklch(0.9524 0.0013 286.37);

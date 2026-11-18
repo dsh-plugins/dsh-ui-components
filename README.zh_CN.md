@@ -67,6 +67,15 @@ DSH 组合组件包括 `SettingsCard`、`SettingsRow`、`PanelShell`、`MenuSele
 
 完整对照与迁移差异见 [Arco 能力与 HeroUI 样式](docs/arco-coverage.md)。Vue 独立包 `@dsh-plugin/dsh-ui-components-vue` 位于 `vue` 分支。
 
+## 可选界面样式
+
+- `Table` 的 `contentSized` 按内容计算列宽并保持单行。固定列沿用 Arco 的 `fixed` 配置。`loadingStyle="blur"` 仅模糊数据区。`Spin` 的同名选项模糊卡片内容。
+- `Card` 的 `variant="glass"` 启用半透明背景和模糊，`glassOpacity` 可设置 0 到 1 的背景不透明度。
+- `ScrollShadow` 的 `variant="page"` 启用两端渐隐的滚动阴影。`Modal`、`Drawer` 的 `scrollGutter` 在内容和滚动条之间留空。`DshProvider` 的 `overlayInset`、`overlayRadius` 可调整作用域内的提示位置和遮罩轮廓。
+- 横向 `Menu` 的 `centered` 和 `itemWidth` 控制整体居中及每项宽度。 `MenuItem` 的 `action` 属性可以放置独立操作。
+- 在标签和单选 `Select` 的共同容器上添加 `dsh-select-label-inset` 可对齐文字。`HintIcon` 支持鼠标悬停和键盘聚焦显示 `content`。
+- `dsh-markdown` 为调用方渲染的 Markdown HTML 设置样式，覆盖表格、代码块、引用块、任务列表、`mark`、`kbd` 和 GitHub 格式提示块。
+
 ## 图标
 
 ```tsx

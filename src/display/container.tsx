@@ -15,7 +15,9 @@ export type CardProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Card>, '
   /** 头部右侧的操作区。 */
   extra?: React.ReactNode
   /** 视觉形态。`elevated` 用描边阴影，`flat` 用极细实线边框。 */
-  variant?: 'elevated' | 'flat'
+  variant?: 'elevated' | 'flat' | 'glass'
+  /** Override the glass surface opacity, from 0 to 1. */
+  glassOpacity?: number
   /** 收紧内边距，用于密集列表。 */
   tight?: boolean
 }
@@ -26,14 +28,18 @@ export type CardProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Card>, '
  * @param props - 见 {@link CardProps}。
  * @returns 卡片元素。
  */
-export function Card({ title, extra, variant = 'elevated', tight, className, ...rest }: CardProps): React.ReactElement {
+export function Card({ title, extra, variant = 'elevated', tight, glassOpacity, className, style, ...rest }: CardProps): React.ReactElement {
   injectDisplayStyles()
+  const glassStyle = variant === 'glass' && Number.isFinite(glassOpacity)
+    ? { '--dsh-glass-opacity': glassOpacity } as React.CSSProperties
+    : undefined
   return (
     <Arco.Card
       {...rest}
       title={title}
       extra={extra}
-      className={cx(variant === 'flat' && 'dsh-card--flat', tight === true && 'dsh-card--tight', Array.isArray(className) ? className.join(' ') : className)}
+      style={glassStyle ? { ...glassStyle, ...style } : style}
+      className={cx(variant === 'glass' && 'dsh-card--glass', variant === 'flat' && 'dsh-card--flat', tight === true && 'dsh-card--tight', Array.isArray(className) ? className.join(' ') : className)}
     />
   )
 }

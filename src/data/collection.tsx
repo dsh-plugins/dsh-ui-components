@@ -6,10 +6,17 @@
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { HeroTree } from './hero-tree.js'
+import { HeroSpin } from '../display/hero-spin.js'
+import { cx } from '../foundation/style.js'
 import { injectDataStyles } from './styles.js'
 
 /** {@link Table} 的 props。 */
-export type TableProps = React.ComponentPropsWithoutRef<typeof Arco.Table>
+export type TableProps = React.ComponentPropsWithoutRef<typeof Arco.Table> & {
+  /** Use intrinsic column widths and horizontal overflow. */
+  contentSized?: boolean
+  /** Blur data rows while loading, retaining the table frame and header. */
+  loadingStyle?: 'blur'
+}
 
 /**
  * 数据表格。表头用模块底色，行悬停用交互填充。
@@ -17,9 +24,29 @@ export type TableProps = React.ComponentPropsWithoutRef<typeof Arco.Table>
  * @param props - 见 {@link TableProps}。
  * @returns 表格元素。
  */
-function TableBase(props: TableProps): React.ReactElement {
+function TableBase({ contentSized, loadingStyle, loading, scroll, className, ...props }: TableProps): React.ReactElement {
   injectDataStyles()
-  return <Arco.Table {...props} />
+  const blur = loadingStyle === 'blur'
+  const spin = typeof loading === 'object' ? loading : { loading }
+  const busy = blur && Boolean(spin.loading)
+  const delay = (typeof loading === 'object' ? loading.delay : 0) ?? 0
+  const [delayElapsed, setDelayElapsed] = React.useState(false)
+  React.useEffect(() => {
+    setDelayElapsed(false)
+    if (!busy || delay <= 0) { return }
+    const timer = setTimeout(() => { setDelayElapsed(true) }, delay)
+    return () => clearTimeout(timer)
+  }, [busy, delay])
+  const showLoading = busy && (delay <= 0 || delayElapsed)
+  const table = <Arco.Table {...props}
+    className={cx(Array.isArray(className) ? className.join(' ') : className, contentSized && 'dsh-table--content-sized')}
+    scroll={contentSized ? { x: 'max-content', ...scroll } : scroll}
+    loading={blur ? false : loading}
+  />
+  return blur ? <div className="dsh-table-loading" aria-busy={busy || undefined} data-loading={showLoading || undefined}>
+    <div {...(busy ? { inert: '' } : {})}>{table}</div>
+    {showLoading && <div className="dsh-table-loading__indicator"><HeroSpin {...spin} delay={undefined} loading /></div>}
+  </div> : table
 }
 
 /**

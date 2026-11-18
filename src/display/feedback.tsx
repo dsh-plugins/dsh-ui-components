@@ -78,7 +78,7 @@ export function Skeleton(props: SkeletonProps): React.ReactElement {
 }
 
 /** {@link Spin} 的 props。 */
-export type SpinProps = React.ComponentPropsWithoutRef<typeof Arco.Spin>
+export type SpinProps = React.ComponentPropsWithoutRef<typeof Arco.Spin> & { loadingStyle?: 'blur' }
 
 /**
  * 加载指示器。
@@ -86,7 +86,12 @@ export type SpinProps = React.ComponentPropsWithoutRef<typeof Arco.Spin>
  * @param props - 见 {@link SpinProps}。
  * @returns 加载元素。
  */
-export function Spin(props: SpinProps): React.ReactElement {
+export function Spin({ loadingStyle, className, children, ...props }: SpinProps): React.ReactElement {
   injectDisplayStyles()
-  return <Arco.Spin {...props} />
+  if (loadingStyle !== 'blur' || children == null) {
+    return <Arco.Spin {...props} className={className}>{children}</Arco.Spin>
+  }
+  return <Arco.Spin {...props} className={['dsh-spin--blur', className].flat().filter(Boolean).join(' ')} aria-busy={props.loading || undefined}>
+    <div {...(props.loading ? { inert: '' } : {})}>{children}</div>
+  </Arco.Spin>
 }

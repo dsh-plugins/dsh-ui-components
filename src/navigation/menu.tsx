@@ -9,7 +9,10 @@ import { cx } from '../foundation/style.js'
 import { injectNavigationStyles } from './styles.js'
 
 /** {@link Menu} 的 props。 */
-export type MenuProps = React.ComponentPropsWithoutRef<typeof Arco.Menu>
+export type MenuProps = React.ComponentPropsWithoutRef<typeof Arco.Menu> & {
+  centered?: boolean
+  itemWidth?: number | string
+}
 
 /**
  * 侧边或页面内的菜单。选中项走宿主的选择态填充。
@@ -17,13 +20,17 @@ export type MenuProps = React.ComponentPropsWithoutRef<typeof Arco.Menu>
  * @param props - 见 {@link MenuProps}。
  * @returns 菜单元素。
  */
-export function Menu(props: MenuProps): React.ReactElement {
+export function Menu({ centered, itemWidth, className, style, ...props }: MenuProps): React.ReactElement {
   injectNavigationStyles()
-  return <Arco.Menu {...props} />
+  const itemStyle = itemWidth === undefined ? style : {
+    '--dsh-menu-item-width': typeof itemWidth === 'number' ? itemWidth + 'px' : itemWidth,
+    ...style,
+  } as React.CSSProperties
+  return <Arco.Menu {...props} className={cx(Array.isArray(className) ? className.join(' ') : className, centered && 'dsh-menu--centered')} style={itemStyle} />
 }
 
 /** {@link MenuItem} 的 props。 */
-export type MenuItemProps = React.ComponentPropsWithoutRef<typeof Arco.Menu.Item>
+export type MenuItemProps = React.ComponentPropsWithoutRef<typeof Arco.Menu.Item> & { action?: React.ReactNode }
 
 /**
  * 菜单中的一项。
@@ -31,10 +38,16 @@ export type MenuItemProps = React.ComponentPropsWithoutRef<typeof Arco.Menu.Item
  * @param props - 见 {@link MenuItemProps}。
  * @returns 菜单项元素。
  */
-export function MenuItem(props: MenuItemProps): React.ReactElement {
+export function MenuItem({ action, children, disabled, ...props }: MenuItemProps): React.ReactElement {
   injectNavigationStyles()
-  return <Arco.Menu.Item {...props} />
+  return <Arco.Menu.Item {...props} disabled={disabled}>{action == null ? children : (
+    <div className="dsh-menu-item-content">
+      <span>{children}</span>
+      <span className="dsh-menu-item-action" {...(disabled ? { inert: '' } : {})} onClick={event => event.stopPropagation()} onKeyDown={event => event.stopPropagation()}>{action}</span>
+    </div>
+  )}</Arco.Menu.Item>
 }
+MenuItem.menuType = 'MenuItem'
 
 /** {@link Dropdown} 的 props。 */
 export type DropdownProps = React.ComponentPropsWithoutRef<typeof Arco.Dropdown>

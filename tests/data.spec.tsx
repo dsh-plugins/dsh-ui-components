@@ -26,6 +26,19 @@ describe('Table', () => {
     expect(screen.getByText('dsh-ui-components')).toBeTruthy()
   })
 
+  it('uses the row loading effect only while busy', () => {
+    const table = (loading: boolean) => <Table rowKey="id" columns={columns} data={data} pagination={false} contentSized loadingStyle="blur" loading={loading} />
+    const { container, rerender } = render(table(true))
+    const heading = screen.getByText('插件')
+    expect(container.querySelector('.dsh-table-loading')?.getAttribute('aria-busy')).toBe('true')
+    expect(container.querySelector('.dsh-table-loading__indicator')).toBeTruthy()
+    expect(container.querySelector('.arco-spin-loading-layer')).toBeNull()
+    expect(container.querySelector('.dsh-table--content-sized')).toBeTruthy()
+    rerender(table(false))
+    expect(container.querySelector('.dsh-table-loading__indicator')).toBeNull()
+    expect(screen.getByText('插件')).toBe(heading)
+  })
+
   it('无数据时显示空状态', () => {
     render(<Table rowKey="id" columns={columns} data={[]} pagination={false} />)
     expect(document.querySelector('.arco-table-empty-row')).toBeTruthy()

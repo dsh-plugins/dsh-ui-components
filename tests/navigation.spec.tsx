@@ -21,6 +21,20 @@ import {
 afterEach(cleanup)
 
 describe('Menu', () => {
+  it('keeps a trailing action separate from menu selection', () => {
+    const select = vi.fn()
+    const refresh = vi.fn()
+    render(<Menu onClickMenuItem={select}>
+      <MenuItem key="create" action={<button onClick={refresh}>Refresh</button>}>Create</MenuItem>
+    </Menu>)
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Refresh' }), { key: 'Enter', keyCode: 13 })
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }))
+    expect(refresh).toHaveBeenCalledOnce()
+    expect(select).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByText('Create'))
+    expect(select).toHaveBeenCalledWith('create', expect.anything(), ['create'])
+  })
+
   it('渲染菜单项', () => {
     render(
       <Menu mode="vertical" defaultSelectedKeys={['a']}>

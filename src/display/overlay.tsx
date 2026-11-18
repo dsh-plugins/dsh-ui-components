@@ -32,6 +32,23 @@ export type TooltipProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Toolt
  * @param props - 见 {@link TooltipProps}。
  * @returns 提示元素。
  */
+/** Information trigger accessible by pointer and keyboard. */
+export interface HintIconProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'content'> {
+  content: React.ReactNode
+  label?: string
+}
+
+export function HintIcon({ content, label, className, onClick, ...props }: HintIconProps): React.ReactElement {
+  return <Tooltip content={content} trigger={['hover', 'focus']}>
+    <button {...props} type="button" className={['dsh-hint-icon', className].filter(Boolean).join(' ')} aria-label={props['aria-label'] ?? label ?? (typeof content === 'string' ? content : 'Info')} onClick={event => { event.stopPropagation(); onClick?.(event) }}>
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+        <path fillRule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14ZM8 6.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM8.75 8a.75.75 0 0 0-1.5 0v3a.75.75 0 0 0 1.5 0V8Z" />
+      </svg>
+    </button>
+  </Tooltip>
+}
+
+/** Scoped tooltip, opening below the trigger by default. */
 export function Tooltip({ position = 'bottom', ...rest }: TooltipProps): React.ReactElement {
   injectDisplayStyles()
   injectHeroOverlayStyles()

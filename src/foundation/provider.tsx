@@ -11,6 +11,7 @@ import { injectCompositeStyles } from '../composites/styles.js'
 import { injectHeroOverlayStyles } from './overlay-style.js'
 import { PICKER_OVERLAY_CSS } from './picker-overlay-style.js'
 import { SELECTION_OVERLAY_CSS } from './selection-overlay-style.js'
+import { PRESENTATION_CSS } from './presentation-style.js'
 import { COLOR_OVERLAY_CSS } from './color-overlay-style.js'
 
 /** 主题源；host 跟随 DSH 的明暗状态，system 跟随操作系统。 */
@@ -27,6 +28,8 @@ export interface DshProviderProps {
   radius?: DshRadius
   reducedMotion?: boolean
   direction?: 'ltr' | 'rtl'
+  overlayInset?: number | string
+  overlayRadius?: number | string
 }
 
 function defaultContainer(): HTMLElement {
@@ -49,7 +52,7 @@ function resolveTheme(theme: DshTheme): 'light' | 'dark' {
 }
 
 /** 注入完整主题，以 body 级独立容器隔离浮层并避免父元素裁切。 */
-export function DshProvider({ children, className, style, theme = 'host', radius = 'md', reducedMotion, direction = 'ltr' }: DshProviderProps): React.ReactElement {
+export function DshProvider({ children, className, style, theme = 'host', radius = 'md', reducedMotion, direction = 'ltr', overlayInset, overlayRadius }: DshProviderProps): React.ReactElement {
   injectUiStyle('foundation/bridge.css', BRIDGE_CSS)
   injectBasicStyles()
   injectDisplayStyles()
@@ -62,6 +65,7 @@ export function DshProvider({ children, className, style, theme = 'host', radius
   injectUiStyle('foundation/hero-pickers.css', PICKER_OVERLAY_CSS)
   injectUiStyle('foundation/hero-selection.css', SELECTION_OVERLAY_CSS)
   injectUiStyle('foundation/hero-colors.css', COLOR_OVERLAY_CSS)
+  injectUiStyle('foundation/presentation.css', PRESENTATION_CSS)
 
   const [effectiveTheme, setEffectiveTheme] = React.useState(() => resolveTheme(theme))
   const [systemReduced, setSystemReduced] = React.useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches))
@@ -119,7 +123,12 @@ export function DshProvider({ children, className, style, theme = 'host', radius
     for (const [key, value] of Object.entries(style ?? {})) {
       if (key.startsWith('--') && value !== undefined) { portal.style.setProperty(key, String(value)) }
     }
-  }, [portal, className, resolved, radius, motion, direction, style])
+    if (overlayInset !== undefined || overlayRadius !== undefined) { portal.dataset.overlayFrame = '' }
+    else { delete portal.dataset.overlayFrame }
+    for (const [name, value] of [['inset', overlayInset], ['radius', overlayRadius]] as const) {
+      if (value !== undefined) { portal.style.setProperty('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
+    }
+  }, [portal, className, resolved, radius, motion, direction, style, overlayInset, overlayRadius])
 
   return (
     <PopupContext.Provider value={getPopupContainer}>

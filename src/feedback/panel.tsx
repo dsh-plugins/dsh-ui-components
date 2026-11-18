@@ -40,6 +40,8 @@ export type ModalProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Modal>,
   footer?: React.ReactNode
   /** 内容超出高度时是否启用宿主统一的滚动容器，默认启用。 */
   scroll?: boolean
+  /** Reserve space between the scrolling content and the thumb. */
+  scrollGutter?: boolean
   /** 关联开关状态、焦点恢复与无障碍属性的触发按钮。 */
   trigger?: React.ReactElement<React.ButtonHTMLAttributes<HTMLButtonElement>>
   /** 配合触发按钮使用的初始显示状态。 */
@@ -69,12 +71,12 @@ function useOverlayTrigger(trigger: ModalProps['trigger'], visible: boolean | un
  * @param props - 见 {@link ModalProps}。
  * @returns 弹窗元素。
  */
-export function Modal({ title, children, footer, scroll = true, getPopupContainer, trigger, defaultVisible = false, visible, onCancel, onOk, ...rest }: ModalProps): React.ReactElement {
+export function Modal({ title, children, footer, scroll = true, scrollGutter, getPopupContainer, trigger, defaultVisible = false, visible, onCancel, onOk, ...rest }: ModalProps): React.ReactElement {
   injectFeedbackStyles()
   injectHeroOverlayStyles()
   const scopedContainer = useDshPopupContainer()
   const state = useOverlayTrigger(trigger, visible, defaultVisible)
-  const body = scroll === true ? <Scrollbar style={{ flex: 1, minHeight: 0 }}>{children}</Scrollbar> : children
+  const body = scroll === true ? <Scrollbar className={scrollGutter ? 'dsh-overlay-scroll--gutter' : undefined} style={{ flex: 1, minHeight: 0 }}>{children}</Scrollbar> : children
   return (
     <>{state.element}<Arco.Modal
       autoFocus={false}
@@ -119,7 +121,7 @@ export function confirm(options: ModalConfirmOptions): ReturnType<typeof Arco.Mo
 }
 
 /** {@link Drawer} 的 props。 */
-export type DrawerProps = React.ComponentPropsWithoutRef<typeof Arco.Drawer> & Pick<ModalProps, 'trigger' | 'defaultVisible'>
+export type DrawerProps = React.ComponentPropsWithoutRef<typeof Arco.Drawer> & Pick<ModalProps, 'trigger' | 'defaultVisible' | 'scrollGutter'>
 
 /**
  * 侧边抽屉占满高度，上下抽屉按内容高度展开。
@@ -127,11 +129,11 @@ export type DrawerProps = React.ComponentPropsWithoutRef<typeof Arco.Drawer> & P
  * @param props - 见 {@link DrawerProps}。
  * @returns 抽屉元素。
  */
-export function Drawer({ getPopupContainer, children, placement = 'right', width, height, className, trigger, defaultVisible = false, visible, onCancel, ...props }: DrawerProps): React.ReactElement {
+export function Drawer({ getPopupContainer, children, placement = 'right', width, height, className, scrollGutter, trigger, defaultVisible = false, visible, onCancel, ...props }: DrawerProps): React.ReactElement {
   injectFeedbackStyles()
   injectHeroOverlayStyles()
   const scopedContainer = useDshPopupContainer()
   const side = placement === 'left' || placement === 'right'
   const state = useOverlayTrigger(trigger, visible, defaultVisible)
-  return <>{state.element}<Arco.Drawer autoFocus={false} {...props} visible={trigger ? state.opened : visible} onCancel={event => { state.close(); onCancel?.(event) }} placement={placement} width={width ?? 'var(--dsh-drawer-width)'} height={height ?? 'auto'} className={[`dsh-drawer-${side ? 'side' : placement}`, className].filter(Boolean).join(' ')} getPopupContainer={getPopupContainer ?? scopedContainer}><Scrollbar style={{ flex: 1, minHeight: 0 }}>{children}</Scrollbar></Arco.Drawer></>
+  return <>{state.element}<Arco.Drawer autoFocus={false} {...props} visible={trigger ? state.opened : visible} onCancel={event => { state.close(); onCancel?.(event) }} placement={placement} width={width ?? 'var(--dsh-drawer-width)'} height={height ?? 'auto'} className={[`dsh-drawer-${side ? 'side' : placement}`, className].filter(Boolean).join(' ')} getPopupContainer={getPopupContainer ?? scopedContainer}><Scrollbar className={scrollGutter ? 'dsh-overlay-scroll--gutter' : undefined} style={{ flex: 1, minHeight: 0 }}>{children}</Scrollbar></Arco.Drawer></>
 }

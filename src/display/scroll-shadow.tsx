@@ -6,6 +6,7 @@ import { injectUiStyle } from '../foundation/style.js'
 export interface ScrollShadowProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onScroll'> {
   /** 内容区域的最大高度，默认 240px。 */
   maxHeight?: React.CSSProperties['maxHeight']
+  variant?: 'page'
   /** 实际内容视口的原生滚动事件，currentTarget 指向该视口。 */
   onScroll?: (event: Event) => void
 }
@@ -20,7 +21,7 @@ const CSS = `
 `
 
 /** 渐隐仅改变内容合成，滚轮、触摸、滑块及键盘操作由 Scrollbar 提供。 */
-export function ScrollShadow({ maxHeight = 240, style, className, children, onScroll, ...props }: ScrollShadowProps): React.ReactElement {
+export function ScrollShadow({ maxHeight = 240, variant, style, className, children, onScroll, ...props }: ScrollShadowProps): React.ReactElement {
   injectUiStyle('display/scroll-shadow.css', CSS)
   const root = React.useRef<HTMLDivElement>(null)
   const [fade, setFade] = React.useState({ start: 0, end: 0 })
@@ -37,12 +38,21 @@ export function ScrollShadow({ maxHeight = 240, style, className, children, onSc
     const content = root.current?.querySelector<HTMLElement>('.dshl-scrollbar-content')
     const resize = new ResizeObserver(measure)
     const mutations = new MutationObserver(measure)
-    const handleScroll = (event: Event) => { measure(); onScroll?.(event) }
+    let hideTimer: ReturnType<typeof setTimeout> | undefined
+    const handleScroll = (event: Event) => {
+      measure()
+      onScroll?.(event)
+      if (variant !== 'page' || !root.current) { return }
+      const container = root.current
+      container.dataset.scrolling = ''
+      clearTimeout(hideTimer)
+      hideTimer = setTimeout(() => { delete container.dataset.scrolling }, 900)
+    }
     viewport?.addEventListener('scroll', handleScroll)
     if (viewport) { resize.observe(viewport) }
     if (content) { resize.observe(content); mutations.observe(content, { childList: true, subtree: true, characterData: true }) }
-    return () => { viewport?.removeEventListener('scroll', handleScroll); resize.disconnect(); mutations.disconnect() }
-  }, [measure, onScroll])
+    return () => { viewport?.removeEventListener('scroll', handleScroll); resize.disconnect(); mutations.disconnect(); clearTimeout(hideTimer); if (root.current) { delete root.current.dataset.scrolling } }
+  }, [measure, onScroll, variant])
   const fadeStyle = { '--dsh-scroll-shadow-start': `${fade.start}px`, '--dsh-scroll-shadow-end': `${fade.end}px` } as React.CSSProperties
-  return <div {...props} ref={root} className={['dsh-scroll-shadow', className].filter(Boolean).join(' ')} style={{ maxHeight, ...fadeStyle, ...style }}><Scrollbar>{children}</Scrollbar></div>
+  return <div {...props} ref={root} data-top={fade.start > 1 || undefined} data-bottom={fade.end > 1 || undefined} className={['dsh-scroll-shadow', variant === 'page' && 'dsh-scroll-shadow--page', className].filter(Boolean).join(' ')} style={{ maxHeight, ...fadeStyle, ...style }}><Scrollbar>{children}</Scrollbar></div>
 }
