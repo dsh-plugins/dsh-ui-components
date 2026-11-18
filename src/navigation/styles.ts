@@ -233,6 +233,7 @@ export const NAVIGATION_CSS = `
 
 /* ── 分段控件 ───────────────────────────────────────────────────── */
 .dsh-segmented {
+  --dsh-segment-radius: 999px;
   position: relative;
   display: inline-grid;
   /* 放在 grid 容器里时，inline-grid 仍会被拉伸到整行；按内容收缩才符合宿主的
@@ -240,17 +241,27 @@ export const NAVIGATION_CSS = `
   justify-self: start;
   width: fit-content;
   grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  gap: 2px;
+  grid-auto-columns: auto;
+  gap: 6px;
   padding: 4px;
-  border-radius: var(--dsw-radius-md, 12px);
-  background-color: var(--dsw-alias-interactive-bg-hover-solid);
+  border-radius: var(--dsh-segment-radius);
+  background-color: var(--surface-secondary, var(--dsw-alias-interactive-bg-hover-solid));
+}
+
+.dsh-ui[data-radius="none"] .dsh-segmented {
+  --dsh-segment-radius: 0px;
 }
 
 .dsh-segmented--block {
   display: grid;
   width: 100%;
   justify-self: stretch;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+}
+
+.dsh-segmented:not(.dsh-segmented--block) .dsh-segmented__indicator {
+  display: none;
 }
 
 .dsh-segmented__indicator {
@@ -260,9 +271,9 @@ export const NAVIGATION_CSS = `
   width: calc((100% - 8px - 2px * (var(--dsh-segment-count) - 1)) / var(--dsh-segment-count));
   height: calc(100% - 8px);
   border: 0;
-  border-radius: var(--dsw-radius-sm, 8px);
-  background-color: var(--dsw-alias-bg-layer-1);
-  box-shadow: var(--dsw-elevation-soft);
+  border-radius: var(--dsh-segment-radius);
+  background-color: var(--surface, var(--dsw-alias-bg-layer-1));
+  box-shadow: var(--dsh-shadow, var(--dsw-elevation-soft));
   transform: translateX(calc(var(--dsh-segment-index) * (100% + 2px)));
   transition: transform 160ms ease;
   pointer-events: none;
@@ -271,27 +282,31 @@ export const NAVIGATION_CSS = `
 .dsh-segmented__tab {
   position: relative;
   z-index: 1;
-  height: 28px;
-  padding: 0 16px;
+  height: 34px;
+  padding: 0 12px;
   border: 0;
-  border-radius: var(--dsw-radius-sm, 8px);
+  border-radius: var(--dsh-segment-radius);
   background-color: transparent;
-  color: var(--dsw-alias-label-secondary);
+  color: var(--muted, var(--dsw-alias-label-secondary));
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 20px;
-  font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
   transition: color 120ms ease;
 }
 
 .dsh-segmented__tab[aria-selected='true'] {
-  color: var(--dsw-alias-label-primary);
+  color: var(--accent, var(--dsw-alias-state-business-primary));
+}
+
+.dsh-segmented:not(.dsh-segmented--block) .dsh-segmented__tab[aria-selected='true'] {
+  background-color: var(--surface, var(--dsw-alias-bg-layer-1));
+  box-shadow: var(--dsh-shadow, var(--dsw-elevation-soft));
 }
 
 @media (hover: hover) {
-  .dsh-segmented__tab:hover:not(:disabled) {
+  .dsh-segmented__tab:hover:not(:disabled, [aria-selected='true']) {
     color: var(--dsw-alias-label-primary);
   }
 }

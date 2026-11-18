@@ -858,6 +858,7 @@ export const HERO_COMPONENT_CSS = `
   box-shadow: var(--dsh-focus);
 }
 .dsh-ui[data-theme][data-radius] .arco-card { box-shadow: var(--dsh-shadow); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-card { border-radius: min(32px, calc(var(--radius) * 2.5)); }
 .dsh-ui[data-theme][data-radius] .arco-btn-primary:not(.arco-btn-disabled) { color: var(--dsh-accent-foreground); }
 .dsh-ui[data-theme][data-radius] .arco-btn-status-danger { --dsh-button-status: var(--dsh-danger); }
 .dsh-ui[data-theme][data-radius] .arco-btn-status-success { --dsh-button-status: var(--dsh-success); }

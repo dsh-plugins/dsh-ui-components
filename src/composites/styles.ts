@@ -225,9 +225,9 @@ export const COMPOSITES_CSS = `
   margin-top: 4px;
   max-height: 264px;
   overflow: auto;
-  padding: 4px;
-  border-radius: var(--dsw-radius-lg, 16px);
-  background: var(--dsw-specific-menu, var(--dsw-alias-bg-layer-2));
+  padding: 6px;
+  border-radius: min(32px, calc(var(--radius, 8px) * 2 + 6px));
+  background: var(--overlay, var(--dsw-specific-menu, var(--dsw-alias-bg-layer-2)));
   backdrop-filter: var(--dsw-menu-backdrop-filter, none);
   box-shadow: var(--dsw-elevation-panel);
 }
@@ -245,39 +245,51 @@ export const COMPOSITES_CSS = `
   gap: 8px;
   width: 100%;
   box-sizing: border-box;
-  min-height: 32px;
-  padding: 5px 10px;
+  min-height: 36px;
+  padding: 6px 10px;
   border: 0;
-  border-radius: var(--dsw-radius-sm, 8px);
+  border-radius: var(--field-radius, var(--dsw-radius-sm, 8px));
   background: none;
   font-family: inherit;
   font-size: 14px;
-  line-height: 22px;
+  line-height: 20px;
   text-align: left;
   color: var(--dsw-alias-label-primary);
   cursor: pointer;
 }
 
-@media (hover: hover) {
-  .dsh-menu-select__option:hover:not(:disabled) {
-    background-color: var(--dsw-alias-interactive-bg-hover);
-  }
+.dsh-menu-select__option + .dsh-menu-select__option {
+  margin-top: 4px;
+}
+
+.dsh-menu-select__option:first-child {
+  border-start-start-radius: calc(var(--radius, 8px) * 2);
+  border-start-end-radius: calc(var(--radius, 8px) * 2);
+}
+
+.dsh-menu-select__option:last-child {
+  border-end-start-radius: calc(var(--radius, 8px) * 2);
+  border-end-end-radius: calc(var(--radius, 8px) * 2);
+}
+
+.dsh-menu-select__option:is(:hover, .dsh-menu-select__option--active):not(:disabled, .dsh-menu-select__option--selected) {
+  background-color: var(--default, var(--dsw-alias-interactive-bg-hover));
 }
 
 .dsh-menu-select__option--selected {
-  background-color: var(--dsw-alias-button-ghost-active-fill);
-  font-weight: 500;
+  background-color: var(--accent, var(--dsw-alias-state-business-primary));
+  color: var(--accent-foreground, var(--dsw-alias-label-primary-foreground));
 }
 
 .dsh-menu-select__option:disabled {
-  color: var(--dsw-alias-label-caption);
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .dsh-menu-select__check {
   margin-left: auto;
   display: inline-flex;
-  color: var(--dsw-alias-label-secondary);
+  color: inherit;
 }
 
 /* ── JSON 树 ────────────────────────────────────────────────────── */
