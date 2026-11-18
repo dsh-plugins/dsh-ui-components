@@ -315,6 +315,16 @@
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr.arco-table-tr-checked:hover { --dsh-table-row-background: color-mix(in srgb, var(--accent) 20%, var(--surface)); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr:not(.arco-table-tr-empty):not(.arco-table-tr-summary) .arco-table-td { background: var(--dsh-table-row-background); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr:not(.arco-table-tr-empty):not(.arco-table-tr-summary) .arco-table-td::before { background: var(--dsh-table-row-background); border-radius: inherit; }
+/* 固定列圆角下方使用表格外框底色，避免露出横向滚过的单元格。 */
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-tr-empty,.arco-table-tr-summary,.arco-table-tr-expand)):is(:first-child,:last-child) > :is(.arco-table-col-fixed-left:first-child,.arco-table-col-fixed-right:last-child) { border-radius: 0; background: var(--surface-secondary); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-tr-empty,.arco-table-tr-summary,.arco-table-tr-expand)):is(:first-child,:last-child) > :is(.arco-table-col-fixed-left:first-child,.arco-table-col-fixed-right:last-child)::before {
+  content: ''; position: absolute; z-index: -1; inset: 0; border-radius: 0;
+  background: var(--dsh-table-row-background); pointer-events: none;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-tr-empty,.arco-table-tr-summary,.arco-table-tr-expand)):first-child > .arco-table-col-fixed-left:first-child::before { border-top-left-radius: calc(var(--radius) * 2); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-tr-empty,.arco-table-tr-summary,.arco-table-tr-expand)):first-child > .arco-table-col-fixed-right:last-child::before { border-top-right-radius: calc(var(--radius) * 2); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-tr-empty,.arco-table-tr-summary,.arco-table-tr-expand)):last-child > .arco-table-col-fixed-left:first-child::before { border-bottom-left-radius: calc(var(--radius) * 2); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-tr-empty,.arco-table-tr-summary,.arco-table-tr-expand)):last-child > .arco-table-col-fixed-right:last-child::before { border-bottom-right-radius: calc(var(--radius) * 2); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-checkbox:not(.arco-checkbox-checked):not(.arco-checkbox-indeterminate) .arco-checkbox-icon { border: 1px solid var(--muted); background: var(--surface-secondary); }
 .dsh-ui .arco-skeleton-shape-square { position: relative; overflow: hidden; border-radius: calc(var(--radius) * 0.5); background: color-mix(in oklab, var(--surface-tertiary) 70%, transparent); }
 .dsh-ui .arco-breadcrumb { gap: 0; font-size: 14px; line-height: 20px; font-weight: 500; }
