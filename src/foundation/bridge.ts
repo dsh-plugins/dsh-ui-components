@@ -761,6 +761,16 @@ const HERO_REFERENCE_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table-hover .arco-table-tr.arco-table-row-checked:is(:hover,.arco-table-tr-hover) { --dsh-table-row-background: color-mix(in srgb, var(--accent) 20%, var(--surface)); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr:not(.arco-table-empty-row,.arco-table-expand-content) > .arco-table-td { background: var(--dsh-table-row-background); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-table-tr:not(.arco-table-empty-row,.arco-table-expand-content) > .arco-table-td::before { background: var(--dsh-table-row-background); border-radius: inherit; }
+/* 固定列圆角下方使用表格外框底色，避免露出横向滚过的单元格。 */
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-empty-row,.arco-table-expand-content)):is(:first-child,:last-child) > :is(.arco-table-col-fixed-left:first-child,.arco-table-col-fixed-right:last-child) { border-radius: 0; background: var(--surface-secondary); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-empty-row,.arco-table-expand-content)):is(:first-child,:last-child) > :is(.arco-table-col-fixed-left:first-child,.arco-table-col-fixed-right:last-child)::before {
+  content: ''; position: absolute; z-index: -1; inset: 0; border-radius: 0;
+  background: var(--dsh-table-row-background); pointer-events: none;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-empty-row,.arco-table-expand-content)):first-child > .arco-table-col-fixed-left:first-child::before { border-top-left-radius: calc(var(--radius) * 2); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-empty-row,.arco-table-expand-content)):first-child > .arco-table-col-fixed-right:last-child::before { border-top-right-radius: calc(var(--radius) * 2); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-empty-row,.arco-table-expand-content)):last-child > .arco-table-col-fixed-left:first-child::before { border-bottom-left-radius: calc(var(--radius) * 2); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-table tbody > .arco-table-tr:where(:not(.arco-table-empty-row,.arco-table-expand-content)):last-child > .arco-table-col-fixed-right:last-child::before { border-bottom-right-radius: calc(var(--radius) * 2); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table .arco-checkbox:not(.arco-checkbox-checked,.arco-checkbox-indeterminate) .arco-checkbox-icon { border: 1px solid var(--muted); background: var(--surface-secondary); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table :is(.arco-table-content-scroll,.arco-table-body) { scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-table:is(:hover,:focus-within) :is(.arco-table-content-scroll,.arco-table-body) { scrollbar-color: var(--muted) transparent; }
