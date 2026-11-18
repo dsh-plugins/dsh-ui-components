@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomePage from '../pages/HomePage.vue'
 import GuidePage from '../pages/GuidePage.vue'
 import ComponentOverview from '../pages/ComponentOverview.vue'
 import ComponentDocPage from '../pages/ComponentDocPage.vue'
@@ -7,11 +6,12 @@ import ComponentDocPage from '../pages/ComponentDocPage.vue'
 export const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', component: HomePage },
+    { path: '/', redirect: '/components/button' },
     { path: '/guide/:section?', component: GuidePage },
-    { path: '/components', component: ComponentOverview },
+    { path: '/overview', component: ComponentOverview },
+    { path: '/components', redirect: '/components/button' },
     { path: '/components/:name', component: ComponentDocPage },
-    { path: '/:pathMatch(.*)*', redirect: '/' },
+    { path: '/:pathMatch(.*)*', redirect: '/components/button' },
   ],
   scrollBehavior() {
     return { top: 0 }

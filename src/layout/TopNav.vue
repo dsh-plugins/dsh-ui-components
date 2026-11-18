@@ -8,7 +8,17 @@ const route = useRoute()
 <template>
   <header class="docs-topnav">
     <div class="docs-topnav-left">
-      <router-link to="/" class="docs-brand">
+      <button
+        type="button"
+        class="docs-menu-toggle-btn"
+        :aria-label="docsState.mobileMenuOpen ? '关闭菜单' : '打开菜单'"
+        @click="docsState.mobileMenuOpen = !docsState.mobileMenuOpen"
+      >
+        <span v-if="docsState.mobileMenuOpen">✕</span>
+        <span v-else>☰</span>
+      </button>
+
+      <router-link to="/components/button" class="docs-brand">
         <span class="docs-brand-logo">D</span>
         <span>DSH Design</span>
       </router-link>
@@ -22,7 +32,14 @@ const route = useRoute()
           指南
         </router-link>
         <router-link
-          to="/components"
+          to="/overview"
+          class="docs-topnav-link"
+          :class="{ active: route.path === '/overview' }"
+        >
+          组件总览
+        </router-link>
+        <router-link
+          to="/components/button"
           class="docs-topnav-link"
           :class="{ active: route.path.startsWith('/components') }"
         >

@@ -8,7 +8,7 @@ const guideLinks = [
   { to: '/guide/quick-start', label: '快速开始' },
   { to: '/guide/theme', label: '主题与 DshProvider' },
   { to: '/guide/coverage', label: '组件覆盖与迁移' },
-  { to: '/components', label: '组件总览' },
+  { to: '/overview', label: '组件总览' },
 ]
 
 function byCategory(key: string) {
