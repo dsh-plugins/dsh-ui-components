@@ -19,7 +19,9 @@ function renderReact() {
     React.createElement(
       DshProvider,
       {
-        className: docsState.theme === 'dark' ? 'dsh-dark' : undefined,
+        theme: docsState.theme,
+        radius: docsState.radius,
+        reducedMotion: docsState.reducedMotion,
       },
       React.createElement(Comp)
     )

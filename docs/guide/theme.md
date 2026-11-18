@@ -10,10 +10,11 @@ title: 主题与 DshProvider
 
 `DshProvider` 支持以下核心属性：
 
-- `theme`: `'auto' | 'light' | 'dark'`（React 版额外支持 `'host' | 'system'`）
+- `theme`: Vue 支持 `'auto' | 'light' | 'dark'`，React 支持 `'host' | 'system' | 'light' | 'dark'`
 - `radius`: `'none' | 'sm' | 'md' | 'lg' | 'full'`（可在页面右上角实时切换）
 - `reducedMotion`: 是否减少动画效果
-- `locale` 与 `rtl`: 国际化与从右到左布局支持
+- 从右到左布局使用 Vue 的 `rtl` 或 React 的 `direction="rtl"`。可通过对应的 Arco `ConfigProvider` 配置语言，Vue 的 `DshProvider` 也接受 `locale`。
+- `overlayInset` 与 `overlayRadius`: 调整作用域内弹窗遮罩的边距和圆角，通知位置也会计入边距。
 
 ## 作用域浮层与 Toast
 

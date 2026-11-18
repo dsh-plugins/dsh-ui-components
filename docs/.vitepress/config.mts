@@ -61,7 +61,6 @@ export default defineConfig({
   base: process.env.GITHUB_PAGES_BASE || '/',
   outDir: '../dist',
   cleanUrls: false,
-  ignoreDeadLinks: true,
 
   themeConfig: {
     siteTitle: 'DSH UI Components',
@@ -83,6 +82,14 @@ export default defineConfig({
     search: {
       provider: 'local',
       options: {
+        _render(source, env, markdown) {
+          const searchable = source.replace(/<ComponentHeader slug="([^"]+)" \/>/g, (tag, slug) => {
+            const component = allComponents.find((entry) => entry.slug === slug)
+            return component ? '# ' + component.name + ' ' + component.title + ' {#component-' + slug + '}\n\n' : tag
+          })
+          const html = markdown.render(searchable, env)
+          return env.frontmatter?.search === false ? '' : html
+        },
         translations: {
           button: {
             buttonText: '搜索组件',

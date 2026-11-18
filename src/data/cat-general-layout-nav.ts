@@ -664,13 +664,14 @@ export function Demo() {
         title: '滚动边缘渐隐',
         description: '内容溢出时自动出现边缘阴影提示，滚动到底部自动隐藏底部阴影。',
         vueComponent: V1.ScrollShadowBasicVue,
-        vueCode: `<template>\n  <ScrollShadow style="height: 160px">...</ScrollShadow>\n</template>`,
-        reactCode: `import { ScrollShadow } from '@dsh-plugin/dsh-ui-components'`,
+        reactComponent: R.ScrollShadowReact,
+        vueCode: `<template>\n  <ScrollShadow :max-height="160" variant="page">...</ScrollShadow>\n</template>`,
+        reactCode: `import { ScrollShadow } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return (\n    <ScrollShadow maxHeight={160} variant="page">\n      {Array.from({ length: 14 }, (_, index) => <div key={index}>滚动内容 {index + 1}</div>)}\n    </ScrollShadow>\n  )\n}`,
       },
     ],
     props: [
-      { name: 'size', description: '渐隐阴影高度（px）', type: 'number', defaultValue: '24' },
-      { name: 'orientation', description: '滚动方向', type: `'vertical' | 'horizontal'`, defaultValue: `'vertical'` },
+      { name: 'maxHeight', description: '滚动视口的最大高度', type: 'number | string', defaultValue: '240' },
+      { name: 'variant', description: '使用页面级滚动阴影和随交互显隐的滚动条', type: `'page'`, defaultValue: '-' },
     ],
   },
 

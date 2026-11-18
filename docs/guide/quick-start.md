@@ -8,14 +8,16 @@ title: 快速开始
 
 ## 1. 安装依赖
 
+站点预览使用 npm `next` 渠道的组件版本。按以下命令安装可体验本文档展示的样式和 API。
+
 ::: code-group
 
 ```bash [Vue 3]
-pnpm add @dsh-plugin/dsh-ui-components-vue
+pnpm add @dsh-plugin/dsh-ui-components-vue@next
 ```
 
 ```bash [React 18]
-pnpm add @dsh-plugin/dsh-ui-components
+pnpm add @dsh-plugin/dsh-ui-components@next
 ```
 
 :::

@@ -17,7 +17,7 @@ features:
   - title: Vue 3 & React 18 双栈支持
     details: "@dsh-plugin/dsh-ui-components-vue 基于 Arco Design Vue；@dsh-plugin/dsh-ui-components 基于 Arco Design React，文档支持全局与单示例实时切换。"
   - title: Arco Design + HeroUI 视觉令牌
-    details: 在保留 Arco Design 完整交互能力的基础上，结合 HeroUI 视觉令牌对表面层级、五档圆角、柔和阴影与焦点环进行微调。"
+    details: 在保留 Arco Design 完整交互能力的基础上，结合 HeroUI 视觉令牌对表面层级、五档圆角、柔和阴影与焦点环进行微调。
   - title: 作用域主题隔离
     details: DshProvider 自动管理浅色/深色/宿主主题及 body 浮层容器，多实例互不干扰，支持实时切换验证。
   - title: 全量组件与 DSH 复合组件

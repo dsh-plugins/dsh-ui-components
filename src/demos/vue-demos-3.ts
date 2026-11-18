@@ -107,7 +107,8 @@ export const ImageBasicVue = defineComponent({
         height: 140,
         src: 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp',
         title: 'DSH 媒体预览',
-        description: '点击放大查看高清大图',
+        description: '点击图片预览',
+        alt: '示例图片',
       })
   },
 })
@@ -388,6 +389,7 @@ export const SpinBasicVue = defineComponent({
         h(UI.Spin, { size: 24 }),
         h(UI.Spin, { dot: true }),
         h(UI.Spinner, { label: '正在加载数据…' }),
+        h(UI.Spin, { loading: true, loadingStyle: 'blur' }, () => h('p', '加载中的内容')),
       ])
   },
 })

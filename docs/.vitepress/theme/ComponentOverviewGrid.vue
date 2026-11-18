@@ -20,7 +20,7 @@ function byCategory(key: string) {
         <a
           v-for="comp in byCategory(cat.key)"
           :key="comp.slug"
-          :href="withBase(`/components/${comp.slug}`)"
+          :href="withBase(`/components/${comp.slug}.html`)"
           class="overview-card"
         >
           <div class="overview-card-head">

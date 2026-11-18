@@ -10,10 +10,8 @@ const props = defineProps<{
   demoId: string
 }>()
 
-const demo = computed(() => {
-  const comp = getComponentBySlug(props.slug)
-  return comp?.demos.find((d) => d.id === props.demoId)
-})
+const component = computed(() => getComponentBySlug(props.slug))
+const demo = computed(() => component.value?.demos.find((d) => d.id === props.demoId))
 </script>
 
 <template>
@@ -33,6 +31,7 @@ const demo = computed(() => {
         :react-component="demo.reactComponent"
         :vue-code="demo.vueCode"
         :react-code="demo.reactCode"
+        :frameworks="component?.frameworks"
       />
     </DshProvider>
   </ClientOnly>

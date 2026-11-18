@@ -1,4 +1,4 @@
-import { h, watch } from 'vue'
+import { defineComponent, h, watch } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
 import '@dsh-plugin/dsh-ui-components-vue/style.css'
@@ -12,19 +12,18 @@ import ComponentOverviewGrid from './ComponentOverviewGrid.vue'
 
 export default {
   extends: DefaultTheme,
-  Layout() {
-    const { isDark } = useData()
-    watch(
-      isDark,
-      (val) => {
-        docsState.theme = val ? 'dark' : 'light'
-      },
-      { immediate: true }
-    )
-    return h(DefaultTheme.Layout, null, {
-      'nav-bar-content-after': () => h(NavFrameworkSwitch),
-    })
-  },
+  Layout: defineComponent({
+    setup() {
+      const { isDark } = useData()
+      watch(isDark, (dark) => {
+        docsState.theme = dark ? 'dark' : 'light'
+      }, { immediate: true })
+      return () => h(DefaultTheme.Layout, null, {
+        'nav-bar-content-after': () => h(NavFrameworkSwitch),
+        'nav-screen-content-after': () => h(NavFrameworkSwitch),
+      })
+    },
+  }),
   enhanceApp({ app }) {
     app.component('DemoBlockById', DemoBlockById)
     app.component('ApiSectionById', ApiSectionById)

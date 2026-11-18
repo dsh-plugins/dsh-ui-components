@@ -67,11 +67,14 @@
   cursor: pointer;
 }
 
-@media (max-width: 960px) {
-  .vp-dsh-radius-select {
-    display: none;
-  }
+@media (max-width: 767px) {
+  .VPNavBar .vp-dsh-controls { display: none; }
 }
+
+.VPNavScreen .vp-dsh-controls {
+  margin: 16px 0 0;
+}
+
 
 /* Component Header */
 .vp-dsh-comp-header {
@@ -145,6 +148,7 @@
 
 .demo-preview {
   padding: 24px 20px;
+  overflow-x: auto;
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
@@ -174,7 +178,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-shrink: 0;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .demo-fw-switch {
@@ -236,6 +241,18 @@
   font-size: 11.5px;
   font-weight: 600;
   color: #9da7b3;
+}
+
+.demo-trigger {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 999px;
+  padding: 4px 12px;
+  color: var(--vp-c-brand-1);
+  cursor: pointer;
+}
+
+.demo-trigger:hover {
+  background: var(--vp-c-brand-soft);
 }
 
 .demo-code pre {

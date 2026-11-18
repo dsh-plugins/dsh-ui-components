@@ -237,7 +237,7 @@ export const SurfaceBasicVue = defineComponent({
 export const ScrollShadowBasicVue = defineComponent({
   setup() {
     return () =>
-      h(UI.ScrollShadow, { style: 'height:160px;border:1px solid var(--docs-border);border-radius:10px;padding:12px;' }, () =>
+      h(UI.ScrollShadow, { maxHeight: 160, variant: 'page', style: 'border:1px solid var(--docs-border);border-radius:10px;padding:12px;' }, () =>
         Array.from({ length: 12 }, (_, i) =>
           h('div', { key: i, style: 'padding:7px 0;border-bottom:1px dashed var(--docs-border);font-size:13px;' }, `滚动边缘渐隐列表项 #${i + 1}`)
         )

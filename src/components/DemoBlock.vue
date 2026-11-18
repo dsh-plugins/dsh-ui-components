@@ -19,6 +19,7 @@ const props = defineProps<{
   reactComponent?: ComponentType<any>
   vueCode?: string
   reactCode?: string
+  frameworks?: ('vue' | 'react')[]
 }>()
 
 const codeVisible = ref(false)
@@ -31,23 +32,21 @@ const isFallbackToReact = computed(
   () => docsState.framework === 'vue' && !props.vueComponent && Boolean(props.reactComponent)
 )
 
+const displayedFramework = computed(() => isFallbackToVue.value ? 'vue' : isFallbackToReact.value ? 'react' : docsState.framework)
+
 const activeCode = computed(() => {
-  if (docsState.framework === 'react') {
-    return props.reactCode || props.vueCode || '// 暂无示例代码'
+  if (displayedFramework.value === 'react') {
+    return props.reactCode || '// 暂无示例代码'
   }
-  return props.vueCode || props.reactCode || '<!-- 暂无示例代码 -->'
+  return props.vueCode || '<!-- 暂无示例代码 -->'
 })
 
 const codeLangLabel = computed(() => {
-  if (docsState.framework === 'react') {
-    return props.reactCode ? 'React TSX' : 'Vue SFC (Fallback)'
-  }
-  return props.vueCode ? 'Vue SFC' : 'React TSX (Fallback)'
+  return displayedFramework.value === 'react' ? 'React TSX' : 'Vue 3'
 })
 
 const highlightedCode = computed(() => {
-  const isReactCode = docsState.framework === 'react' ? Boolean(props.reactCode) : !props.vueCode && Boolean(props.reactCode)
-  const lang = isReactCode ? 'typescript' : 'xml'
+  const lang = displayedFramework.value === 'react' ? 'typescript' : 'xml'
   try {
     return hljs.highlight(activeCode.value, { language: lang }).value
   } catch {
@@ -71,8 +70,8 @@ async function copyCode() {
 <template>
   <section :id="id" class="demo-block">
     <div v-if="isFallbackToVue || isFallbackToReact" class="demo-notice">
-      <span v-if="isFallbackToVue">当前组件仅提供 Vue 3 实现，以下为 Vue 实时预览与示例。</span>
-      <span v-else>当前组件仅提供 React 18 实现，以下为 React 实时预览与示例。</span>
+      <span v-if="isFallbackToVue">{{ frameworks?.includes('react') ? '此示例使用 Vue 3。' : '当前组件仅提供 Vue 3 实现。' }}</span>
+      <span v-else>{{ frameworks?.includes('vue') ? '此示例使用 React 18。' : '当前组件仅提供 React 18 实现。' }}</span>
     </div>
     <div class="demo-preview">
       <template v-if="docsState.framework === 'vue'">
@@ -95,6 +94,7 @@ async function copyCode() {
             type="button"
             class="demo-fw-btn"
             :class="{ active: docsState.framework === 'vue' }"
+            :aria-pressed="docsState.framework === 'vue'"
             @click="docsState.framework = 'vue'"
           >
             Vue
@@ -103,6 +103,7 @@ async function copyCode() {
             type="button"
             class="demo-fw-btn"
             :class="{ active: docsState.framework === 'react' }"
+            :aria-pressed="docsState.framework === 'react'"
             @click="docsState.framework = 'react'"
           >
             React
@@ -115,6 +116,7 @@ async function copyCode() {
           type="button"
           class="demo-action-btn"
           :class="{ active: codeVisible }"
+          :aria-expanded="codeVisible"
           @click="codeVisible = !codeVisible"
         >
           {{ codeVisible ? '收起代码' : '</> 查看代码' }}

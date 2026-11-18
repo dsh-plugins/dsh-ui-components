@@ -252,7 +252,7 @@ export function BadgeTagReact() {
 
 export function CardReact() {
   return (
-    <DSH.Card title="React 卡片" extra={<DSH.Pill>v0.0.1</DSH.Pill>}>
+    <DSH.Card title="React 卡片" extra={<DSH.Pill>HeroUI</DSH.Pill>}>
       保留 Arco Card 能力与 HeroUI 表面层次。
     </DSH.Card>
   )
@@ -284,16 +284,27 @@ export function EmptyReact() {
   return <DSH.Empty description="暂无匹配数据" />
 }
 
-export function PopoverTooltipReact() {
+export function PopoverReact() {
   return (
-    <div style={{ display: 'flex', gap: 12 }}>
-      <DSH.Tooltip content="Tooltip 提示">
-        <DSH.Button variant="outline">悬停 Tooltip</DSH.Button>
-      </DSH.Tooltip>
-      <DSH.Popover title="Popover" content="气泡卡片内容">
-        <DSH.Button variant="secondary">点击 Popover</DSH.Button>
-      </DSH.Popover>
-    </div>
+    <DSH.Popover title="Popover" content="气泡卡片内容" trigger="click">
+      <button type="button" className="demo-trigger">点击 Popover</button>
+    </DSH.Popover>
+  )
+}
+
+export function TooltipReact() {
+  return (
+    <DSH.Tooltip content="Tooltip 提示" trigger={['hover', 'focus']}>
+      <button type="button" className="demo-trigger">查看提示</button>
+    </DSH.Tooltip>
+  )
+}
+
+export function ScrollShadowReact() {
+  return (
+    <DSH.ScrollShadow maxHeight={160} variant="page">
+      {Array.from({ length: 14 }, (_, index) => <div key={index}>滚动内容 {index + 1}</div>)}
+    </DSH.ScrollShadow>
   )
 }
 
@@ -327,10 +338,19 @@ export function ProgressReact() {
   return <DSH.Progress percent={68} />
 }
 
-export function SpinSkeletonReact() {
+export function SpinReact() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+      <DSH.Spin />
+      <DSH.Spin dot />
+      <DSH.Spin loading loadingStyle="blur"><p>加载中的内容</p></DSH.Spin>
+    </div>
+  )
+}
+
+export function SkeletonReact() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <DSH.Spin />
       <DSH.Skeleton text={{ rows: 2 }} animation />
     </div>
   )
@@ -427,7 +447,7 @@ export function FormReact() {
         <DSH.Input placeholder="请输入用户名" />
       </DSH.FormItem>
       <DSH.FormItem>
-        <DSH.Button variant="primary">提交</DSH.Button>
+        <DSH.Button variant="primary" htmlType="submit">提交</DSH.Button>
       </DSH.FormItem>
     </DSH.Form>
   )
