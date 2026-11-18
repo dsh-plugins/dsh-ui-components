@@ -1,9 +1,41 @@
 import { describe, expect, it } from 'vitest'
 import dayjs from 'dayjs'
-import { calendarFocus, calendarKeyDate, monthDays, orderedRange, pickerDate } from '../../src/vue/picker-model.js'
+import { calendarFocus, calendarKeyDate, monthDays, orderedRange, pickerDate, renderCalendar } from '../../src/vue/picker-model.js'
 import { dateFromParts, dateSegments } from '../../src/vue/date-input.js'
 
 describe('日期面板的日历边界', () => {
+  it.each(['已选', '反向预览'])('跨月%s只高亮日期所属月份，并显示两个月的标题', mode => {
+    const start = dayjs('2026-11-30')
+    const end = dayjs('2026-12-06')
+    const cells: Record<string, unknown>[] = []
+    const headings: string[] = []
+    const noop = () => {}
+    renderCalendar<void>((tag, props, ...children) => {
+      if (tag === 'button' && props['data-date']) { cells.push(props) }
+      if (String(props.className).startsWith('dsh-calendar__heading')) { headings.push(String(children[0])) }
+    }, {
+      month: start.startOf('month'),
+      focused: end,
+      selected: mode === '已选' ? [start, end] : [],
+      anchor: mode === '反向预览' ? end : undefined,
+      hover: mode === '反向预览' ? start : undefined,
+      range: true,
+      yearOpen: false,
+      locale: 'zh-CN',
+      firstDay: 1,
+      disabled: () => false,
+    }, { select: noop, hover: noop, month: noop, focus: noop, year: noop, yearSelect: noop })
+
+    const outside = cells.filter(cell => cell['data-outside-month'])
+    expect(outside.some(cell => cell['data-date'] === '2026-11-30')).toBe(true)
+    expect(outside.some(cell => cell['data-date'] === '2026-12-06')).toBe(true)
+    expect(outside.every(cell => !cell['data-selected'] && !cell['data-selection-start'] && !cell['data-selection-end'])).toBe(true)
+    expect(cells.filter(cell => cell['data-selected'])).toHaveLength(7)
+    expect(cells.filter(cell => cell['data-selection-start']).map(cell => cell['data-date'])).toEqual(['2026-11-30'])
+    expect(cells.filter(cell => cell['data-selection-end']).map(cell => cell['data-date'])).toEqual(['2026-12-06'])
+    expect(headings).toEqual(['2026年11月', '2026年12月'])
+  })
+
   it('只保留与当前月相交的周，并包含闰日', () => {
     const november = monthDays(dayjs('2026-11-16'), 0)
     expect(november).toHaveLength(35)

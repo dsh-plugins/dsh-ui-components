@@ -13,7 +13,12 @@
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__year-trigger[data-open] { color: var(--accent-soft-foreground); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__year-trigger[data-open] svg { transform: rotate(90deg); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__heading { flex: 1; font-size: 14px; font-weight: 500; line-height: 20px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__grids { display: flex; gap: 24px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__header { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding-inline: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__heading { justify-self: center; background: transparent; color: inherit; text-align: center; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__nav { position: absolute; inset-block-start: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__nav:first-child { inset-inline-start: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__nav:last-child { inset-inline-end: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__grids { display: flex; align-items: flex-start; gap: 24px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__grid { display: grid; flex: 0 0 252px; grid-template-columns: repeat(7, minmax(0, 1fr)); width: 252px; border: 0; border-collapse: collapse; border-spacing: 0; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__grid :is(thead, tbody, tr) { display: contents; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__grid td { padding: 0; border: 0; }
@@ -29,22 +34,22 @@
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell[data-selected]:not([data-outside-month]) { border-radius: 0; background: var(--accent-soft); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell[data-today] .dsh-calendar__cell-button { background: var(--accent-soft); color: var(--accent-soft-foreground); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell:is([data-selection-start], [data-selection-end]):not([data-outside-month]) .dsh-calendar__cell-button { background: var(--accent); color: var(--accent-foreground); }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range td:first-child .dsh-calendar__cell[data-selected] { border-start-start-radius: 8px; border-end-start-radius: 8px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range td:last-child .dsh-calendar__cell[data-selected] { border-start-end-radius: 8px; border-end-end-radius: 8px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range :is(td:first-child, td:not(:has(> .dsh-calendar__cell[data-selected])) + td) > .dsh-calendar__cell[data-selected] { border-start-start-radius: 8px; border-end-start-radius: 8px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range td:not(:has(+ td > .dsh-calendar__cell[data-selected])) > .dsh-calendar__cell[data-selected] { border-start-end-radius: 8px; border-end-end-radius: 8px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell[data-selection-start] { border-start-start-radius: 24px !important; border-end-start-radius: 24px !important; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell[data-selection-end] { border-start-end-radius: 24px !important; border-end-end-radius: 24px !important; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar[data-year-open] .dsh-calendar__nav { visibility: hidden; pointer-events: none; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar[data-year-open] :is(.dsh-calendar__nav,.dsh-calendar__heading--next) { visibility: hidden; pointer-events: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar[data-year-open] .dsh-calendar__grids { visibility: hidden; pointer-events: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__years { position: absolute; inset-inline: 0; display: grid; grid-template-columns: repeat(3, 1fr); align-content: start; gap: 4px; padding-right: 4px; padding: 4px; box-sizing: border-box; overflow-y: auto; scrollbar-width: var(--scrollbar-width); scrollbar-color: var(--scrollbar-color); scrollbar-gutter: var(--scrollbar-gutter); will-change: opacity; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__year { display: inline-flex; align-items: center; justify-content: center; height: 32px; transform: translateZ(0); padding-inline: 10px !important; border-radius: 24px; background: transparent; color: inherit; font-size: 14px; line-height: 20px; font-weight: 500; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__year[data-selected] { background: var(--accent); color: var(--accent-foreground); }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar :is(.dsh-calendar__nav, .dsh-calendar__year-trigger, .dsh-calendar__year, .dsh-calendar__cell):focus-visible { outline: none; box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--focus); z-index: 2; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar :is(.dsh-calendar__nav, .dsh-calendar__heading, .dsh-calendar__year-trigger, .dsh-calendar__year, .dsh-calendar__cell):focus-visible { outline: none; box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--focus); z-index: 2; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar:not(.dsh-calendar--range) .dsh-calendar__cell:focus-visible { z-index: auto; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell:focus-visible { outline: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell:focus-visible .dsh-calendar__cell-button { outline: none; box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--focus); }
 @media (hover: hover) {
   .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__nav:hover, .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__year:not([data-selected]):hover, .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar:not(.dsh-calendar--range) .dsh-calendar__cell:not([data-selected]):hover { background: var(--default); }
-  .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell:not([data-selected]):hover .dsh-calendar__cell-button { background: var(--default); }
+  .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar--range .dsh-calendar__cell:not([data-selected],[data-outside-month]):hover .dsh-calendar__cell-button { background: var(--default); }
 }
 
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-picker { box-sizing: border-box; height: 36px; min-height: 36px; padding: 4px 12px; border-width: var(--border-width-field); color: var(--field-foreground); }
