@@ -230,14 +230,14 @@ export interface FeedbackApi {
 
 /** 命令式提示通过当前 Provider 渲染，避免共享全局容器和主题。 */
 export function useFeedback(): FeedbackApi {
-  const toast = useToast()
+  const { toast, rtl } = useDshTheme()
   const message = (type: 'info' | 'success' | 'warning' | 'error' | 'loading' | 'normal') =>
     (config: string | MessageConfig) => toast.show({
       ...(typeof config === 'string' ? { content: config } : config), kind: 'message', type,
     })
   const notification = (type: 'info' | 'success' | 'warning' | 'error') =>
     (config: string | NotificationConfig) => toast.show({
-      position: 'topRight', ...(typeof config === 'string' ? { content: config } : config), kind: 'notification', type,
+      position: rtl.value ? 'topLeft' : 'topRight', ...(typeof config === 'string' ? { content: config } : config), kind: 'notification', type,
     })
   return {
     message: {

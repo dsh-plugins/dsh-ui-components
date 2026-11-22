@@ -47,6 +47,7 @@ export interface ToastApi {
 export interface DshThemeContext {
   container: ShallowRef<HTMLElement | undefined>
   readonly locale: Readonly<Ref<string>>
+  readonly rtl: Readonly<Ref<boolean>>
   toast: ToastApi
   mountOverlay: (content: () => VNodeChild) => () => void
 }
@@ -111,7 +112,7 @@ export const DshProvider = defineComponent({
       if (!container.value) {
         return
       }
-      const duration = entry.duration ?? 4000
+      const duration = entry.duration ?? 3000
       if (duration > 0) {
         timers.set(entry.internalId, setTimeout(() => close(entry.internalId), duration))
       }
@@ -157,7 +158,7 @@ export const DshProvider = defineComponent({
         }
       }
     }
-    provide(themeKey, { container, toast, mountOverlay, locale: computed(() => props.locale?.locale ?? 'zh-CN') })
+    provide(themeKey, { container, toast, mountOverlay, locale: computed(() => props.locale?.locale ?? 'zh-CN'), rtl: computed(() => props.rtl) })
 
     const syncPortal = () => {
       const portal = container.value
