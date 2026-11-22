@@ -227,6 +227,8 @@ export const DATA_CSS = `
   overflow: hidden;
 }
 
+.dsh-ui-overlay > .arco-image-preview { position: fixed !important; inset: 0; }
+
 .dsh-ui .arco-image-preview-toolbar {
   border-radius: var(--dsw-radius-md, 12px);
   background-color: var(--dsw-alias-bg-mask-3);

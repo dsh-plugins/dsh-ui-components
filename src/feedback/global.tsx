@@ -332,5 +332,5 @@ export type PopconfirmProps = React.ComponentPropsWithoutRef<typeof Arco.Popconf
 /** 确认气泡使用 Provider 的主题容器。 */
 export function Popconfirm(props: PopconfirmProps): React.ReactElement {
   injectFeedbackStyles()
-  return <Arco.Popconfirm {...props} />
+  return <Arco.Popconfirm {...props} triggerProps={{ showArrow: false, ...props.triggerProps }} />
 }

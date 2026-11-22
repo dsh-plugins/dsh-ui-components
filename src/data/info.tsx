@@ -6,6 +6,7 @@
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { injectDataStyles } from './styles.js'
+import { useDshPopupContainer } from '../foundation/provider.js'
 import { HeroCalendar } from './hero-picker.js'
 
 /** {@link Statistic} 的 props。 */
@@ -84,7 +85,20 @@ export type ImageProps = React.ComponentPropsWithoutRef<typeof Arco.Image>
  * @param props - 见 {@link ImageProps}。
  * @returns 图片元素。
  */
-export function Image(props: ImageProps): React.ReactElement {
+const ImageBase = React.forwardRef<HTMLDivElement, ImageProps>(function Image({ previewProps, ...props }, ref) {
   injectDataStyles()
-  return <Arco.Image {...props} />
-}
+  const container = useDshPopupContainer()
+  return <Arco.Image {...props} ref={ref} previewProps={{ getPopupContainer: container, ...previewProps }} />
+})
+
+const ImagePreview: typeof Arco.Image.Preview = React.forwardRef(({ getPopupContainer, ...props }, ref) => {
+  const container = useDshPopupContainer()
+  return <Arco.Image.Preview {...props} ref={ref} getPopupContainer={getPopupContainer ?? container} />
+})
+
+const ImagePreviewGroup: typeof Arco.Image.PreviewGroup = React.forwardRef(({ getPopupContainer, ...props }, ref) => {
+  const container = useDshPopupContainer()
+  return <Arco.Image.PreviewGroup {...props} ref={ref} getPopupContainer={getPopupContainer ?? container} />
+})
+
+export const Image: typeof Arco.Image = Object.assign(ImageBase, { Preview: ImagePreview, PreviewGroup: ImagePreviewGroup })

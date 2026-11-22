@@ -93,7 +93,7 @@ export function HoverCard({ delayMs = 120, triggerProps, ...rest }: HoverCardPro
   return (
     <ScopedPopover
       {...rest}
-      trigger="hover"
+      trigger={['hover', 'focus']}
       triggerProps={{ ...triggerProps, mouseEnterDelay: delayMs, mouseLeaveDelay: 80 }}
     />
   )

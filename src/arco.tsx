@@ -12,6 +12,7 @@ import { HeroSpin } from './display/hero-spin.js'
 import { HeroTag } from './display/hero-tag.js'
 import { HeroProgress } from './feedback/hero-progress.js'
 import { HeroResult } from './feedback/hero-result.js'
+import { Image } from './data/info.js'
 import { HeroDatePicker, HeroCalendar } from './data/hero-picker.js'
 
 type ModalKind = 'confirm' | 'info' | 'success' | 'warning' | 'error'
@@ -58,7 +59,7 @@ const ScopedModal: typeof Modal & Pick<typeof HostArco.Modal, ModalKind | 'confi
 const ScopedMenu = Object.assign(wrapScopedPopup(HostArco.Menu, {}, false, true), { SubMenu: wrapScopedPopup(HostArco.Menu.SubMenu, { popupAlign: { right: 8, left: 8, top: 0, bottom: 0 }, showArrow: false }, false, true) })
 
 const scopedPopups = {
-  Menu: ScopedMenu,
+  Menu: ScopedMenu, Image,
   Select: wrapScopedPopup(HostArco.Select, {}, true), AutoComplete: wrapScopedPopup(HostArco.AutoComplete),
   Tooltip: wrapScopedPopup(HostArco.Tooltip, { showArrow: false, popupAlign: { top: 3, bottom: 3, left: 3, right: 3 } }), Popover: wrapScopedPopup(HostArco.Popover, { showArrow: false }),
   Popconfirm: wrapScopedPopup(HostArco.Popconfirm, { showArrow: false }), Dropdown: wrapScopedPopup(HostArco.Dropdown),
