@@ -1,4 +1,4 @@
-import { Fragment, Teleport, getCurrentInstance, cloneVNode, createTextVNode, defineComponent, h, isVNode, nextTick, ref, shallowRef, type App, type Component, type ComponentPublicInstance, type CSSProperties, type VNode } from 'vue'
+import { Fragment, Teleport, getCurrentInstance, cloneVNode, createTextVNode, defineComponent, h, isVNode, mergeProps, nextTick, ref, shallowRef, type App, type Component, type ComponentPublicInstance, type CSSProperties, type VNode } from 'vue'
 import * as Arco from '@arco-design/web-vue'
 import IconInfoCircleFill from '@arco-design/web-vue/es/icon/icon-info-circle-fill/index.js'
 import { useDshTheme } from './provider.js'
@@ -15,6 +15,16 @@ function scopedPopup<C extends Component>(component: C, name: string, nested?: '
       const selection = shallowRef<unknown>(attrs.defaultValue ?? attrs['default-value'])
       const query = ref('')
       const instance = shallowRef<ComponentPublicInstance>()
+      let labeledInput: HTMLElement | undefined
+      function bindSelectId(node: VNode) {
+        const root = node.el instanceof HTMLElement ? node.el : node.el?.nextElementSibling
+        if (!(root instanceof HTMLElement)) { return }
+        labeledInput?.removeAttribute('id')
+        labeledInput = undefined
+        if (typeof attrs.id !== 'string' || !attrs.id) { return }
+        labeledInput = root.querySelector<HTMLInputElement>('input:not([type="hidden"])') ?? root
+        labeledInput.id = attrs.id
+      }
       const anchor = shallowRef<Element>()
       const open = ref(Boolean(attrs.defaultPopupVisible ?? attrs['default-popup-visible']))
       const arrowTarget = shallowRef<HTMLElement>()
@@ -183,6 +193,10 @@ function scopedPopup<C extends Component>(component: C, name: string, nested?: '
             else if (typeof listener === 'function') { listener(value) }
           },
         } : {}
+        if (name === 'Select') {
+          delete forwarded.id
+          return h(component, mergeProps(forwarded, popup, { ref: instance, onVnodeMounted: bindSelectId, onVnodeUpdated: bindSelectId }), componentSlots)
+        }
         return h(component, { ...forwarded, ...popup, ...popupVisibleChange, ref: instance }, componentSlots)
       }
     },
