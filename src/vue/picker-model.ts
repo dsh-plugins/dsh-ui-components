@@ -39,6 +39,20 @@ export function orderedRange(first: Dayjs, second: Dayjs): [Dayjs, Dayjs] {
   return first.isAfter(second, 'day') ? [second, first] : [first, second]
 }
 
+export type RangeEndpoint = 'start' | 'end'
+export type DisabledDay = (date: Dayjs, endpoint: RangeEndpoint) => boolean
+
+/** 两端分别应用各自的规则，区间不能跨过完全禁用的日期。 */
+export function validDateRange(start: Dayjs, end: Dayjs, disabled?: DisabledDay): boolean {
+  if (end.isBefore(start, 'day')) { return false }
+  if (!disabled) { return true }
+  if (disabled(start, 'start') || disabled(end, 'end')) { return false }
+  for (let day = start.add(1, 'day'); day.isBefore(end, 'day'); day = day.add(1, 'day')) {
+    if (disabled(day, 'start') && disabled(day, 'end')) { return false }
+  }
+  return true
+}
+
 export function calendarWeekStart(locale: string): number {
   return /^(en-US|en-CA|ja|ko|zh-TW|zh-HK)/i.test(locale) ? 0 : 1
 }

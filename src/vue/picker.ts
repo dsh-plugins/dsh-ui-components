@@ -5,7 +5,7 @@ import * as Arco from '@arco-design/web-vue'
 import { DatePicker as ScopedDate, RangePicker as ScopedRange, MonthPicker, YearPicker, QuarterPicker, WeekPicker } from './popup.js'
 import { useDshTheme } from './provider.js'
 import { renderDateInput, type DateInputDraft } from './date-input.js'
-import { calendarWeekStart, orderedRange, pickerDate, renderCalendar, type CalendarFactory } from './picker-model.js'
+import { calendarWeekStart, orderedRange, pickerDate, renderCalendar, validDateRange, type CalendarFactory, type DisabledDay, type RangeEndpoint } from './picker-model.js'
 
 const factory: CalendarFactory<VNode> = (tag, props, ...children) => {
   const { className, fillRule, clipRule, suppressContentEditableWarning, onKeyDown, onBeforeInput, onMouseEnter, onBlur, ...rest } = props
@@ -20,7 +20,7 @@ const CalendarPanel = defineComponent({
     view: { type: Object as PropType<Dayjs>, required: true },
     locale: { type: String, required: true },
     weekStart: Number,
-    disabled: { type: Function as PropType<(date: Dayjs) => boolean>, required: true },
+    disabled: Function as PropType<DisabledDay>,
     onSelect: { type: Function as PropType<(dates: Dayjs[], complete: boolean) => void>, required: true },
     onView: { type: Function as PropType<(date: Dayjs) => void>, required: true },
   },
@@ -53,27 +53,29 @@ const CalendarPanel = defineComponent({
     onUpdated(() => { if (previousFocus) { void focusPanel(previousFocus) } })
     onMounted(() => { if (!props.standalone) { void focusPanel() } })
     watch(yearOpen, () => { void focusPanel() })
+    const isDisabled = (date: Dayjs) => !!props.disabled?.(date, anchor.value ? 'end' : 'start')
     const move = (date: Dayjs) => { props.onView(date) }
     return () => h('div', { ref: root, class: ['dsh-picker-popover', { 'dsh-picker-popover--range': props.range, 'dsh-calendar-standalone': props.standalone }] }, [renderCalendar(factory, {
       month: month.value, focused: focused.value, selected: props.value, anchor: anchor.value, hover: hover.value,
-      range: props.range, yearOpen: yearOpen.value, locale: props.locale, firstDay: props.weekStart ?? calendarWeekStart(props.locale), disabled: props.disabled,
+      range: props.range, yearOpen: yearOpen.value, locale: props.locale, firstDay: props.weekStart ?? calendarWeekStart(props.locale), disabled: isDisabled,
     }, {
       month: move, focus: date => { focused.value = date }, year: value => { yearOpen.value = value },
       hover: date => { if (anchor.value) { hover.value = date } },
       yearSelect: year => { const date = month.value.year(year).date(Math.min(focused.value.date(), month.value.year(year).daysInMonth())); focused.value = date; move(date); yearOpen.value = false },
       select: date => {
-        if (props.disabled(date)) { return }
+        if (isDisabled(date)) { return }
         focused.value = date
         if (!props.range) { props.onSelect([date], true); return }
         if (!anchor.value) { anchor.value = date; hover.value = date; props.onSelect([date], false); return }
         const dates = orderedRange(anchor.value, date)
-        let cursor = dates[0]
-        while (!cursor.isAfter(dates[1], 'day')) { if (props.disabled(cursor)) { return }; cursor = cursor.add(1, 'day') }
+        if (!validDateRange(dates[0], dates[1], props.disabled)) { return }
         anchor.value = undefined; hover.value = undefined; props.onSelect(dates, true)
       },
     })])
   },
 })
+
+const booleanPickerAttrs = new Set(['disabled', 'readonly', 'disabledInput', 'showTime', 'showNowBtn', 'showConfirmBtn', 'popupVisible', 'defaultPopupVisible', 'allowClear'])
 
 function createPicker(range: boolean) {
   const Base = range ? ScopedRange : ScopedDate
@@ -85,13 +87,19 @@ function createPicker(range: boolean) {
       const inputRoot = shallowRef<HTMLElement>()
       const revision = ref(0)
       const draft: DateInputDraft = { parts: [], source: '', buffer: '' }
-      const get = (name: string) => attrs[name] ?? attrs[name.replace(/[A-Z]/g, value => `-${value.toLowerCase()}`)]
+      const get = (name: string) => {
+        const attr = attrs[name] ?? attrs[name.replace(/[A-Z]/g, value => `-${value.toLowerCase()}`)]
+        return attr === '' && booleanPickerAttrs.has(name) ? true : attr
+      }
       const parse = (value: unknown) => pickerDate(value, String(get('valueFormat') ?? (typeof get('format') === 'string' ? get('format') : 'YYYY-MM-DD')))
       const localValue = shallowRef(get('defaultValue'))
       const visible = ref(!!get('defaultPopupVisible'))
       const first = (value: unknown) => range && Array.isArray(value) ? value[0] : value
       const view = shallowRef(parse(first(get('pickerValue') ?? get('defaultPickerValue') ?? get('modelValue') ?? get('defaultValue'))) ?? dayjs())
-      const value = computed(() => get('modelValue') === undefined ? localValue.value : get('modelValue'))
+      const value = computed(() => 'modelValue' in attrs || 'model-value' in attrs ? get('modelValue') : localValue.value)
+      watch(() => parse(first(value.value))?.valueOf(), timestamp => {
+        if (timestamp !== undefined) { view.value = dayjs(timestamp) }
+      })
       const call = (event: string, ...args: unknown[]) => {
         const listener = attrs[event]
         if (Array.isArray(listener)) { listener.forEach(fn => { if (typeof fn === 'function') { fn(...args) } }) }
@@ -112,13 +120,14 @@ function createPicker(range: boolean) {
         const mode = get('mode')
         const fallback = !!(get('panelRender') || get('showTime') || get('showNowBtn') === true || get('showConfirmBtn') || (get('shortcuts') as unknown[] | undefined)?.length || slots.extra || slots.cell || get('utcOffset') !== undefined || get('timezone') || mode && mode !== 'date' || Array.isArray(get('disabled')))
         const trigger = (get('triggerProps') ?? {}) as Record<string, unknown>
+        const disabledDate = get('disabledDate') as ((date: Date, type?: RangeEndpoint) => boolean) | undefined
+        const disabled: DisabledDay | undefined = disabledDate
+          ? (date, endpoint) => disabledDate(date.toDate(), range ? endpoint : undefined)
+          : undefined
         const panel = () => h(CalendarPanel, {
           range, value: dates, view: parse(first(get('pickerValue'))) ?? view.value,
           locale: theme.locale.value, weekStart: get('dayStartOfWeek') as number | undefined,
-          disabled: (date: Dayjs) => {
-            const callback = get('disabledDate') as ((date: Date, type?: 'start' | 'end') => boolean) | undefined
-            return !!callback?.(date.toDate(), range ? dates.length ? 'end' : 'start' : undefined)
-          },
+          disabled,
           onView: date => {
             if (get('pickerValue') === undefined) { view.value = date }
             const next = range ? [date, date.add(1, 'month')] : [date]
@@ -153,7 +162,7 @@ function createPicker(range: boolean) {
             range, format, label: String(get('aria-label') ?? '日期'), disabled: !!get('disabled'), readonly: !!(get('readonly') || get('disabledInput')),
             open: !!(get('popupVisible') ?? visible.value), allowClear: get('allowClear') !== false, draft,
             invalidate: () => { revision.value++ }, change: commitInput, toggle: () => changeVisible(!(get('popupVisible') ?? visible.value)),
-            disabledDate: date => !!(get('disabledDate') as ((date: Date) => boolean) | undefined)?.(date.toDate()),
+            disabledDate: disabled,
           })
           return h('div', { ref: inputRoot, class: attrs.class, style: attrs.style as Record<string, string> }, [node])
         } } : slots
