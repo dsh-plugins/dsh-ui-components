@@ -99,6 +99,12 @@ describe('SegmentedControl', () => {
     render(<SegmentedControl items={items} value="list" onChange={onChange} label="视图" />)
     fireEvent.keyDown(screen.getByRole('tablist'), { key: 'ArrowRight' })
     expect(onChange).toHaveBeenCalledWith('grid')
+    expect(document.activeElement).toBe(screen.getByRole('tab', { name: '网格' }))
+  })
+
+  it('已选项离开列表后保留键盘入口', () => {
+    render(<SegmentedControl items={items} value="removed" onChange={() => {}} label="视图" />)
+    expect(screen.getByRole('tab', { name: '列表' }).tabIndex).toBe(0)
   })
 
   it('方向键跳过禁用段', () => {

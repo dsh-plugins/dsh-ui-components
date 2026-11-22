@@ -267,17 +267,19 @@ export const NAVIGATION_CSS = `
 .dsh-segmented__indicator {
   position: absolute;
   top: 4px;
-  left: 4px;
+  inset-inline-start: 4px;
   width: calc((100% - 8px - 2px * (var(--dsh-segment-count) - 1)) / var(--dsh-segment-count));
   height: calc(100% - 8px);
   border: 0;
   border-radius: var(--dsh-segment-radius);
   background-color: var(--surface, var(--dsw-alias-bg-layer-1));
   box-shadow: var(--dsh-shadow, var(--dsw-elevation-soft));
-  transform: translateX(calc(var(--dsh-segment-index) * (100% + 2px)));
+  transform: translateX(calc(var(--dsh-segment-direction, 1) * var(--dsh-segment-index) * (100% + 2px)));
   transition: transform 160ms ease;
   pointer-events: none;
 }
+
+.dsh-segmented:dir(rtl) { --dsh-segment-direction: -1; }
 
 .dsh-segmented__tab {
   position: relative;

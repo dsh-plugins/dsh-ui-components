@@ -66,7 +66,8 @@ export function SegmentedControl({
 }: SegmentedControlProps): React.ReactElement {
   injectNavigationStyles()
 
-  const selectedIndex = Math.max(0, items.findIndex(item => item.value === value))
+  const selectedIndex = items.findIndex(item => item.value === value)
+  const entryIndex = selectedIndex >= 0 && !items[selectedIndex]?.disabled ? selectedIndex : items.findIndex(item => !item.disabled)
 
   /**
    * 方向键、Home、End 在段之间移动。
@@ -75,13 +76,16 @@ export function SegmentedControl({
    */
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
     if (disabled === true) return
-    const delta = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0
+    const direction = getComputedStyle(event.currentTarget).direction === 'rtl' ? -1 : 1
+    const delta = event.key === 'ArrowRight' ? direction : event.key === 'ArrowLeft' ? -direction : 0
     const enabled = items.map((item, index) => (item.disabled === true ? -1 : index)).filter(index => index >= 0)
     if (enabled.length === 0) return
 
+    const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('button[role="tab"]'))
     let nextIndex: number | undefined
     if (delta !== 0) {
-      const position = enabled.indexOf(selectedIndex)
+      const focused = buttons.indexOf(document.activeElement as HTMLButtonElement)
+      const position = enabled.indexOf(focused < 0 ? entryIndex : focused)
       const base = position >= 0 ? position : 0
       nextIndex = enabled[(base + delta + enabled.length) % enabled.length]
     } else if (event.key === 'Home') {
@@ -93,6 +97,7 @@ export function SegmentedControl({
     if (nextIndex === undefined) return
     event.preventDefault()
     const target = items[nextIndex]
+    buttons[nextIndex]?.focus()
     if (target !== undefined) onChange(target.value)
   }
 
@@ -110,8 +115,8 @@ export function SegmentedControl({
       }
       onKeyDown={onKeyDown}
     >
-      <span className="dsh-segmented__indicator" aria-hidden="true" />
-      {items.map(item => {
+      {selectedIndex >= 0 && <span className="dsh-segmented__indicator" aria-hidden="true" />}
+      {items.map((item, index) => {
         const selected = item.value === value
         return (
           <button
@@ -121,7 +126,7 @@ export function SegmentedControl({
             id={id === undefined ? undefined : `${id}-${item.value}`}
             aria-selected={selected}
             aria-controls={id === undefined ? undefined : `${id}-${item.value}-panel`}
-            tabIndex={selected ? 0 : -1}
+            tabIndex={index === entryIndex ? 0 : -1}
             disabled={disabled === true || item.disabled === true}
             title={item.disabledReason}
             className="dsh-segmented__tab"
