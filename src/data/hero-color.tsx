@@ -13,6 +13,6 @@ export const HeroColorPicker = React.forwardRef<React.ComponentRef<typeof HostAr
   const value = props.value ?? current
   const variables = colorVariables(value)
   const advanced = showFormatControls || props.format === 'rgb' || props.mode && props.mode !== 'single'
-  return <ScopedColor {...props} ref={ref} className={['dsh-color-trigger', className].filter(Boolean).join(' ')} style={{ ...variables, ...style }} onChange={next => { setCurrent(next); onChange?.(next) }}
-    triggerProps={{ ...triggerProps, className: [triggerProps?.className, 'dsh-color-panel', advanced && 'dsh-color-panel--advanced'].filter(Boolean).join(' '), style: { ...variables, ...triggerProps?.style } }} />
+  return <ScopedColor {...props} ref={ref} className={['dsh-color-trigger', className].flat().filter(Boolean).join(' ')} style={{ ...variables, ...style }} onChange={next => { setCurrent(next); onChange?.(next) }}
+    triggerProps={{ ...triggerProps, className: [triggerProps?.className, 'dsh-color-panel', advanced && 'dsh-color-panel--advanced'].flat().filter(Boolean).join(' '), style: { ...variables, ...triggerProps?.style } }} />
 })
