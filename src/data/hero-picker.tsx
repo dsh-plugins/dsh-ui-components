@@ -8,8 +8,8 @@ import { calendarWeekStart, orderedRange, pickerDate, renderCalendar, validDateR
 
 const ScopedDate = wrapScopedPopup(HostArco.DatePicker) as unknown as React.ForwardRefExoticComponent<DateProps & React.RefAttributes<{ focus: () => void; blur: () => void }>>
 const ScopedRange = wrapScopedPopup(HostArco.DatePicker.RangePicker)
-type DateProps = React.ComponentPropsWithoutRef<typeof HostArco.DatePicker>
-type RangeProps = React.ComponentPropsWithoutRef<typeof HostArco.DatePicker.RangePicker>
+type DateProps = React.ComponentPropsWithoutRef<typeof HostArco.DatePicker> & { id?: string }
+type RangeProps = React.ComponentPropsWithoutRef<typeof HostArco.DatePicker.RangePicker> & { id?: string }
 const factory: CalendarFactory<React.ReactNode> = (tag, props, ...children) => React.createElement(tag, props, ...children)
 
 function CalendarPanel({ range, value, view, locale, weekStart, disabled, onSelect, onView, standalone = false }: {
@@ -105,10 +105,11 @@ const DateBase = React.forwardRef<React.ComponentRef<typeof ScopedRange>, DatePr
   const segmented = !fallback && props.triggerElement === undefined && !props.inputProps && typeof props.format !== 'function' && /^(?:YYYY|MM?|DD?|[\/\-.\s])+$/.test(format)
   const triggerElement = segmented ? <div ref={inputRoot} className={Array.isArray(props.className) ? props.className.join(' ') : props.className} style={props.style}>{renderDateInput(factory, {
     dates: [parse(value)], range: false, format, label: (props as { 'aria-label'?: string })['aria-label'] ?? '日期', disabled: !!props.disabled, readonly: props.editable === false,
-    open: props.popupVisible ?? visible, allowClear: !!props.allowClear, draft: draft.current, invalidate,
+    id: props.id, placeholder: props.placeholder, size: props.size ?? config.size,
+    onClear: props.onClear, open: props.popupVisible ?? visible, allowClear: props.allowClear !== false, draft: draft.current, invalidate,
     change: next => onChange(next[0]?.format(format) ?? '', next[0]), toggle: () => onVisibleChange(!(props.popupVisible ?? visible)), disabledDate: props.disabledDate,
   })}</div> : props.triggerElement
-  return <ScopedDate {...props} ref={baseRef} triggerElement={triggerElement} value={value} onChange={onChange} popupVisible={props.popupVisible ?? visible} onVisibleChange={onVisibleChange}
+  return <ScopedDate {...props} allowClear={props.allowClear !== false} ref={baseRef} triggerElement={triggerElement} value={value} onChange={onChange} popupVisible={props.popupVisible ?? visible} onVisibleChange={onVisibleChange}
     triggerProps={{ popupAlign: { bottom: 8, top: 8 }, ...props.triggerProps }}
     panelRender={fallback ? props.panelRender : () => <CalendarPanel range={false} value={dates} view={parse(props.pickerValue) ?? view} locale={config.locale?.locale ?? 'zh-CN'} weekStart={props.dayStartOfWeek} disabled={props.disabledDate}
       onView={date => { if (props.pickerValue === undefined) { setView(date) }; props.onPickerValueChange?.(date.format(format), date) }}
@@ -135,17 +136,18 @@ const RangeBase = React.forwardRef<React.ComponentRef<typeof HostArco.DatePicker
   const segmented = !fallback && props.triggerElement === undefined && !props.inputProps && typeof props.format !== 'function' && /^(?:YYYY|MM?|DD?|[\/\-.\s])+$/.test(format)
   const triggerElement = segmented ? <div ref={inputRoot} className={Array.isArray(props.className) ? props.className.join(' ') : props.className} style={props.style}>{renderDateInput(factory, {
     dates: [parse(value?.[0]), parse(value?.[1])], range: true, format, label: (props as { 'aria-label'?: string })['aria-label'] ?? '日期范围', disabled: !!props.disabled, readonly: props.editable === false,
-    open: props.popupVisible ?? visible, allowClear: !!props.allowClear, draft: draft.current, invalidate,
+    id: props.id, placeholder: props.placeholder, size: props.size ?? config.size,
+    onClear: props.onClear, open: props.popupVisible ?? visible, allowClear: props.allowClear !== false, draft: draft.current, invalidate,
     change: next => { if (next.every((date): date is Dayjs => !!date)) { onChange(next.map(date => date.format(format)), next) } else if (!next.length) { onChange([], []) } }, toggle: () => onVisibleChange(!(props.popupVisible ?? visible)), disabledDate: props.disabledDate,
   })}</div> : props.triggerElement
-  return <ScopedRange {...props} ref={baseRef} triggerElement={triggerElement} value={value} onChange={onChange} popupVisible={props.popupVisible ?? visible} onVisibleChange={onVisibleChange}
+  return <ScopedRange {...props} allowClear={props.allowClear !== false} ref={baseRef} triggerElement={triggerElement} value={value} onChange={onChange} popupVisible={props.popupVisible ?? visible} onVisibleChange={onVisibleChange}
     triggerProps={{ popupAlign: { bottom: 8, top: 8 }, ...props.triggerProps }}
     panelRender={fallback ? props.panelRender : () => <CalendarPanel range value={dates} view={parse(props.pickerValue?.[0]) ?? view} locale={config.locale?.locale ?? 'zh-CN'} weekStart={props.dayStartOfWeek} disabled={props.disabledDate}
       onView={date => { if (props.pickerValue === undefined) { setView(date) }; const next = [date, date.add(1, 'month')]; props.onPickerValueChange?.(next.map(item => item.format(format)), next) }}
       onSelect={(next, complete) => { props.onSelect?.(next.map(date => date.format(format)), next, { type: complete ? 'end' : 'start' }); if (complete) { if (!next.every((date, index) => dates[index]?.isSame(date, 'day'))) { onChange(next.map(date => date.format(format)), next) }; onVisibleChange(false) } }} />} />
 })
 
-export const HeroRangePicker = RangeBase as typeof HostArco.DatePicker.RangePicker
+export const HeroRangePicker = RangeBase as typeof HostArco.DatePicker.RangePicker & typeof RangeBase
 export const HeroDatePicker = Object.assign(DateBase, {
   RangePicker: HeroRangePicker,
   MonthPicker: wrapScopedPopup(HostArco.DatePicker.MonthPicker),
