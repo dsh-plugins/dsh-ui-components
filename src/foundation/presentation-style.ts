@@ -311,7 +311,18 @@ export const PRESENTATION_CSS = `
 }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea.dsh-textarea-sm { min-height: 60px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea.dsh-textarea-lg { min-height: 96px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions .arco-mentions-textarea[rows="1"] { min-height: 36px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions :is(.arco-mentions-textarea, .arco-mentions-measure) {
+  padding: 8px 12px; font-family: inherit; font-size: 14px; line-height: 20px;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions .arco-mentions-textarea {
+  box-sizing: border-box; min-height: 0; color: var(--field-foreground); background: var(--field-background);
+  border: var(--field-border-width) solid var(--field-border); border-radius: var(--field-radius); box-shadow: var(--field-shadow);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions .arco-mentions-textarea[rows="1"] { min-height: var(--dsh-field-height-md); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions .arco-mentions-textarea:not(:disabled):hover { background: var(--field-hover); border-color: var(--field-border-hover); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions .arco-mentions-textarea:not(:disabled):focus { background: var(--field-focus); border-color: var(--focus); box-shadow: inset 0 0 0 1px var(--focus); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions .arco-mentions-textarea.arco-textarea-error { outline: 1px solid var(--danger); outline-offset: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions .arco-mentions-textarea:disabled { background: var(--default); color: var(--muted); box-shadow: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-switch.arco-switch-small { width: 32px; min-width: 32px; height: 16px; --switch-thumb-offset: calc(100% - 18.5px); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-switch-small .arco-switch-dot { width: 16.5px; height: 12px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(label.arco-checkbox, label.arco-radio) { min-height: 20px; }
