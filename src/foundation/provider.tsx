@@ -74,6 +74,7 @@ export function DshProvider({ children, className, style, theme = 'host', radius
   const [systemReduced, setSystemReduced] = React.useState(false)
   const [portal] = React.useState(() => typeof document === 'undefined' ? null : document.createElement('div'))
   const root = React.useRef<HTMLDivElement>(null)
+  const appliedPortalTokens = React.useRef(new Map<string, string>())
   const getPopupContainer = React.useCallback(() => portal ?? defaultContainer(), [portal])
   const motion = (reducedMotion ?? systemReduced) ? 'reduced' : 'full'
   const resolved = theme === 'light' || theme === 'dark' ? theme : effectiveTheme
@@ -109,27 +110,39 @@ export function DshProvider({ children, className, style, theme = 'host', radius
   useLayoutEffect(() => {
     if (portal === null) { return }
     const sync = () => {
+      // A computed style is live. Read a snapshot before any DOM writes;
+      // interleaving the two makes Chromium repeatedly recompute the cascade.
+      const tokens = new Map<string, string>()
+      if (root.current) {
+        const computed = getComputedStyle(root.current)
+        const length = computed.length
+        for (let index = 0; index < length; index += 1) {
+          const key = computed.item(index)
+          if (key.startsWith('--')) { tokens.set(key, computed.getPropertyValue(key)) }
+        }
+      }
+      for (const [key, value] of Object.entries(style ?? {})) {
+        if (key.startsWith('--') && value !== undefined) { tokens.set(key, String(value)) }
+      }
+      for (const [name, value] of [['inset', overlayInset], ['radius', overlayRadius]] as const) {
+        if (value !== undefined) { tokens.set('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
+      }
+
       portal.className = `${ROOT_CLASS} dsh-ui-overlay`
       portal.dataset.theme = resolved
       portal.dataset.radius = radius
       portal.dataset.motion = motion
       portal.dir = direction
-      portal.style.cssText = ''
-      if (root.current) {
-        const computed = getComputedStyle(root.current)
-        for (let index = 0; index < computed.length; index += 1) {
-          const key = computed.item(index)
-          if (key.startsWith('--')) { portal.style.setProperty(key, computed.getPropertyValue(key)) }
-        }
-      }
-      for (const [key, value] of Object.entries(style ?? {})) {
-        if (key.startsWith('--') && value !== undefined) { portal.style.setProperty(key, String(value)) }
-      }
       if (overlayInset !== undefined || overlayRadius !== undefined) { portal.dataset.overlayFrame = '' }
       else { delete portal.dataset.overlayFrame }
-      for (const [name, value] of [['inset', overlayInset], ['radius', overlayRadius]] as const) {
-        if (value !== undefined) { portal.style.setProperty('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
+      const previous = appliedPortalTokens.current
+      for (const key of previous.keys()) {
+        if (!tokens.has(key)) { portal.style.removeProperty(key) }
       }
+      for (const [key, value] of tokens) {
+        if (previous.get(key) !== value) { portal.style.setProperty(key, value) }
+      }
+      appliedPortalTokens.current = tokens
     }
     sync()
     const observer = new MutationObserver(sync)
