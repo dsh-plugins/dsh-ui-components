@@ -174,10 +174,7 @@ export const InputTagBasicVue = defineComponent({
 
 export const MentionBasicVue = defineComponent({
   setup() {
-    return () =>
-      h('div', { style: 'max-width:360px;' }, [
-        h(UI.Mention, { data: ['Alice', 'Bob', 'Charlie', 'DSH Bot'], placeholder: '输入 @ 触发提及列表' }),
-      ])
+    return () => h(UI.Mention, { data: ['Alice', 'Bob', 'Charlie'], placeholder: '输入 @ 提及' })
   },
 })
 
