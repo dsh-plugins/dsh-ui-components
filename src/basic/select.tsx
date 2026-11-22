@@ -36,7 +36,9 @@ export interface SelectOption {
 /** {@link Select} 的 props。 */
 export interface SelectProps {
   /** 选项列表。 */
-  options: readonly SelectOption[]
+  options?: readonly SelectOption[]
+  /** 也可以用 Select.Option 和 Select.OptGroup 声明选项。 */
+  children?: React.ReactNode
   /** 当前值；多选时为数组。 */
   value?: string | string[]
   /** 默认值；多选时为数组。 */
@@ -73,6 +75,7 @@ export interface SelectProps {
  */
 export function Select({
   options,
+  children,
   value,
   defaultValue,
   onChange,
@@ -90,7 +93,8 @@ export function Select({
   injectBasicStyles()
   return (
     <ScopedSelect
-      options={options as SelectOption[]}
+      options={options as SelectOption[] | undefined}
+      children={children}
       arrowIcon={<HeroChevronDown />}
       {...(value === undefined ? {} : { value })}
       defaultValue={defaultValue}

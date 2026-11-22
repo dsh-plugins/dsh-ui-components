@@ -17,3 +17,7 @@ export * from './navigation/index.js'
 export * from './data/index.js'
 export * from './composites/index.js'
 export * from './arco.js'
+export {
+  Button, AutoComplete, Checkbox, Form, Input, Radio, Select, Avatar, Card,
+  Collapse, Typography, Statistic, Tree, TreeSelect, Breadcrumb, Dropdown, Menu, Icon, Modal,
+} from './arco-members.js'

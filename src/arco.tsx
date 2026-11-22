@@ -17,10 +17,13 @@ import { HeroDatePicker, HeroCalendar } from './data/hero-picker.js'
 type ModalKind = 'confirm' | 'info' | 'success' | 'warning' | 'error'
 
 /** 嵌套语言配置保留当前 Provider 的主题浮层容器。 */
-export function ConfigProvider({ getPopupContainer, ...props }: React.ComponentPropsWithoutRef<typeof HostArco.ConfigProvider>): React.ReactElement {
+function ScopedConfigProvider({ getPopupContainer, ...props }: React.ComponentPropsWithoutRef<typeof HostArco.ConfigProvider>): React.ReactElement {
   const container = useDshPopupContainer()
   return <HostArco.ConfigProvider {...props} getPopupContainer={getPopupContainer ?? container} />
 }
+
+export const ConfigProvider: typeof ScopedConfigProvider & Pick<typeof HostArco.ConfigProvider, 'ConfigContext'> =
+  Object.assign(ScopedConfigProvider, { ConfigContext: HostArco.ConfigProvider.ConfigContext })
 
 function openHookModal(api: ReturnType<typeof HostArco.Modal.useModal>[0], kind: ModalKind, options: ModalConfirmOptions, container: () => HTMLElement) {
   const open = api[kind]
