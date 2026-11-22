@@ -58,14 +58,12 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
     if (selection && props.showSearch && Array.isArray(props.options) && props.dropdownRender === undefined) {
       const text = String(props.inputValue ?? query)
       const id = String(props.id ?? selectId)
-      const filter = props.filterOption
       selectionProps.id = id
       selectionProps.showSearch = false
-      selectionProps.inputValue = undefined
-      selectionProps.options = filter === false ? props.options : props.options.filter(option => typeof filter === 'function' ? filter(text, option) : String(typeof option === 'object' && option ? option.label ?? option.value : option).toLocaleLowerCase().includes(text.toLocaleLowerCase()))
-      if (!(selectionProps.options as unknown[]).length) { selectionProps.value = undefined; selectionProps.defaultValue = undefined }
+      // 保留原始 options，让 Arco 用真实的 Option 元素执行过滤和渲染。
+      selectionProps.inputValue = text
       selectionProps.placeholder = props.placeholder ?? 'Select an item'
-      selectionProps.dropdownRender = (menu: React.ReactNode) => <><div className="dsh-select-search"><div className="dsh-select-search__group"><input type="search" aria-label="搜索" value={text} autoFocus={(selectionProps.options as unknown[]).length > 0} onChange={event => {
+      selectionProps.dropdownRender = (menu: React.ReactNode) => <><div className="dsh-select-search"><div className="dsh-select-search__group"><input type="search" aria-label="搜索" value={text} autoFocus onChange={event => {
         const value = event.target.value
         setQuery(value)
         for (const name of ['onInputValueChange', 'onSearch']) { (props[name] as ((value: string, reason: string) => void) | undefined)?.(value, 'manual') }
