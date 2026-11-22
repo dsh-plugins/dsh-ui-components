@@ -15,11 +15,11 @@ importers:
         specifier: ^2.59.0
         version: 2.59.0(vue@3.5.45(typescript@5.8.3))
       '@dsh-plugin/dsh-ui-components':
-        specifier: 0.1.0-dev.44282081732
-        version: 0.1.0-dev.44282081732(@dsh-plugin/dsh-loader@2.0.0-dev.43799314028(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.1.0-dev.45000630458
+        version: 0.1.0-dev.45000630458(@dsh-plugin/dsh-loader@2.0.0-dev.43799314028(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@dsh-plugin/dsh-ui-components-vue':
-        specifier: 0.1.0-dev.44282081091
-        version: 0.1.0-dev.44282081091(vue@3.5.45(typescript@5.8.3))
+        specifier: 0.1.0-dev.45000630522
+        version: 0.1.0-dev.45000630522(vue@3.5.45(typescript@5.8.3))
       dayjs:
         specifier: 1.11.23
         version: 1.11.23
@@ -282,14 +282,14 @@ packages:
       react-dom:
         optional: true
 
-  '@dsh-plugin/dsh-ui-components-vue@0.1.0-dev.44282081091':
-    resolution: {integrity: sha512-dS5fhPUTKWBa2pOladx2ur0yCiuF7gDXt0UPr+0J7ynkrzFYmXYTpa1Ul97S6vi3NBQRIV97WJmPtWUMVQk3EQ==}
+  '@dsh-plugin/dsh-ui-components-vue@0.1.0-dev.45000630522':
+    resolution: {integrity: sha512-OBhbPFjlEKhxb9bkH7YdW/+XOb0cKeQvRK3dBbbd2qD34bALrxnjIrKTSe3MJyMM4hOnAdAk4N+NW3GOCVKhEg==}
     engines: {node: '>=24.9.0'}
     peerDependencies:
       vue: ^3.5.0
 
-  '@dsh-plugin/dsh-ui-components@0.1.0-dev.44282081732':
-    resolution: {integrity: sha512-+/T/P7EiOPBZKLiaBULNLXhuF/mY1t27Ss+5NSp35sQ/G5l33+Xz+n50jFrfkG1Rp+BKnaI70yaUekjZy7O5AQ==}
+  '@dsh-plugin/dsh-ui-components@0.1.0-dev.45000630458':
+    resolution: {integrity: sha512-s8US0o1jgB3lXQ5cLEa0VpMSgKOmq6vrY7gpBcHHCo5iJzGQMYi00SP+V5uKLeSnFkM5cswWEPshWRWTtKkq8Q==}
     engines: {node: '>=24.9.0'}
     peerDependencies:
       '@dsh-plugin/dsh-loader': ^2.0.0-0
@@ -1999,13 +1999,13 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@dsh-plugin/dsh-ui-components-vue@0.1.0-dev.44282081091(vue@3.5.45(typescript@5.8.3))':
+  '@dsh-plugin/dsh-ui-components-vue@0.1.0-dev.45000630522(vue@3.5.45(typescript@5.8.3))':
     dependencies:
       '@arco-design/web-vue': 2.59.0(vue@3.5.45(typescript@5.8.3))
       dayjs: 1.11.23
       vue: 3.5.45(typescript@5.8.3)
 
-  '@dsh-plugin/dsh-ui-components@0.1.0-dev.44282081732(@dsh-plugin/dsh-loader@2.0.0-dev.43799314028(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@dsh-plugin/dsh-ui-components@0.1.0-dev.45000630458(@dsh-plugin/dsh-loader@2.0.0-dev.43799314028(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@dsh-plugin/dsh-loader': 2.0.0-dev.43799314028(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@icon-park/react': 1.4.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
