@@ -1,5 +1,7 @@
 /* HeroUI 3.2.7 浮层视觉规则适配 Arco；来源及许可见 NOTICE。 */
 .dsh-ui.dsh-ui[data-theme][data-radius] { --dsh-drawer-width: 384px; }
+/* Arco positions overlays absolutely in custom containers. The provider portal tracks the document for anchored popups, but these panels belong to the viewport. */
+:is(.dsh-ui-portal, [data-dsh-dialog-owner]) > :is(.arco-image-preview,.arco-drawer-container,.arco-modal-container) { position: fixed !important; inset: 0; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-container,
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-wrapper { height: 100dvh; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-wrapper-align-center {

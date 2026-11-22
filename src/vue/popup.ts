@@ -40,6 +40,7 @@ function scopedPopup<C extends Component>(component: C, name: string, nested?: '
           forwarded.textareaAttrs = { rows: attrs.rows ?? 1, ...((attrs.textareaAttrs ?? attrs['textarea-attrs']) as object) }
           delete forwarded['textarea-attrs']
         }
+        if (name === 'Tooltip') { forwarded.position = attrs.position ?? 'bottom' }
         if (name === 'Menu') {
           const itemWidth = attrs.itemWidth ?? attrs['item-width']
           forwarded.class = [attrs.class, { 'dsh-menu--centered': attrs.centered === true || attrs.centered === '' }]

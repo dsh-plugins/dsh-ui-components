@@ -72,7 +72,7 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
         }
         dialog = undefined
         if (restore && previousFocus?.isConnected) {
-          previousFocus.focus()
+          previousFocus.focus({ preventScroll: true })
         }
         if (restore) {
           previousFocus = undefined
@@ -145,7 +145,7 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
           document.removeEventListener('focusin', focusin)
         }
         const initialFocus = element.querySelector<HTMLElement>('[autofocus]') ?? element
-        initialFocus.focus()
+        initialFocus.focus({ preventScroll: true })
       }
       watch(visible, async value => {
         if (value && typeof document !== 'undefined') {
@@ -204,7 +204,7 @@ function createOverlay(name: string, drawer: boolean, alert: boolean) {
               height: typeof attrs.height === 'string' || typeof attrs.height === 'number' ? attrs.height : 'auto',
               class: ['dsh-drawer', `dsh-drawer-${attrs.placement === 'top' || attrs.placement === 'bottom' ? attrs.placement : 'side'}`, id, attrs.class],
             }, contentSlots)
-            : h(ArcoModal, { ...shared, alignCenter: true, modalClass: ['dsh-modal', id, attrs.modalClass] }, contentSlots)
+            : h(ArcoModal, { alignCenter: true, ...shared, modalClass: ['dsh-modal', id, attrs.modalClass] }, contentSlots)
         ) : null]
       }
     },
