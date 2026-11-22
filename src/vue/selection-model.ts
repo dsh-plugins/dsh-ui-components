@@ -40,7 +40,7 @@ export function toggleSelection(value: SelectionValue, key: string | number, mul
   const keys = Array.isArray(value) ? value : value === undefined ? [] : [value]
   const selected = keys.includes(key)
   if (!multiple) { return selected && allowEmpty ? undefined : key }
-  if (selected) { return !allowEmpty && keys.length === 1 ? [...keys] : keys.filter(item => item !== key) }
+  if (selected) { return !allowEmpty && keys.length === 1 ? value : keys.filter(item => item !== key) }
   return [...keys, key]
 }
 

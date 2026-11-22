@@ -43,6 +43,7 @@ export const ListBox = defineComponent({
       if (props.disabled || !option || option.disabled) { return }
       active.value = index
       const value = toggleSelection(current.value, option.value, props.multiple, props.allowEmpty)
+      if (value === current.value) { return }
       localValue.value = value
       emit('update:modelValue', value)
       emit('change', value)
@@ -62,6 +63,7 @@ export const ListBox = defineComponent({
       } else if (props.multiple && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
         event.preventDefault()
         const value = props.options.filter(option => !option.disabled || selected.value.includes(option.value)).map(option => option.value)
+        if (value.length === selected.value.length && value.every(key => selected.value.includes(key))) { return }
         localValue.value = value
         emit('update:modelValue', value)
         emit('change', value)
@@ -161,6 +163,7 @@ export const ToggleButtonGroup = defineComponent({
     const choose = (option: SelectionOption) => {
       if (props.disabled || option.disabled) { return }
       const value = toggleSelection(current.value, option.value, props.multiple, props.allowEmpty)
+      if (value === current.value) { return }
       localValue.value = value
       emit('update:modelValue', value)
       emit('change', value)
@@ -236,7 +239,13 @@ export const Toolbar = defineComponent({
       onFocusin(event: FocusEvent) { synchronize(event.target as HTMLElement) },
       onKeydown(event: KeyboardEvent) {
         const target = event.target as HTMLElement
-        if (target.matches('input, textarea, select, [contenteditable="true"]')) { return }
+        if (target.matches('input, textarea, select, [contenteditable="true"]')) {
+          if (event.key !== 'Tab') { return }
+          const controls = elements()
+          const next = controls[controls.indexOf(target) + (event.shiftKey ? -1 : 1)]
+          if (next) { event.preventDefault(); next.focus() }
+          return
+        }
         const keys = props.orientation === 'horizontal' ? ['ArrowLeft', 'ArrowRight', 'Home', 'End'] : ['ArrowUp', 'ArrowDown', 'Home', 'End']
         if (!keys.includes(event.key)) { return }
         const controls = elements()
@@ -281,8 +290,11 @@ export const TagGroup = defineComponent({
       emit('update:modelValue', localValue.value)
       emit('remove', item.value)
       void nextTick(() => {
-        const buttons = root.value?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')
-        if (buttons?.length) { buttons[Math.min(index, buttons.length - 1)]?.focus() } else { root.value?.focus() }
+        const buttons = Array.from(root.value?.querySelectorAll<HTMLButtonElement>('.dsh-tag-group__remove') ?? [])
+        const nearest = buttons.slice(index).find(button => !button.disabled)
+          ?? buttons.slice(0, index).reverse().find(button => !button.disabled)
+        const target = nearest ?? root.value
+        target?.focus()
       })
     }
     return () => h('div', { ref: root, class: 'dsh-tag-group', role: 'group', 'aria-label': props.label, tabindex: -1 }, items.value.map((item, index) => h('span', {
