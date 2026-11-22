@@ -2,6 +2,15 @@
 .dsh-ui.dsh-ui[data-theme][data-radius] { --dsh-drawer-width: 384px; }
 /* Arco positions overlays absolutely in custom containers. The provider portal tracks the document for anchored popups, but these panels belong to the viewport. */
 :is(.dsh-ui-portal, [data-dsh-dialog-owner]) > :is(.arco-image-preview,.arco-drawer-container,.arco-modal-container) { position: fixed !important; inset: 0; }
+
+.dsh-ui .arco-image-preview-toolbar {
+  border-radius: var(--dsw-radius-md, min(999px, var(--dsh-radius)));
+  background-color: var(--dsw-alias-bg-mask-3, light-dark(var(--surface-tertiary), #30333d));
+  --border-radius-small: min(8px, var(--dsh-radius));
+  --color-neutral-8: var(--dsw-alias-label-primary, light-dark(var(--foreground), #f2f3f7));
+  --color-neutral-2: var(--dsw-alias-bg-layer-2, light-dark(var(--surface-secondary), #252730));
+  --color-text-4: color-mix(in srgb, var(--dsw-alias-label-secondary, light-dark(var(--muted), #a5a7b3)) 60%, transparent);
+}
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-container,
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-wrapper { height: 100dvh; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-wrapper-align-center {
