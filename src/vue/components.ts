@@ -1,6 +1,6 @@
 import { defineComponent, h, type PropType } from 'vue'
-import { Collapse } from '@arco-design/web-vue'
-import { Spin } from './basic.js'
+import { Collapse, Pagination as ArcoPagination } from '@arco-design/web-vue'
+import { Spin, installComponent } from './basic.js'
 export { InputNumber as NumberField } from './basic.js'
 export { Tag as Chip } from './basic.js'
 
@@ -20,6 +20,11 @@ export {
   RangePicker as DateRangePicker,
   TypographyText as Text,
 } from '@arco-design/web-vue'
+
+/* 保留上游分页器的插槽、实例和事件，只统一默认折叠阈值。 */
+export const Pagination = installComponent(Object.assign({}, ArcoPagination, {
+  props: { ...ArcoPagination.props, baseSize: { type: Number, default: 5 } },
+}), ArcoPagination)
 
 /** 手风琴默认只展开一项，设置 accordion=false 可展开多项。 */
 export const Accordion = defineComponent({

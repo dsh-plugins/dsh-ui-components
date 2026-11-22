@@ -1,5 +1,5 @@
 import { computed, defineComponent, getCurrentInstance, h, mergeProps, nextTick, onBeforeUnmount, onMounted, ref, useId, type PropType } from 'vue'
-import { Input, Scrollbar } from '@arco-design/web-vue'
+import { Input, Link as ArcoLink, Scrollbar } from '@arco-design/web-vue'
 import { insertOtp, normalizeOtp } from './selection-model.js'
 
 function hasModel(): boolean {
@@ -11,23 +11,34 @@ function hasModel(): boolean {
 export const Link = defineComponent({
   name: 'DshLink',
   inheritAttrs: false,
-  props: { href: String, disabled: Boolean, external: Boolean },
+  props: {
+    href: String, disabled: Boolean, external: Boolean, loading: Boolean, icon: Boolean,
+    hoverable: { type: Boolean, default: true },
+    status: String as PropType<InstanceType<typeof ArcoLink>['$props']['status']>,
+  },
   emits: ['click'],
   setup(props, { attrs, slots, emit }) {
-    return () => h('a', {
-      ...attrs,
-      class: ['dsh-link', attrs.class],
-      role: 'link',
-      href: props.disabled ? undefined : props.href,
-      target: props.disabled ? undefined : props.external ? '_blank' : attrs.target,
-      rel: props.external || attrs.target === '_blank' ? `${attrs.rel ?? ''} noopener noreferrer`.trim() : attrs.rel,
-      tabindex: props.disabled ? -1 : attrs.tabindex,
-      'aria-disabled': props.disabled || undefined,
-      onClick(event: MouseEvent) {
-        if (props.disabled) { event.preventDefault(); event.stopImmediatePropagation(); return }
-        emit('click', event)
-      },
-    }, slots.default?.())
+    return () => {
+      const blocked = props.disabled || props.loading
+      return h(ArcoLink, {
+        ...attrs,
+        disabled: props.disabled, loading: props.loading, icon: props.icon,
+        hoverable: props.hoverable, status: props.status,
+        class: ['dsh-link', attrs.class],
+        role: 'link',
+        href: blocked ? undefined : props.href,
+        target: blocked ? undefined : props.external ? '_blank' : attrs.target,
+        rel: props.external || attrs.target === '_blank' ? `${attrs.rel ?? ''} noopener noreferrer`.trim() : attrs.rel,
+        tabindex: blocked ? -1 : attrs.tabindex,
+        'aria-disabled': blocked || undefined,
+        'aria-busy': props.loading || undefined,
+        onClickCapture: blocked ? (event: MouseEvent) => {
+          event.preventDefault()
+          event.stopImmediatePropagation()
+        } : attrs.onClickCapture,
+        onClick: (event: MouseEvent) => emit('click', event),
+      }, slots)
+    }
   },
 })
 
@@ -139,7 +150,7 @@ export const TextField = defineComponent({
       const hasDescription = Boolean(props.description || slots.description)
       const hasError = Boolean(props.errorMessage || slots.error)
       const describedBy = [attrs['aria-describedby'], hasDescription ? `${id}-description` : '', hasError ? `${id}-error` : ''].filter(Boolean).join(' ') || undefined
-      const { class: className, style, ...inputAttrs } = attrs
+      const { class: className, style, 'aria-labelledby': labelledBy, ...inputAttrs } = attrs
       return h('div', { class: ['dsh-field', className], style, 'data-invalid': props.invalid || hasError || undefined }, [
         props.label || slots.label ? h(Label, { for: id, required: props.required }, { default: () => slots.label?.() ?? props.label }) : null,
         h(Input, {
@@ -153,6 +164,7 @@ export const TextField = defineComponent({
             type: props.type,
             required: props.required,
             'aria-label': attrs['aria-label'],
+            'aria-labelledby': labelledBy ?? (attrs.inputAttrs as Record<string, unknown> | undefined)?.['aria-labelledby'],
             'aria-invalid': props.invalid || hasError || undefined,
             'aria-describedby': describedBy,
             'aria-required': props.required || undefined,

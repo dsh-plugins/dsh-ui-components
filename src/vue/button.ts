@@ -1,5 +1,5 @@
-import { defineComponent, h, ref, type PropType } from 'vue'
-import { Button as ArcoButton } from '@arco-design/web-vue'
+import { computed, defineComponent, h, inject, provide, ref, type ComputedRef, type InjectionKey, type PropType } from 'vue'
+import { Button as ArcoButton, ButtonGroup as ArcoButtonGroup } from '@arco-design/web-vue'
 
 /** 按钮的视觉层级，与 HeroUI 的语义变体对应。 */
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'outline' | 'ghost' | 'danger' | 'danger-soft'
@@ -7,6 +7,32 @@ export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'outline' | '
 export type ControlSize = 'sm' | 'md' | 'lg'
 /** 可按组件覆盖提供器中的圆角。 */
 export type Radius = 'none' | 'sm' | 'md' | 'lg' | 'full'
+
+const sizes = { sm: 'small', md: 'medium', lg: 'large' } as const
+type ArcoSize = NonNullable<InstanceType<typeof ArcoButtonGroup>['$props']['size']>
+const groupSizeKey: InjectionKey<ComputedRef<ArcoSize | undefined>> = Symbol('dsh-button-group-size')
+
+/** 组尺寸兼容 DSH 简写与 Arco 原生取值。 */
+export const ButtonGroup = defineComponent({
+  name: 'DshButtonGroup',
+  inheritAttrs: false,
+  props: {
+    size: String as PropType<ControlSize | ArcoSize>,
+    type: String as PropType<InstanceType<typeof ArcoButtonGroup>['$props']['type']>,
+    status: String as PropType<InstanceType<typeof ArcoButtonGroup>['$props']['status']>,
+    shape: String as PropType<InstanceType<typeof ArcoButtonGroup>['$props']['shape']>,
+    disabled: Boolean,
+  },
+  setup(props, { attrs, slots }) {
+    const size = computed(() => {
+      const requested = props.size
+      if (requested === 'sm' || requested === 'md' || requested === 'lg') { return sizes[requested] }
+      return requested
+    })
+    provide(groupSizeKey, size)
+    return () => h(ArcoButtonGroup, { ...attrs, ...props, size: size.value }, slots)
+  },
+})
 
 /** 按钮沿用 Arco 的链接、提交、加载和点击行为，并增加语义化外观。 */
 export const Button = defineComponent({
@@ -22,7 +48,7 @@ export const Button = defineComponent({
     long: Boolean,
     loadingFixedWidth: Boolean,
     variant: { type: String as PropType<ButtonVariant>, default: 'primary' },
-    size: { type: String as PropType<ControlSize>, default: 'md' },
+    size: String as PropType<ControlSize>,
     radius: String as PropType<Radius>,
     disabled: Boolean,
     loading: Boolean,
@@ -30,6 +56,9 @@ export const Button = defineComponent({
     block: Boolean,
   },
   setup(props, { attrs, slots, expose }) {
+    const groupSize = inject(groupSizeKey, undefined)
+    const size = computed(() => props.size ? sizes[props.size] : groupSize?.value)
+    const displaySize = computed(() => ({ mini: 'sm', small: 'sm', medium: 'md', large: 'lg' } as const)[size.value ?? 'medium'])
     const button = ref<InstanceType<typeof ArcoButton>>()
     expose({ focus: () => button.value?.$el?.focus(), blur: () => button.value?.$el?.blur() })
     return () => h(ArcoButton, {
@@ -38,11 +67,11 @@ export const Button = defineComponent({
       ref: button,
       class: ['dsh-button', attrs.class],
       'data-variant': props.variant,
-      'data-size': props.size,
+      'data-size': displaySize.value,
       'data-radius': props.radius,
       'data-icon-only': props.iconOnly || undefined,
       type: props.type ?? (props.variant === 'primary' || props.variant === 'danger' ? 'primary' : 'secondary'),
-      size: ({ sm: 'small', md: 'medium', lg: 'large' } as const)[props.size],
+      size: size.value,
       disabled: props.disabled,
       loading: props.loading,
       long: props.block || props.long,

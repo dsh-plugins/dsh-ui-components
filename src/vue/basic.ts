@@ -32,7 +32,7 @@ const progress = defineComponent({
 
 type InstallableComponent = Component & { install: typeof ArcoProgress.install }
 
-function installComponent<C extends InstallableComponent>(wrapped: Component, original: C): C {
+export function installComponent<C extends InstallableComponent>(wrapped: Component, original: C): C {
   return Object.assign(wrapped, {
     install(app: App, options?: Parameters<typeof ArcoProgress.install>[1]) {
       function component(name: string): Component | undefined
