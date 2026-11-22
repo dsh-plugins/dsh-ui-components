@@ -61,6 +61,13 @@
 
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input { box-sizing: border-box; display: flex; align-items: center; height: 36px; min-width: 0; width: 100%; border: var(--border-width-field) solid var(--field-border); border-radius: calc(var(--radius) * 1.5); background: var(--field-background); box-shadow: var(--field-shadow); color: var(--field-foreground); font-size: 14px; line-height: 20px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__field { display: flex; align-items: center; flex-shrink: 0; gap: 1px; padding: 8px 8px 8px 12px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.dsh-date-input[data-size="mini"], .arco-picker.arco-picker-size-mini) { height: 24px; min-height: 24px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.dsh-date-input[data-size="small"], .arco-picker.arco-picker-size-small) { height: 28px; min-height: 28px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.dsh-date-input[data-size="large"], .arco-picker.arco-picker-size-large) { height: 44px; min-height: 44px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__field { padding-block: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__field[data-placeholder]:not(:focus-within)::before { content: attr(data-placeholder); color: var(--muted); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__field[data-placeholder]:not(:focus-within) > * { position: absolute; opacity: 0; pointer-events: none; }
+
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__segment { display: block; padding: 0 2px; border-radius: calc(var(--radius) * .75); outline: none; caret-color: transparent; white-space: nowrap; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__segment:focus { background: var(--accent); color: var(--accent-foreground); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__literal, .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__separator, .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__segment[data-placeholder] { color: var(--muted); }

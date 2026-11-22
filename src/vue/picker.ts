@@ -83,6 +83,7 @@ function createPicker(range: boolean) {
     name: range ? 'DshRangePicker' : 'DshDatePicker', inheritAttrs: false,
     setup(_, { attrs, slots, expose }) {
       const theme = useDshTheme()
+      const config = inject(configProviderInjectionKey, undefined)
       const instance = shallowRef<ComponentPublicInstance>()
       const inputRoot = shallowRef<HTMLElement>()
       const revision = ref(0)
@@ -159,7 +160,9 @@ function createPicker(range: boolean) {
         const componentSlots = segmented ? { ...slots, default: () => {
           const node = renderDateInput(factory, {
             dates: range ? [parse(Array.isArray(raw) ? raw[0] : undefined), parse(Array.isArray(raw) ? raw[1] : undefined)] : [parse(raw)],
-            range, format, label: String(get('aria-label') ?? '日期'), disabled: !!get('disabled'), readonly: !!(get('readonly') || get('disabledInput')),
+            range, format, id: attrs.id as string | undefined, size: (get('size') ?? config?.size) as string | undefined,
+            placeholder: get('placeholder') as string | string[] | undefined, onClear: () => call('onClear'),
+            label: String(get('aria-label') ?? '日期'), disabled: !!get('disabled'), readonly: !!(get('readonly') || get('disabledInput')),
             open: !!(get('popupVisible') ?? visible.value), allowClear: get('allowClear') !== false, draft,
             invalidate: () => { revision.value++ }, change: commitInput, toggle: () => changeVisible(!(get('popupVisible') ?? visible.value)),
             disabledDate: disabled,
