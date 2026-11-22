@@ -23,8 +23,6 @@ function scopedPopup<C extends Component>(component: C, name: string, nested?: '
         has: (_, key) => instance.value !== undefined && key in instance.value,
       }))
       return () => {
-        // Trigger 在首次打开时缓存挂载点，等待 Provider 建好容器再创建实例。
-        if (!container.value) { return null }
         const forwarded = { ...attrs }
         if (name === 'Menu') {
           const itemWidth = attrs.itemWidth ?? attrs['item-width']

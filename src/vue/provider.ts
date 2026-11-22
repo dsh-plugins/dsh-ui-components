@@ -1,5 +1,5 @@
 import {
-  Teleport, TransitionGroup, computed, defineComponent, h, inject, nextTick, onBeforeUnmount, onMounted,
+  Teleport, TransitionGroup, computed, defineComponent, h, inject, nextTick, onBeforeMount, onBeforeUnmount, onMounted,
   onUpdated, provide, shallowReactive, ref, shallowRef, watch, type InjectionKey, type PropType,
   type ShallowRef, type VNodeChild, type CSSProperties, type Ref,
 } from 'vue'
@@ -84,6 +84,7 @@ export const DshProvider = defineComponent({
   setup(props, { attrs, slots }) {
     const root = shallowRef<HTMLElement>()
     const container = shallowRef<HTMLElement>()
+    const mounted = ref(false)
     const autoTheme = ref<'light' | 'dark'>('light')
     const hostTheme = ref(false)
     const systemMotion = ref(false)
@@ -185,12 +186,15 @@ export const DshProvider = defineComponent({
         if (value !== undefined) { portal.style.setProperty('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
       }
     }
-    onMounted(() => {
+    onBeforeMount(() => {
       const portal = document.createElement('div')
       portal.className = 'dsh-ui dsh-ui-portal'
       document.body.appendChild(portal)
       container.value = portal
-      const stopToastLayout = observeToastLayout(portal)
+    })
+    onMounted(() => {
+      mounted.value = true
+      const stopToastLayout = observeToastLayout(container.value!)
       entries.forEach(arm)
       const color = window.matchMedia('(prefers-color-scheme: dark)')
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -205,7 +209,9 @@ export const DshProvider = defineComponent({
         void nextTick(syncPortal)
       }
       const observer = new MutationObserver(update)
-      observer.observe(document.body, { attributes: true, attributeFilter: ['data-ds-dark-theme', 'arco-theme', 'style', 'class'] })
+      for (let node: Element | null = root.value ?? null; node; node = node.parentElement) {
+        observer.observe(node, { attributes: true })
+      }
       color.addEventListener('change', update)
       reduced.addEventListener('change', update)
       disconnect = () => {
@@ -236,7 +242,7 @@ export const DshProvider = defineComponent({
           'data-host-theme': String(props.theme === 'auto' && hostTheme.value), dir: props.rtl ? 'rtl' : 'ltr',
         }, slots.default?.()),
         ...overlays.map(entry => h('div', { key: entry.id, style: { display: 'contents' } }, [entry.content()])),
-        container.value ? h(Teleport, { to: container.value },
+        mounted.value && container.value ? h(Teleport, { to: container.value },
           (['top', 'bottom', 'topLeft', 'topRight', 'bottomLeft', 'bottomRight'] as const).map(position => h(TransitionGroup, {
             tag: 'div', name: 'dsh-toast-slide',
             class: 'dsh-toast-region', 'data-position': position, 'aria-label': '通知',
