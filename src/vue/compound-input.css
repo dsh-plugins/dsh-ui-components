@@ -1,0 +1,18 @@
+/* Arco Vue 将装饰、密码眼睛和清除按钮渲染为原生 input 的兄弟节点。 */
+.dsh-ui .arco-input-wrapper:not(.arco-input-number, .arco-input-number *):has(> .arco-input-prefix, > .arco-input-suffix, > .arco-input-clear-btn) {
+  align-items: center;
+  padding-block: 0;
+}
+
+/* 外框已有焦点反馈。宿主给 input 附加的表面、最小宽度与阴影不应挤压后缀。 */
+.dsh-ui .arco-input-wrapper:not(.arco-input-number, .arco-input-number *):has(> .arco-input-prefix, > .arco-input-suffix, > .arco-input-clear-btn) > input.arco-input {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
