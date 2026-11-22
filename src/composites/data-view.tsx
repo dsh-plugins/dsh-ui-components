@@ -64,7 +64,7 @@ interface JsonNodeProps {
 function JsonNode({ name, value, last, defaultExpanded, depth }: JsonNodeProps): React.ReactElement {
   const kind = kindOf(value)
   const expandable = kind === 'object' || kind === 'array'
-  const [expanded, setExpanded] = React.useState(defaultExpanded || depth < 1)
+  const [expanded, setExpanded] = React.useState(defaultExpanded)
   const suffix = last ? '' : ','
   const keyPart = name === undefined ? null : <span className="dsh-json-tree__key">{name}: </span>
 
@@ -122,7 +122,7 @@ function JsonNode({ name, value, last, defaultExpanded, depth }: JsonNodeProps):
                 name={kind === 'array' ? undefined : key}
                 value={item}
                 last={index === entries.length - 1}
-                defaultExpanded={defaultExpanded}
+                defaultExpanded={false}
                 depth={depth + 1}
               />
             ))}
@@ -144,7 +144,7 @@ function JsonNode({ name, value, last, defaultExpanded, depth }: JsonNodeProps):
  * @param props - 见 {@link JsonTreeProps}。
  * @returns JSON 树元素。
  */
-export function JsonTree({ value, defaultExpanded = false, className }: JsonTreeProps): React.ReactElement {
+export function JsonTree({ value, defaultExpanded = true, className }: JsonTreeProps): React.ReactElement {
   injectCompositeStyles()
   return (
     <div className={cx('dsh-json-tree', className)}>

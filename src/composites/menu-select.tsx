@@ -66,7 +66,9 @@ export function MenuSelect({
   className,
 }: MenuSelectProps): React.ReactElement {
   injectCompositeStyles()
-  const [open, setOpen] = React.useState(false)
+  const [requestedOpen, setOpen] = React.useState(false)
+  const open = requestedOpen && !disabled
+  React.useEffect(() => { if (disabled) setOpen(false) }, [disabled])
   const [above, setAbove] = React.useState(false)
   const [activeIndex, setActiveIndex] = React.useState(-1)
   const triggerRef = React.useRef<HTMLButtonElement>(null)
@@ -102,7 +104,7 @@ export function MenuSelect({
   React.useEffect(() => {
     if (!open) return undefined
     updatePlacement()
-    setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0)
+    setActiveIndex(selectedIndex >= 0 && !options[selectedIndex]?.disabled ? selectedIndex : options.findIndex(option => !option.disabled))
     window.addEventListener('scroll', updatePlacement, true)
     window.addEventListener('resize', updatePlacement)
 
@@ -121,7 +123,7 @@ export function MenuSelect({
       window.removeEventListener('resize', updatePlacement)
       document.removeEventListener('pointerdown', onPointerDown)
     }
-  }, [open, selectedIndex, updatePlacement, close])
+  }, [open, options, selectedIndex, updatePlacement, close])
 
   /**
    * 选中一个选项并关闭。
@@ -129,7 +131,7 @@ export function MenuSelect({
    * @param option - 被选中的选项。
    */
   const choose = (option: MenuSelectOption): void => {
-    if (option.disabled === true) return
+    if (disabled || option.disabled) return
     onChange?.(option.value)
     close(true)
   }
@@ -149,15 +151,14 @@ export function MenuSelect({
       return
     }
 
-    const enabled = options.map((option, index) => (option.disabled === true ? -1 : index)).filter(index => index >= 0)
-    if (enabled.length === 0) return
-    const position = enabled.indexOf(activeIndex)
-
     if (event.key === 'Escape') {
       event.preventDefault()
       close(true)
       return
     }
+    const enabled = options.map((option, index) => (option.disabled ? -1 : index)).filter(index => index >= 0)
+    if (enabled.length === 0) return
+    const position = enabled.indexOf(activeIndex)
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
       const option = options[activeIndex]

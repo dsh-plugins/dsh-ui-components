@@ -36,7 +36,7 @@ function defaultContainer(): HTMLElement {
   return ensureOverlayContainer() ?? document.body
 }
 
-const PopupContext = React.createContext<() => HTMLElement>(defaultContainer)
+export const PopupContext = React.createContext<() => HTMLElement>(defaultContainer)
 const useLayoutEffect = typeof document === 'undefined' ? React.useEffect : React.useLayoutEffect
 
 /** 供封装浮层使用，确保弹窗和触发器属于同一主题。 */

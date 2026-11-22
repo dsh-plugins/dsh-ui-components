@@ -33,7 +33,7 @@ function extensionOf(name: string): string {
   const trimmed = name.trim()
   if (trimmed === '') return 'file'
   if (trimmed.includes('/') || trimmed.includes('\\') || trimmed.includes('.')) {
-    const base = trimmed.slice(trimmed.lastIndexOf('/') + 1, undefined)
+    const base = trimmed.split(/[\\/]/).pop() ?? ''
     const dot = base.lastIndexOf('.')
     if (dot <= 0) return 'file'
     return base.slice(dot + 1)

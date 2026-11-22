@@ -5,7 +5,7 @@
  * 组合件是本包相对直接用 Arco 的增量，测试重点是它们自己的交互契约：下拉的
  * 鼠标与键盘两条路径、弹出层的留白与滚动容器、JSON 树的展开语义。
  */
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import * as React from 'react'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import {
@@ -19,6 +19,11 @@ import {
   StatusLine,
 } from '../src/composites/index.js'
 
+beforeAll(() => {
+  // jsdom 未实现原生模态 API；实际焦点边界由浏览器上的 dialog 提供。
+  HTMLDialogElement.prototype.showModal ??= function () { this.open = true; this.querySelector<HTMLElement>('button')?.focus() }
+  HTMLDialogElement.prototype.close ??= function () { this.open = false }
+})
 afterEach(cleanup)
 
 describe('SettingsCard', () => {
@@ -65,6 +70,21 @@ describe('PanelShell', () => {
   it('内容区使用宿主统一滚动容器', () => {
     render(<PanelShell title="详情">正文</PanelShell>)
     expect(document.querySelector('.dshl-scrollbar')).toBeTruthy()
+  })
+
+  it('打开原生模态框、处理取消并在卸载时归还焦点', () => {
+    const trigger = document.body.appendChild(document.createElement('button'))
+    trigger.focus()
+    const onClose = vi.fn()
+    const { unmount } = render(<PanelShell title={<span>详情</span>} closeLabel="关闭" onClose={onClose} />)
+    const dialog = screen.getByRole('dialog', { name: '详情' }) as HTMLDialogElement
+    expect(dialog.open).toBe(true)
+    expect(dialog.contains(document.activeElement)).toBe(true)
+    fireEvent(dialog, new Event('cancel', { cancelable: true }))
+    expect(onClose).toHaveBeenCalledOnce()
+    unmount()
+    expect(document.activeElement).toBe(trigger)
+    trigger.remove()
   })
 
   it('关闭按钮触发回调', () => {
@@ -143,6 +163,21 @@ describe('MenuSelect', () => {
     expect(screen.queryByRole('listbox')).toBeNull()
   })
 
+  it('空选项也可取消，展开后整组禁用立即撤下选项', () => {
+    const onChange = vi.fn()
+    const { rerender } = render(<MenuSelect options={[]} label="模式" onChange={onChange} />)
+    const trigger = screen.getByRole('button', { name: /模式/ })
+    fireEvent.click(trigger)
+    fireEvent.keyDown(trigger, { key: 'Escape' })
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    rerender(<MenuSelect options={options} label="模式" onChange={onChange} />)
+    fireEvent.click(trigger)
+    expect(screen.getByRole('listbox')).toBeTruthy()
+    rerender(<MenuSelect options={options} disabled label="模式" onChange={onChange} />)
+    expect(screen.queryByRole('listbox')).toBeNull()
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
   it('禁用时触发器不可点', () => {
     render(<MenuSelect options={options} value="auto" label="模式" disabled />)
     expect((screen.getByRole('button', { name: /模式/ }) as HTMLButtonElement).disabled).toBe(true)
@@ -158,15 +193,25 @@ describe('JsonTree', () => {
   })
 
   it('数组按项数汇总收起', () => {
-    render(<JsonTree value={{ items: [1, 2, 3] }} defaultExpanded={false} />)
+    render(<JsonTree value={{ items: [1, 2, 3] }} />)
     expect(screen.getByText(/3 项/)).toBeTruthy()
   })
 
   it('点击可展开折叠的节点', () => {
-    render(<JsonTree value={{ items: [1, 2, 3] }} defaultExpanded={false} />)
+    render(<JsonTree value={{ items: [1, 2, 3] }} />)
     const toggle = screen.getAllByRole('button', { name: '展开' })[0]!
     fireEvent.click(toggle)
     expect(screen.getByText('1')).toBeTruthy()
+  })
+
+  it('显式根展开设置不传播到子树', () => {
+    const value = { items: [1, 2] }
+    const { unmount } = render(<JsonTree value={value} defaultExpanded={false} />)
+    expect(screen.queryByText(/items:/)).toBeNull()
+    unmount()
+    render(<JsonTree value={value} defaultExpanded />)
+    expect(screen.getByText(/2 项/)).toBeTruthy()
+    expect(screen.queryByText('1')).toBeNull()
   })
 
   it('布尔与空值使用关键字配色', () => {
@@ -194,6 +239,11 @@ describe('CodeBlockShell', () => {
 })
 
 describe('FileTypeBadge', () => {
+  it('忽略 Windows 目录中的点号', () => {
+    render(<FileTypeBadge name={String.raw`C:\dir.v1\README`} />)
+    expect(screen.getByText('file')).toBeTruthy()
+  })
+
   it('从文件名取扩展名', () => {
     render(<FileTypeBadge name="src/index.tsx" />)
     expect(screen.getByText('tsx')).toBeTruthy()

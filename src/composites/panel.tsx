@@ -8,7 +8,8 @@
  * @module @dsh-plugin/dsh-ui-components/composites/panel
  */
 import * as React from 'react'
-import { Scrollbar } from '@dsh-plugin/dsh-loader/client'
+import { Arco, Scrollbar } from '@dsh-plugin/dsh-loader/client'
+import { PopupContext } from '../foundation/provider.js'
 import { cx } from '../foundation/style.js'
 import { IconButton } from '../basic/icon-button.js'
 import { Icon } from '../foundation/icons.js'
@@ -48,25 +49,43 @@ export function PanelShell({
   mask = true,
 }: PanelShellProps): React.ReactElement {
   injectCompositeStyles()
+  const dialog = React.useRef<HTMLDialogElement>(null)
+  const titleId = React.useId()
+  const getPopupContainer = React.useCallback(() => dialog.current ?? document.body, [])
+  React.useLayoutEffect(() => {
+    const node = dialog.current!
+    const previous = document.activeElement
+    node.showModal()
+    return () => {
+      node.close()
+      if (previous instanceof HTMLElement && previous.isConnected) previous.focus()
+    }
+  }, [])
   return (
-    <div className={cx('dsh-panel-shell', className)} role="dialog" aria-modal="true" aria-label={typeof title === 'string' ? title : undefined}>
-      {mask ? <div className="dsh-panel-shell__mask" onClick={onClose} /> : null}
-      <div className="dsh-panel-shell__card">
-        {title === undefined && closeLabel === undefined
-          ? null
-          : (
-            <div className="dsh-panel-shell__header">
-              {title === undefined ? <span /> : <h2 className="dsh-panel-shell__title">{title}</h2>}
-              {closeLabel === undefined
-                ? null
-                : <IconButton icon={<Icon name="Close" />} label={closeLabel} onClick={onClose} />}
+    <dialog ref={dialog} className={cx('dsh-panel-shell', className)} aria-modal="true"
+      aria-labelledby={title == null ? undefined : titleId}
+      onCancel={event => { event.preventDefault(); onClose?.() }}>
+      <PopupContext.Provider value={getPopupContainer}>
+        <Arco.ConfigProvider getPopupContainer={getPopupContainer}>
+          {mask ? <div className="dsh-panel-shell__mask" onClick={onClose} /> : null}
+          <div className="dsh-panel-shell__card">
+            {title === undefined && closeLabel === undefined
+              ? null
+              : (
+                <div className="dsh-panel-shell__header">
+                  {title === undefined ? <span /> : <h2 id={titleId} className="dsh-panel-shell__title">{title}</h2>}
+                  {closeLabel === undefined
+                    ? null
+                    : <IconButton icon={<Icon name="Close" />} label={closeLabel} onClick={onClose} />}
+                </div>
+              )}
+            <div className="dsh-panel-shell__body">
+              <Scrollbar>{children}</Scrollbar>
             </div>
-          )}
-        <div className="dsh-panel-shell__body">
-          <Scrollbar style={{ maxHeight: '100%' }}>{children}</Scrollbar>
-        </div>
-        {footer === undefined ? null : <div className="dsh-panel-shell__footer">{footer}</div>}
-      </div>
-    </div>
+            {footer === undefined ? null : <div className="dsh-panel-shell__footer">{footer}</div>}
+          </div>
+        </Arco.ConfigProvider>
+      </PopupContext.Provider>
+    </dialog>
   )
 }

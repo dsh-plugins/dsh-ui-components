@@ -103,9 +103,20 @@ export const COMPOSITES_CSS = `
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
   padding: ${G.overlayMargin}px 24px;
   box-sizing: border-box;
 }
+
+.dsh-panel-shell:not([open]) { display: none; }
+.dsh-panel-shell::backdrop { background: transparent; }
 
 .dsh-panel-shell__mask {
   position: absolute;
@@ -146,11 +157,15 @@ export const COMPOSITES_CSS = `
 }
 
 .dsh-panel-shell__body {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
   padding: 16px 24px;
   overflow: hidden;
 }
+
+.dsh-panel-shell__body > .dshl-scrollbar { flex: 1 1 auto; }
 
 .dsh-panel-shell__footer {
   display: flex;
