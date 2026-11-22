@@ -73,7 +73,7 @@ export const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttrib
         ref={ref}
         size={ARCO_SIZE[size]}
         status={invalid === true ? 'error' : status}
-        aria-invalid={invalid === true ? true : undefined}
+        aria-invalid={invalid === true ? true : rest['aria-invalid']}
         className={mergeClass(className, mono === true && 'dsh-mono')}
       />
     )
@@ -109,7 +109,7 @@ export const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.Ref
         {...rest}
         ref={ref}
         status={invalid === true ? 'error' : status}
-        aria-invalid={invalid === true ? true : undefined}
+        aria-invalid={invalid === true ? true : rest['aria-invalid']}
         className={mergeClass(className, `dsh-textarea-${size}`, mono === true && 'dsh-mono')}
       />
     )

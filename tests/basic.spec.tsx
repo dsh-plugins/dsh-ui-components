@@ -8,7 +8,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as React from 'react'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { Field, Input } from '../src/basic/index.js'
+import { Field, Input, Textarea } from '../src/basic/index.js'
 
 // 未开启 vitest 全局 API 时 testing-library 不会自动清理，显式登记一次，
 // 否则上一个用例渲染的节点会留在 document 里影响后续查询。
@@ -25,6 +25,12 @@ describe('Input', () => {
   it('校验失败时标记 aria-invalid', () => {
     render(<Input invalid placeholder="地址" />)
     expect(screen.getByPlaceholderText('地址').getAttribute('aria-invalid')).toBe('true')
+  })
+
+  it('保留调用方传给单行与多行输入的校验状态', () => {
+    render(<><Input aria-invalid="grammar" placeholder="名称" /><Textarea aria-invalid="true" placeholder="详情" /></>)
+    expect(screen.getByPlaceholderText('名称').getAttribute('aria-invalid')).toBe('grammar')
+    expect(screen.getByPlaceholderText('详情').getAttribute('aria-invalid')).toBe('true')
   })
 
   it('等宽模式附加字体类名', () => {
