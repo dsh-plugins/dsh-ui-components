@@ -241,7 +241,7 @@ export const DATA_CSS = `
 }
 
 .dsh-ui .arco-carousel-indicator-item-active {
-  background-color: var(--dsw-alias-label-primary);
+  background-color: var(--snow);
 }
 
 /* ── 日历 ───────────────────────────────────────────────────────── */

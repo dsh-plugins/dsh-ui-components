@@ -57,7 +57,7 @@ function TableBase({ contentSized, loadingStyle, loading, scroll, className, ...
 export type TableColumn = NonNullable<TableProps['columns']>[number]
 
 /** 带静态子组件的表格导出。 */
-export const Table = TableBase
+export const Table: typeof TableBase & Pick<typeof Arco.Table, 'Summary'> = Object.assign(TableBase, { Summary: Arco.Table.Summary })
 
 /** {@link List} 的 props。 */
 export type ListProps = React.ComponentPropsWithoutRef<typeof Arco.List>

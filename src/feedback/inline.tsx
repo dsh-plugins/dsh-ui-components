@@ -6,9 +6,9 @@
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
 import { injectFeedbackStyles } from './styles.js'
-import { HeroSuccess } from '../foundation/hero-icons.js'
+import { componentProps } from '../foundation/component-props.js'
 import { HeroProgress } from './hero-progress.js'
-import { HeroResult } from './hero-result.js'
+import { HeroResult, statusIcons } from './hero-result.js'
 
 /** {@link Alert} 的 props。 */
 export type AlertProps = React.ComponentPropsWithoutRef<typeof Arco.Alert>
@@ -21,7 +21,13 @@ export type AlertProps = React.ComponentPropsWithoutRef<typeof Arco.Alert>
  */
 export function Alert(props: AlertProps): React.ReactElement {
   injectFeedbackStyles()
-  return <Arco.Alert icon={props.type === 'success' ? <HeroSuccess /> : undefined} {...props} />
+  const config = React.useContext(Arco.ConfigProvider.ConfigContext)
+  const options = componentProps(props, config.componentConfig?.Alert)
+  const path = statusIcons[options.type ?? 'info']
+  const icon = options.icon === undefined ? <svg className="dsh-alert-status-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16">
+    <path fill="currentColor" fillRule="evenodd" clipRule="evenodd" d={path} />
+  </svg> : options.icon
+  return <Arco.Alert {...options} icon={icon} />
 }
 
 /** {@link Progress} 的 props。 */
@@ -35,7 +41,7 @@ export type ProgressProps = React.ComponentPropsWithoutRef<typeof Arco.Progress>
  */
 export function Progress(props: ProgressProps): React.ReactElement {
   injectFeedbackStyles()
-  return <HeroProgress strokeWidth={props.type === 'circle' ? undefined : props.size === 'small' ? 4 : props.size === 'large' ? 12 : 8} {...props} />
+  return <HeroProgress {...props} />
 }
 
 /** {@link Result} 的 props。 */

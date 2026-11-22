@@ -5,6 +5,7 @@
  */
 import * as React from 'react'
 import { Arco } from '@dsh-plugin/dsh-loader/client'
+import { HeroSpin } from './hero-spin.js'
 import { injectDisplayStyles } from './styles.js'
 
 /** {@link Typography} 的 props。 */
@@ -89,9 +90,9 @@ export type SpinProps = React.ComponentPropsWithoutRef<typeof Arco.Spin> & { loa
 export function Spin({ loadingStyle, className, children, ...props }: SpinProps): React.ReactElement {
   injectDisplayStyles()
   if (loadingStyle !== 'blur' || children == null) {
-    return <Arco.Spin {...props} className={className}>{children}</Arco.Spin>
+    return <HeroSpin {...props} className={className}>{children}</HeroSpin>
   }
-  return <Arco.Spin {...props} className={['dsh-spin--blur', className].flat().filter(Boolean).join(' ')} aria-busy={props.loading || undefined}>
+  return <HeroSpin {...props} className={['dsh-spin--blur', className].flat().filter(Boolean).join(' ')} aria-busy={props.loading || undefined}>
     <div {...(props.loading ? { inert: '' } : {})}>{children}</div>
-  </Arco.Spin>
+  </HeroSpin>
 }

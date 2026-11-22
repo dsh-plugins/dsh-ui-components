@@ -699,6 +699,8 @@ const HERO_REFERENCE_CSS = `
 .dsh-ui[data-theme][data-radius] .arco-tag-size-large { padding: 4px 12px; font-size: 14px; }
 .dsh-ui[data-theme][data-radius] .dsh-tag-label { padding-inline: 2px; }
 .dsh-ui[data-theme][data-radius] .arco-avatar { color: var(--foreground); }
+.dsh-ui[data-theme][data-radius] .arco-avatar-circle { border-radius: 50%; }
+.dsh-ui[data-theme][data-radius] .arco-avatar-square { border-radius: min(var(--radius), 12.5%); }
 .dsh-ui[data-theme][data-radius] .arco-avatar-with-trigger-icon { overflow: visible; }
 .dsh-ui[data-theme][data-radius] .arco-avatar-with-trigger-icon::before { border-radius: inherit; }
 .dsh-ui[data-theme][data-radius] .arco-avatar:has(.arco-avatar-text)::before { content: ''; display: flex; position: static; width: 100%; height: 100%; background: inherit; }
@@ -732,6 +734,10 @@ const HERO_REFERENCE_CSS = `
 .dsh-ui[data-theme][data-radius] .arco-alert-content { font-size: 14px; line-height: 20px; }
 .dsh-ui[data-theme][data-radius] .arco-alert-icon-wrapper { font-size: 16px; width: 24px; height: 24px; margin: 0; padding: 4px; display: flex; align-items: center; justify-content: center; flex: 0 0 24px; }
 .dsh-ui[data-theme][data-radius] .arco-alert-icon-wrapper svg { width: 16px; height: 16px; }
+.dsh-ui[data-theme][data-radius] .arco-alert-icon-wrapper .dsh-alert-status-icon { color: inherit; }
+.dsh-ui[data-theme][data-radius] .arco-alert-info :is(.arco-alert-icon-wrapper,.arco-alert-title) { color: var(--accent-soft-foreground); }
+.dsh-ui[data-theme][data-radius] .arco-alert-warning :is(.arco-alert-icon-wrapper,.arco-alert-title) { color: var(--warning-soft-foreground); }
+.dsh-ui[data-theme][data-radius] .arco-alert-error :is(.arco-alert-icon-wrapper,.arco-alert-title) { color: var(--danger-soft-foreground); }
 .dsh-ui[data-theme][data-radius] .arco-alert-success .arco-alert-icon-wrapper,
 .dsh-ui[data-theme][data-radius] .arco-alert-success .arco-alert-icon-wrapper svg,
 .dsh-ui[data-theme][data-radius] .arco-alert-success .arco-alert-title { color: var(--success-soft-foreground); }

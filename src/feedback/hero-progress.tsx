@@ -8,5 +8,7 @@ export const HeroProgress: typeof Arco.Progress = React.forwardRef((props, ref) 
   const settings = componentProps(props, config.componentConfig?.Progress)
   const size = settings.size ?? config.size
   const circle = settings.type === 'circle' && settings.showText === false && !settings.formatText && !settings.steps && settings.width === undefined && (size === undefined || size === 'default')
-  return <Arco.Progress {...props} ref={ref} width={circle ? 36 : settings.width} className={[...(Array.isArray(settings.className) ? settings.className : settings.className ? [settings.className] : []), ...(circle ? ['dsh-hero-progress-circle'] : []), ...(circle && settings.strokeWidth === undefined ? ['dsh-hero-progress-circle-default-stroke'] : [])]} />
+  const linear = (settings.type === undefined || settings.type === 'line') && !settings.steps && size !== 'mini'
+  const strokeWidth = settings.strokeWidth ?? (linear ? size === 'small' ? 4 : size === 'large' ? 12 : 8 : undefined)
+  return <Arco.Progress {...props} ref={ref} strokeWidth={strokeWidth} width={circle ? 36 : settings.width} className={[...(Array.isArray(settings.className) ? settings.className : settings.className ? [settings.className] : []), ...(circle ? ['dsh-hero-progress-circle'] : []), ...(circle && settings.strokeWidth === undefined ? ['dsh-hero-progress-circle-default-stroke'] : [])]} />
 })
