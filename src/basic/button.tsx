@@ -17,6 +17,20 @@ export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text'
 /** 按钮尺寸，`md` 高 36，`sm` 高 28。 */
 export type ButtonSize = 'md' | 'sm' | 'lg'
 
+type ButtonGroupOptions = { disabled?: boolean; size?: ButtonSize }
+const ButtonGroupContext = React.createContext<ButtonGroupOptions>({})
+
+export type ButtonGroupProps = React.ComponentPropsWithoutRef<typeof Arco.Button.Group> & ButtonGroupOptions
+
+/** 组级禁用始终生效，显式设置的按钮尺寸优先。 */
+export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(function ButtonGroup(
+  { disabled, size, ...rest }, ref,
+) {
+  const parent = React.useContext(ButtonGroupContext)
+  const value = { disabled: disabled || parent.disabled, size: size ?? parent.size }
+  return <ButtonGroupContext.Provider value={value}><Arco.Button.Group {...rest} ref={ref} /></ButtonGroupContext.Provider>
+})
+
 /** {@link Button} 的 props。 */
 export type ButtonProps = Omit<React.ComponentPropsWithoutRef<typeof Arco.Button>, 'type' | 'size' | 'status'> & {
   /** 视觉层级，默认 `primary`。 */
@@ -55,22 +69,24 @@ const ARCO_SIZE: Record<ButtonSize, 'default' | 'small' | 'large'> = {
  */
 export const Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>> =
   React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-    { variant = 'primary', size = 'md', danger, icon, block, children, htmlType, ...rest },
+    { variant = 'primary', size, disabled, danger, icon, block, long, children, htmlType, ...rest },
     ref,
   ) {
+    const group = React.useContext(ButtonGroupContext)
     injectBasicStyles()
     return (
       <Arco.Button
         {...rest}
         ref={ref}
         type={ARCO_TYPE[variant]}
-        size={ARCO_SIZE[size]}
+        size={ARCO_SIZE[size ?? group.size ?? 'md']}
+        disabled={disabled || group.disabled}
+        icon={icon}
         status={danger === true ? 'danger' : undefined}
-        long={block === true}
+        long={block ?? long}
         htmlType={htmlType ?? 'button'}
       >
-        {icon === undefined || icon === null ? null : icon}
-        <>{children}</>
+        {children == null ? null : <>{children}</>}
       </Arco.Button>
     )
   })

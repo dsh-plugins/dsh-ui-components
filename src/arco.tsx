@@ -113,7 +113,7 @@ export const Mentions = HostArco.Mentions
 /** 内容水印。 */
 export const Watermark = HostArco.Watermark
 /** 按钮组合。 */
-export const ButtonGroup = HostArco.Button.Group
+export { ButtonGroup, type ButtonGroupProps } from './basic/button.js'
 /** 头像组合。 */
 export const AvatarGroup = HostArco.Avatar.Group
 /** 表单动态字段列表。 */

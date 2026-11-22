@@ -7,9 +7,7 @@
  * @module @dsh-plugin/dsh-ui-components/basic/icon-button
  */
 import * as React from 'react'
-import { Arco } from '@dsh-plugin/dsh-loader/client'
-import { injectBasicStyles } from './styles.js'
-import { type ButtonProps, type ButtonSize, type ButtonVariant } from './button.js'
+import { Button, type ButtonProps } from './button.js'
 
 /** {@link IconButton} 的 props。 */
 export type IconButtonProps = Omit<ButtonProps, 'children' | 'icon' | 'shape'> & {
@@ -21,21 +19,6 @@ export type IconButtonProps = Omit<ButtonProps, 'children' | 'icon' | 'shape'> &
   shape?: 'square' | 'circle'
 }
 
-/** DSH 尺寸到 Arco 尺寸的映射。 */
-const ARCO_SIZE: Record<ButtonSize, 'default' | 'small' | 'large'> = {
-  md: 'default',
-  sm: 'small',
-  lg: 'large',
-}
-
-/** Arco 的 `type` 取值。 */
-const ARCO_TYPE: Record<ButtonVariant, 'primary' | 'secondary' | 'outline' | 'text'> = {
-  primary: 'primary',
-  secondary: 'secondary',
-  outline: 'outline',
-  text: 'text',
-}
-
 /**
  * 只显示图标的方形或圆形按钮。
  *
@@ -44,23 +27,22 @@ const ARCO_TYPE: Record<ButtonVariant, 'primary' | 'secondary' | 'outline' | 'te
  * @returns 图标按钮元素。
  */
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
-  { icon, label, shape = 'square', variant = 'text', size = 'md', danger, htmlType, ...rest },
+  { icon, label, shape = 'square', variant = 'text', size, danger, htmlType, ...rest },
   ref,
 ) {
-  injectBasicStyles()
   return (
-    <Arco.Button
+    <Button
       {...rest}
       ref={ref}
-      type={ARCO_TYPE[variant]}
-      size={ARCO_SIZE[size]}
+      variant={variant}
+      size={size}
       shape={shape}
-      status={danger === true ? 'danger' : undefined}
+      danger={danger}
+      icon={icon}
+      iconOnly
       htmlType={htmlType ?? 'button'}
       aria-label={label}
       title={rest.title ?? label}
-    >
-      {icon}
-    </Arco.Button>
+    />
   )
 })

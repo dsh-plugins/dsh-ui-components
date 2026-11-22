@@ -9,6 +9,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as React from 'react'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { Field, Input, Textarea } from '../src/basic/index.js'
+import { Button, ButtonGroup } from '../src/basic/button.js'
+import { IconButton } from '../src/basic/icon-button.js'
 
 // 未开启 vitest 全局 API 时 testing-library 不会自动清理，显式登记一次，
 // 否则上一个用例渲染的节点会留在 document 里影响后续查询。
@@ -60,5 +62,21 @@ describe('Field', () => {
   it('必填时在标签后加星号', () => {
     render(<Field label="密钥" required><Input /></Field>)
     expect(screen.getByText('*')).toBeTruthy()
+  })
+})
+
+describe('按钮组', () => {
+  it('对子按钮和纯图标按钮应用组禁用和尺寸，保留单项尺寸', () => {
+    const action = vi.fn()
+    render(<ButtonGroup disabled size="sm"><Button block onClick={action}>保存</Button><IconButton label="关闭" size="lg" icon={<svg />} /></ButtonGroup>)
+    const save = screen.getByRole('button', { name: '保存' }) as HTMLButtonElement
+    const close = screen.getByRole('button', { name: '关闭' }) as HTMLButtonElement
+    fireEvent.click(save)
+    expect(action).not.toHaveBeenCalled()
+    expect(save.disabled && close.disabled).toBe(true)
+    expect(save.classList.contains('arco-btn-size-small')).toBe(true)
+    expect(save.classList.contains('arco-btn-long')).toBe(true)
+    expect(close.classList.contains('arco-btn-size-large')).toBe(true)
+    expect(close.classList.contains('arco-btn-icon-only')).toBe(true)
   })
 })

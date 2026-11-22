@@ -73,6 +73,13 @@ export const BASIC_CSS = `
   width: 44px;
 }
 
+.dsh-ui[data-theme][data-radius] .arco-btn.arco-btn-icon-only {
+  width: auto;
+  padding-inline: 0;
+  aspect-ratio: 1;
+}
+.dsh-ui[data-theme][data-radius] .arco-btn.arco-btn-long { width: 100%; }
+
 .dsh-ui .arco-btn-icon-only {
   gap: 0;
 }
