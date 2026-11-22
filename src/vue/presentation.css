@@ -279,8 +279,17 @@
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea-wrapper:is([size="lg"], [size="large"]) { --dsh-textarea-height: 96px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea-wrapper > .arco-textarea { min-height: calc(var(--dsh-textarea-height) - 2px); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-mention > .dsh-mention { display: flex; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper:has(textarea[rows="1"]) { --dsh-textarea-height: 36px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper > textarea[rows="1"] { padding-block: 7px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper {
+  color: var(--field-foreground); background: var(--field-background); border: var(--field-border-width) solid var(--field-border);
+  border-radius: var(--field-radius); box-shadow: var(--field-shadow);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper > .arco-textarea { min-height: 0; padding: 8px 12px; color: inherit; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper:has(textarea[rows="1"]) { min-height: var(--dsh-field-height-md); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper:not(.arco-textarea-disabled):hover { background: var(--field-hover); border-color: var(--field-border-hover); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper:not(.arco-textarea-disabled):focus-within { background: var(--field-focus); border-color: var(--focus); box-shadow: inset 0 0 0 1px var(--focus); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper.arco-textarea-error { outline: 1px solid var(--danger); outline-offset: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper.arco-textarea-disabled { background: var(--default); color: var(--muted); box-shadow: none; opacity: var(--disabled-opacity); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-disabled > .arco-textarea { resize: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-resizebox { border-radius: var(--dsh-radius, calc(var(--radius) * 1.5)); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-picker { border-width: 1px; border-style: solid; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-small { min-height: 32px; }
