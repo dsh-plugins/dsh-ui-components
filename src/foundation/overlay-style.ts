@@ -8,7 +8,7 @@ export const HERO_OVERLAY_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-trigger:is(.arco-tooltip,.arco-autocomplete-popup) { backface-visibility: visible; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-container,
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-wrapper { height: 100dvh; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-wrapper-align-center {
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-modal-wrapper-align-center[style*="display: block"] {
   display: flex !important; flex-direction: column; align-items: center;
   padding: 120px 40px; overflow: hidden; box-sizing: border-box;
 }
