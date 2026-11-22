@@ -240,6 +240,8 @@
 
 .dsh-ui .arco-card { border: 0; border-radius: min(32px, calc(var(--radius) * 2.5)); background: var(--surface); color: var(--foreground); box-shadow: var(--surface-shadow); }
 .dsh-ui .arco-card { color: inherit; display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.dsh-ui .arco-card.dsh-card--flat { border: 1px solid var(--border); background: transparent; box-shadow: none; }
+.dsh-ui .arco-card.dsh-card--tight { padding: 12px 16px; gap: 8px; }
 .dsh-ui .arco-card-header { padding: 0; height: auto; min-height: 0; border: 0; }
 .dsh-ui .arco-card-header-title { color: var(--foreground); font-weight: 500; font-size: 14px; line-height: 24px; }
 .dsh-ui .arco-card-body { color: inherit; padding: 0; font-size: 16px; line-height: 24px; }
@@ -248,12 +250,17 @@
 .dsh-ui .dsh-surface[data-variant="tertiary"] { background: var(--surface-tertiary); }
 .dsh-ui .dsh-surface[data-variant="transparent"] { background: transparent; box-shadow: none; }
 .dsh-ui :is(.arco-tag, .arco-badge-number) { border-radius: calc(var(--radius) * 2); font-weight: 500; }
-.dsh-ui .arco-tag { height: 24px; padding: 2px 10px; border: 0; font-size: 12px; line-height: 20px; color: var(--default-foreground); background: var(--default); }
+.dsh-ui .arco-tag { height: 24px; padding: 2px 8px; border: 0; font-size: 12px; line-height: 20px; color: var(--default-foreground); background: var(--default); }
+.dsh-ui .dsh-tag-label { padding-inline: 2px; }
+.dsh-ui .arco-tag-size-small { height: 20px; padding: 0 4px; }
+.dsh-ui .arco-tag-size-large { height: 28px; padding: 4px 12px; font-size: 14px; }
 .dsh-ui .arco-tag.arco-tag-green { border: 0; color: var(--success-soft-foreground); background: var(--default); }
 .dsh-ui .arco-tag.arco-tag-blue { border: 0; color: var(--accent-soft-foreground); background: var(--default); }
 .dsh-ui .arco-tag.arco-tag-red { border: 0; color: var(--danger-soft-foreground); background: var(--default); }
 .dsh-ui .arco-tag.arco-tag-orange { border: 0; color: var(--warning-soft-foreground); background: var(--default); }
 .dsh-ui .arco-avatar { background: var(--default); color: var(--default-soft-foreground); border-radius: calc(var(--radius) * 3); font-size: 14px; line-height: 20px; font-weight: 500; }
+.dsh-ui .arco-avatar-circle { border-radius: 50%; }
+.dsh-ui .arco-avatar-square { border-radius: min(var(--radius), 12.5%); }
 .dsh-ui .arco-avatar:not(.arco-avatar-with-trigger-icon) { overflow: hidden; }
 .dsh-ui .arco-avatar:has(.arco-avatar-text)::before { content: ""; display: flex; position: static; width: 100%; height: 100%; background: inherit; }
 .dsh-ui .arco-avatar-with-trigger-icon::before { border-radius: inherit; }
@@ -427,6 +434,7 @@
 .dsh-ui :is(.arco-picker-cell-in-view.arco-picker-cell-selected .arco-picker-date-value, .arco-picker-cell-selected .arco-picker-month-value) { border-radius: 6px; background: var(--dsh-accent); color: var(--dsh-accent-foreground); }
 .dsh-ui :is(.arco-result-title, .arco-statistic-value, .arco-typography) { color: var(--dsh-foreground); }
 .dsh-ui :is(.arco-result-subtitle, .arco-statistic-title, .arco-timeline-item-label) { color: var(--dsh-muted); }
+.dsh-ui .arco-carousel-indicator-item-active { background-color: var(--snow); }
 .dsh-ui :is(.arco-image, .arco-carousel) { border-radius: var(--dsh-radius); overflow: hidden; }
 .dsh-ui .arco-back-top-btn { background: var(--dsh-overlay); color: var(--dsh-foreground); border-radius: var(--dsh-radius); box-shadow: var(--dsh-overlay-shadow); }
 .dsh-ui .arco-anchor-link-active > .arco-anchor-link { color: var(--dsh-accent); }

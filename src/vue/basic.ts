@@ -10,13 +10,23 @@ const progress = defineComponent({
     const progressProps = props as InstanceType<typeof ArcoProgress>['$props']
     const config = inject(configProviderInjectionKey, undefined)
     const circle = () => progressProps.type === 'circle' && progressProps.showText === false && !slots.text && !progressProps.steps && progressProps.width === undefined && ((progressProps.size ?? config?.size) === undefined || (progressProps.size ?? config?.size) === 'medium')
-    return () => h(ArcoProgress, {
-      ...attrs,
-      ...props,
-      class: [attrs.class, { 'dsh-hero-progress-circle': circle(), 'dsh-hero-progress-circle-default-stroke': circle() && progressProps.strokeWidth === undefined }],
-      width: circle() ? 36 : progressProps.width,
-      strokeWidth: progressProps.strokeWidth ?? (progressProps.type === 'line' && !progressProps.steps ? 8 : undefined),
-    }, slots)
+    return () => {
+      const size = progressProps.size ?? config?.size
+      const lineWidth = size === 'small' ? 4 : size === 'large' ? 12 : 8
+      const linear = progressProps.type === 'line' && size !== 'mini' && !progressProps.steps
+      const strokeWidth = progressProps.strokeWidth ?? (linear ? lineWidth : undefined)
+      const accessibility = Object.fromEntries(Object.entries(attrs).filter(([key]) => key === 'role' || key.startsWith('aria-')))
+      // The visual Arco nodes expose a 0–1 value against a 0–100 scale. Supply a single accessible value for every shape, including during SSR.
+      return h('div', { style: { display: 'contents' } }, [h('span', {
+        class: 'dsh-progress-reader', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': 100,
+        'aria-valuenow': Number(((progressProps.percent ?? 0) * 100).toFixed(10)), ...accessibility,
+      }), h(ArcoProgress, {
+        ...attrs, ...props, 'aria-hidden': 'true',
+        class: [attrs.class, { 'dsh-progress-line-four': linear && strokeWidth === 4, 'dsh-hero-progress-circle': circle(), 'dsh-hero-progress-circle-default-stroke': circle() && progressProps.strokeWidth === undefined }],
+        width: circle() ? 36 : progressProps.width,
+        strokeWidth,
+      }, slots)])
+    }
   },
 })
 
@@ -43,7 +53,7 @@ export const Progress = installComponent(progress, ArcoProgress)
 
 export type TableOptions = { contentSized?: boolean; loadingStyle?: 'blur' }
 export type SpinOptions = { loadingStyle?: 'blur' }
-export type CardOptions = { variant?: 'glass'; glassOpacity?: number }
+export type CardOptions = { variant?: 'elevated' | 'flat' | 'glass'; glassOpacity?: number; tight?: boolean }
 
 type WithOptions<C extends abstract new (...args: never[]) => { $props: object }, Options> =
   C & (new () => Omit<InstanceType<C>, '$props'> & { $props: InstanceType<C>['$props'] & Options })
@@ -52,7 +62,7 @@ type WithOptions<C extends abstract new (...args: never[]) => { $props: object }
 export const Textarea = ArcoTextarea as WithOptions<typeof ArcoTextarea, { size?: 'sm' | 'md' | 'lg' | 'small' | 'medium' | 'large' }>
 
 /** 表格滚动时临时显示滑块，保留 Arco 的参数、插槽和公开实例方法。 */
-export const Table = installComponent(defineComponent({
+export const Table = Object.assign(installComponent(defineComponent({
   name: 'DshTable', inheritAttrs: false,
   props: { contentSized: Boolean, loadingStyle: String as PropType<TableOptions['loadingStyle']> },
   setup(props, { attrs, slots, expose }) {
@@ -85,16 +95,19 @@ export const Table = installComponent(defineComponent({
       ]) : table
     }
   },
-}), ArcoTable) as WithOptions<typeof ArcoTable, TableOptions>
+}), ArcoTable), {
+  Column: ArcoTable.Column, Thead: ArcoTable.Thead, Tbody: ArcoTable.Tbody,
+  Tr: ArcoTable.Tr, Th: ArcoTable.Th, Td: ArcoTable.Td,
+}) as WithOptions<typeof ArcoTable, TableOptions>
 
 /** Optional translucent glass surface. */
 export const Card = Object.assign(installComponent(defineComponent({
   name: 'DshCard',
   inheritAttrs: false,
-  props: { variant: String as PropType<CardOptions['variant']>, glassOpacity: Number },
+  props: { variant: String as PropType<CardOptions['variant']>, glassOpacity: Number, tight: Boolean },
   setup(props, { attrs, slots }) {
     return () => h(ArcoCard, mergeProps(attrs, {
-      class: { 'dsh-card--glass': props.variant === 'glass' },
+      class: { 'dsh-card--glass': props.variant === 'glass', 'dsh-card--flat': props.variant === 'flat', 'dsh-card--tight': props.tight },
       style: props.variant === 'glass' && Number.isFinite(props.glassOpacity) ? { '--dsh-glass-opacity': props.glassOpacity } : undefined,
     }), slots)
   },
@@ -238,6 +251,7 @@ export const Tag = installComponent(defineComponent({
       event.target.click()
     } }), {
       ...slots,
+      default: slots.default ? () => h('span', { class: 'dsh-tag-label' }, slots.default?.()) : undefined,
       'close-icon': slots['close-icon'] ?? (() => h('svg', { class: 'dsh-tag-close-icon', viewBox: '0 0 16 16', fill: 'none', 'aria-hidden': true }, [h('path', { d: 'M3.47 3.47a.75.75 0 0 1 1.06 0L8 6.94l3.47-3.47a.75.75 0 1 1 1.06 1.06L9.06 8l3.47 3.47a.75.75 0 1 1-1.06 1.06L8 9.06l-3.47 3.47a.75.75 0 0 1-1.06-1.06L6.94 8 3.47 4.53a.75.75 0 0 1 0-1.06Z', fill: 'currentColor', 'fill-rule': 'evenodd', 'clip-rule': 'evenodd' })])),
     })
   },
