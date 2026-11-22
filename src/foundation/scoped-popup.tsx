@@ -12,7 +12,23 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
     const [ready, setReady] = React.useState(false)
     React.useEffect(() => { setReady(true) }, [])
     const [query, setQuery] = React.useState('')
-    const selectId = React.useId()
+    const selectInstance = React.useRef<{ dom?: HTMLElement } | null>(null)
+    const bindSelect = React.useCallback((value: { dom?: HTMLElement } | null) => {
+      selectInstance.current = value
+      if (typeof ref === 'function') { ref(value) }
+      else if (ref) { ref.current = value }
+    }, [ref])
+    // 非搜索多选将内置 input 设为 disabled，使用不占位的标签激活按钮转交焦点。
+    const labelButton = selection && typeof props.id === 'string' && props.mode === 'multiple' && !props.showSearch && !props.allowCreate
+    React.useEffect(() => {
+      if (labelButton || !selection || typeof props.id !== 'string' || !props.id) { return }
+      const root = selectInstance.current?.dom
+      const input = root?.querySelector<HTMLInputElement>('input:not([type="hidden"])')
+      const target = input ?? root
+      if (!target) { return }
+      target.id = props.id
+      return () => { if (target.id === props.id) { target.removeAttribute('id') } }
+    }, [labelButton, selection, props.id, props.mode, props.triggerElement])
     const [localValue, setLocalValue] = React.useState(props.defaultValue)
     const config = React.useContext(Arco.ConfigProvider.ConfigContext)
     const container = useDshPopupContainer()
@@ -57,8 +73,6 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
     }
     if (selection && props.showSearch && Array.isArray(props.options) && props.dropdownRender === undefined) {
       const text = String(props.inputValue ?? query)
-      const id = String(props.id ?? selectId)
-      selectionProps.id = id
       selectionProps.showSearch = false
       // 保留原始 options，让 Arco 用真实的 Option 元素执行过滤和渲染。
       selectionProps.inputValue = text
@@ -70,7 +84,7 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
       }} onKeyDown={event => {
         if (!['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(event.key)) { return }
         event.preventDefault()
-        document.getElementById(id)?.dispatchEvent(new KeyboardEvent('keydown', { key: event.key, bubbles: true }))
+        selectInstance.current?.dom?.dispatchEvent(new KeyboardEvent('keydown', { key: event.key, bubbles: true }))
       }} /></div></div>{menu}</>
     }
     if (selection && props.mode === 'multiple' && props.renderTag === undefined && !props.showSearch) {
@@ -104,11 +118,16 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
         return renderDropdown ? renderDropdown(menu) : menu
       }
     }
-    return React.createElement(Component as React.ElementType, {
-      ...props, ...selectionProps, ref,
+    const element = React.createElement(Component as React.ElementType, {
+      ...props, ...selectionProps, ...(selection ? { ref: bindSelect, id: undefined } : { ref }),
       ...(!nestedOnly ? { ...(!ready ? { popupVisible: false } : {}), getPopupContainer } : {}),
       triggerProps: { ...triggerDefaults, ...arrowOffset, ...trigger, ...(tooltipArrow ? { arrowProps: tooltipArrow } : {}), getPopupContainer, popupAlign, ...(!ready ? { popupVisible: false } : {}) },
     })
+    if (!labelButton) { return element }
+    return <>{element}<button type="button" hidden id={props.id as string} disabled={props.disabled === true} onClick={() => {
+      const root = selectInstance.current?.dom
+      if (root && root.getAttribute('aria-disabled') !== 'true') { root.focus() }
+    }} /></>
   })
   // 静态 Option/RangePicker 等入口由组件模块继续覆写为相同作用域的版本。
   for (const key of Object.keys(Component)) {
