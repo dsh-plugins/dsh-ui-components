@@ -116,7 +116,9 @@ const DateBase = React.forwardRef<React.ComponentRef<typeof ScopedRange>, DatePr
       onSelect={([date]) => { if (!date) { return }; props.onSelect?.(date.format(format), date); if (!dates[0]?.isSame(date, 'day')) { onChange(date.format(format), date) }; onVisibleChange(false) }} />} />
 })
 
-const RangeBase = React.forwardRef<React.ComponentRef<typeof HostArco.DatePicker.RangePicker>, RangeProps>((props, ref) => {
+type RangeRef = React.ComponentRef<typeof HostArco.DatePicker.RangePicker>
+const RangeBase: React.ForwardRefExoticComponent<RangeProps & React.RefAttributes<RangeRef>> =
+  React.forwardRef<RangeRef, RangeProps>((props, ref) => {
   const inputRoot = React.useRef<HTMLDivElement>(null)
   const baseRef = React.useRef<React.ComponentRef<typeof ScopedRange>>(null)
   const [, invalidate] = React.useReducer(value => value + 1, 0)
