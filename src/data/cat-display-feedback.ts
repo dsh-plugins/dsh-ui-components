@@ -90,12 +90,12 @@ export const displayFeedbackComponents: ComponentMeta[] = [
     demos: [
       {
         id: 'card-basic',
-        title: '基础卡片与可悬停效果',
-        description: '展示 title、extra 与 hoverable 阴影交互。',
+        title: '悬停卡片与紧凑卡片',
+        description: '对照默认卡片和带细边框、紧凑内边距的 flat 卡片。',
         vueComponent: V3.CardBasicVue,
         reactComponent: R.CardReact,
-        vueCode: `<template>\n  <Card title="标准卡片" extra="更多">内容</Card>\n  <Card title="可悬停卡片" hoverable>内容</Card>\n</template>`,
-        reactCode: `import { Card, Pill } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return (\n    <Card title="React 卡片" extra={<Pill>HeroUI</Pill>}>\n      保留 Arco Card 能力与 HeroUI 表面层次。\n    </Card>\n  )\n}`,
+        vueCode: `<template>\n  <Card title="标准卡片" hoverable>悬停查看阴影。</Card>\n  <Card title="紧凑卡片" variant="flat" tight>适合紧凑列表。</Card>\n</template>`,
+        reactCode: `import { Card } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return <Card title="紧凑卡片" variant="flat" tight>适合紧凑列表。</Card>\n}`,
       },
     ],
     apiSections: [
@@ -107,7 +107,8 @@ export const displayFeedbackComponents: ComponentMeta[] = [
           { name: 'title', description: '卡片标题', type: 'string | ReactNode', defaultValue: '-' },
           { name: 'extra', description: '卡片右上角操作区', type: 'string | ReactNode', defaultValue: '-' },
           { name: 'hoverable', description: '是否可悬浮高亮', type: 'boolean', defaultValue: 'false' },
-          { name: 'variant', description: 'glass 启用半透明模糊背景，React 还支持 elevated 和 flat', type: "'glass' | 'elevated' | 'flat'", defaultValue: '-' },
+          { name: 'variant', description: 'elevated 使用表面阴影，flat 使用细边框，glass 使用半透明模糊背景', type: "'glass' | 'elevated' | 'flat'", defaultValue: '-' },
+          { name: 'tight', description: '将内边距收紧为上下 12px、左右 16px', type: 'boolean', defaultValue: 'false' },
           { name: 'glassOpacity', description: '玻璃背景不透明度，范围为 0 到 1', type: 'number', defaultValue: '-' },
           { name: 'bordered', description: '是否显示边框', type: 'boolean', defaultValue: 'true' },
           { name: 'loading', description: '是否为加载中状态', type: 'boolean', defaultValue: 'false' },
@@ -218,6 +219,12 @@ export function Demo() {
         id: 'comment-basic',
         title: '基础评论',
         description: '包含作者、时间、正文与操作区。',
+        reactComponent: R.CommentBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return <DSH.Comment author="DSH Design Team" datetime="1 分钟前" content="文档站点支持 Vue 与 React 示例。" />
+}`,
         vueComponent: V3.CommentBasicVue,
         vueCode: `<template>\n  <Comment author="DSH Design Team" datetime="1 分钟前" content="评论内容" />\n</template>`,
       },
@@ -299,6 +306,7 @@ export function Demo() {
       { name: 'src', description: '图片地址', type: 'string', defaultValue: '-' },
       { name: 'width / height', description: '图片宽高', type: 'number | string', defaultValue: '-' },
       { name: 'preview', description: '是否开启点击预览', type: 'boolean', defaultValue: 'true' },
+      { name: 'previewProps', description: '预览默认挂载到 DshProvider 容器。React 可用 getPopupContainer 自定义挂载点，Vue 可用 popupContainer。', type: 'ImagePreviewProps', defaultValue: '-' },
     ],
   },
   {
@@ -361,11 +369,11 @@ export function Demo() {
       {
         id: 'popover-basic',
         title: '点击与悬停触发',
-        description: '支持 click 与 hover 两种触发方式。',
+        description: '点击打开 Popover。React 的 HoverCard 也可将焦点移到按钮上打开。',
         vueComponent: V3.PopoverBasicVue,
         reactComponent: R.PopoverReact,
         vueCode: `<template>\n  <Popover title="标题" content="内容" trigger="click"><Button>点击</Button></Popover>\n</template>`,
-        reactCode: `import { Popover } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return (\n    <Popover title="Popover" content="气泡卡片内容" trigger="click">\n      <button type="button">点击 Popover</button>\n    </Popover>\n  )\n}`,
+        reactCode: `import { HoverCard, Popover } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return (\n    <>\n      <Popover title="Popover" content="气泡卡片内容" trigger="click">\n        <button type="button">点击 Popover</button>\n      </Popover>\n      <HoverCard content="组件详情">\n        <button type="button">悬停或聚焦查看详情</button>\n      </HoverCard>\n    </>\n  )\n}`,
       },
     ],
     props: [
@@ -442,8 +450,8 @@ export function Demo() {
         title: 'Table Props',
         kind: 'props',
         rows: [
-          { name: 'columns', description: '表格列配置', type: 'TableColumnData[]', required: true },
-          { name: 'data', description: '表格数据源', type: 'TableData[]', required: true },
+          { name: 'columns', description: '表格列配置。Vue 也可在 columns 插槽中使用 Table.Column 声明列。', type: 'TableColumnData[]', defaultValue: '-' },
+          { name: 'data', description: '表格数据源', type: 'TableData[]', defaultValue: '[]' },
           { name: 'pagination', description: '分页器配置或设为 false 禁用', type: 'boolean | PaginationProps', defaultValue: 'true' },
           { name: 'bordered', description: '是否显示边框', type: 'boolean | { wrapper?: boolean; cell?: boolean }', defaultValue: 'true' },
           { name: 'stripe', description: '是否开启斑马纹', type: 'boolean', defaultValue: 'false' },
@@ -489,14 +497,15 @@ export function Demo() {
       {
         id: 'tag-basic',
         title: '预设色彩与可关闭标签',
-        description: '展示多种颜色与 closable 关闭交互。',
+        description: '对照三档尺寸和可关闭标签。',
         vueComponent: V3.TagBasicVue,
-        reactComponent: R.BadgeTagReact,
-        vueCode: `<template>\n  <Tag color="blue">blue</Tag>\n  <Chip color="purple" closable>HeroUI Chip</Chip>\n</template>`,
-        reactCode: `import { Tag, Pill } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return <><Tag color="blue">Vue 3</Tag><Pill>React 18</Pill></>\n}`,
+        reactComponent: R.TagReact,
+        vueCode: `<template>\n  <Tag color="blue" size="small">小号</Tag>\n  <Tag color="green">默认</Tag>\n  <Chip color="orange" size="large" closable>可关闭</Chip>\n</template>`,
+        reactCode: `import { Tag } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return <><Tag tone="info" size="sm">小号</Tag><Tag tone="success">默认</Tag><Tag tone="warning" size="lg" closable>可关闭</Tag></>\n}`,
       },
     ],
     props: [
+      { name: 'size', description: '小、中、大三档对应的普通标签高度为 20、24、28px', type: 'Vue: small | medium | large；React: sm | md | lg', defaultValue: 'Vue: medium；React: md' },
       { name: 'color', description: '标签预设色或自定义色值（Vue）', type: 'string', defaultValue: '-' },
       { name: 'tone', description: '语义色调（React）', type: `'neutral' | 'info' | 'success' | 'warning' | 'danger'`, defaultValue: `'neutral'` },
       { name: 'closable', description: '是否可关闭', type: 'boolean', defaultValue: 'false' },
@@ -547,7 +556,7 @@ export function Demo() {
     ],
     props: [
       { name: 'content', description: '提示文案', type: 'string', defaultValue: '-' },
-      { name: 'position', description: '弹出方位', type: `'top' | 'tl' | 'tr' | 'bottom' | 'bl' | 'br' | 'left' | 'right'`, defaultValue: `'top'` },
+      { name: 'position', description: '弹出方位', type: `'top' | 'tl' | 'tr' | 'bottom' | 'bl' | 'br' | 'left' | 'right'`, defaultValue: `'bottom'` },
       { name: 'mini', description: '是否使用紧凑样式', type: 'boolean', defaultValue: 'false' },
     ],
   },
@@ -589,6 +598,12 @@ export function Demo() {
         id: 'watermark-basic',
         title: '区域文字水印',
         description: '支持自定义文字、角度与间距。',
+        reactComponent: R.WatermarkBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return <DSH.Watermark content="DSH UI"><div style={{ height: 120 }}>水印保护区域</div></DSH.Watermark>
+}`,
         vueComponent: V3.WatermarkBasicVue,
         vueCode: `<template>\n  <Watermark content="DSH UI"><div>受保护内容</div></Watermark>\n</template>`,
       },
@@ -638,19 +653,20 @@ export function Demo() {
     demos: [
       {
         id: 'drawer-basic',
-        title: '多方向抽屉 (placement)',
-        description: '切换 right / left / top / bottom 滑出方向并打开抽屉。',
+        title: '打开和关闭抽屉',
+        description: 'Vue 示例可切换方向，React 示例使用 trigger 管理非受控抽屉的开关。',
         vueComponent: V3.DrawerBasicVue,
         reactComponent: R.DrawerReact,
         vueCode: `<template>\n  <Drawer v-model:visible="open" :placement="placement" title="作用域抽屉">内容</Drawer>\n</template>`,
-        reactCode: `import * as React from 'react'\nimport { Drawer, Button } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  const [open, setOpen] = React.useState(false)\n  return (\n    <>\n      <Button variant="outline" onClick={() => setOpen(true)}>打开 Drawer</Button>\n      <Drawer title="React Drawer" visible={open} onCancel={() => setOpen(false)}>React Drawer 内容</Drawer>\n    </>\n  )\n}`,
+        reactCode: `import { Drawer, Button } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return <Drawer title="作用域抽屉" trigger={<Button variant="outline">打开 Drawer</Button>}>点击确定或取消关闭抽屉。</Drawer>\n}`,
       },
     ],
     props: [
       { name: 'visible', description: '是否可见（Vue 支持 v-model:visible）', type: 'boolean', defaultValue: 'false' },
+      { name: 'defaultVisible', description: '非受控时的初始可见状态', type: 'boolean', defaultValue: 'false' },
       { name: 'scrollGutter', description: '在内容区与滚动条之间留出间距', type: 'boolean', defaultValue: 'false' },
       { name: 'placement', description: '抽屉滑出位置', type: `'top' | 'right' | 'bottom' | 'left'`, defaultValue: `'right'` },
-      { name: 'width / height', description: '抽屉宽度或高度', type: 'number | string', defaultValue: '250' },
+      { name: 'width / height', description: '抽屉宽度或高度', type: 'number | string', defaultValue: '侧边宽 384px，上下高度 auto' },
     ],
   },
   {
@@ -668,15 +684,15 @@ export function Demo() {
         title: '作用域 Message 与 useToast',
         description: '点击按钮触发不同语义的作用域提示。',
         vueComponent: V3.MessageBasicVue,
-        reactComponent: R.MessageNotificationReact,
+        reactComponent: R.MessageReact,
         vueCode: `<script setup lang="ts">\nimport { useFeedback, useToast } from '@dsh-plugin/dsh-ui-components-vue'\nconst { message } = useFeedback()\nconst toast = useToast()\n</script>`,
-        reactCode: `import { Button, messageSuccess, messageWarning } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return (\n    <div style={{ display: 'flex', gap: 10 }}>\n      <Button variant="primary" onClick={() => messageSuccess('操作成功')}>Message 成功</Button>\n      <Button variant="outline" onClick={() => messageWarning('请注意检查配置')}>Message 警告</Button>\n    </div>\n  )\n}`,
+        reactCode: `import { Button, Message } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  const [message, holder] = Message.useMessage()\n  return <>{holder}<Button onClick={() => message.success?.('操作成功')}>Message 成功</Button></>\n}`,
       },
     ],
     props: [
       { name: 'content', description: '提示内容', type: 'string', defaultValue: '-' },
       { name: 'duration', description: '自动关闭延时（ms）', type: 'number', defaultValue: '3000' },
-      { name: 'closable', description: '是否可手动关闭', type: 'boolean', defaultValue: 'false' },
+      { name: 'closable', description: '是否可手动关闭', type: 'boolean', defaultValue: 'true' },
     ],
   },
   {
@@ -725,12 +741,14 @@ export function Demo() {
     ],
     props: [
       { name: 'visible', description: '是否可见（Vue 支持 v-model:visible）', type: 'boolean', defaultValue: 'false' },
+      { name: 'defaultVisible', description: '非受控时的初始可见状态', type: 'boolean', defaultValue: 'false' },
+      { name: 'alignCenter', description: '是否垂直居中显示', type: 'boolean', defaultValue: 'true' },
       { name: 'title', description: '对话框标题', type: 'string', defaultValue: '-' },
       { name: 'maskClosable', description: '点击遮罩是否允许关闭', type: 'boolean', defaultValue: 'true' },
       { name: 'scrollGutter', description: '在内容区与滚动条之间留出间距', type: 'boolean', defaultValue: 'false' },
     ],
     events: [
-      { name: 'ok', description: '点击确定按钮触发', type: '() => void' },
+      { name: 'ok / onOk', description: '点击确定按钮触发。React 也可使用 onConfirm，同时传入时优先调用 onOk', type: '() => void' },
       { name: 'cancel', description: '点击取消或关闭触发', type: '() => void' },
     ],
   },
@@ -749,15 +767,16 @@ export function Demo() {
         title: '作用域通知提醒',
         description: '通过 useFeedback().notification 调用，支持多主题隔离。',
         vueComponent: V3.NotificationBasicVue,
-        reactComponent: R.MessageNotificationReact,
+        reactComponent: R.NotificationReact,
         vueCode: `<script setup lang="ts">\nconst { notification } = useFeedback()\nnotification.info({ title: '系统通知', content: '...' })\n</script>`,
-        reactCode: `import { Button, notification } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  return <Button onClick={() => notification({ title: '通知', content: 'React Notification 提示' })}>打开 Notification</Button>\n}`,
+        reactCode: `import { Button, Notification } from '@dsh-plugin/dsh-ui-components'\n\nexport function Demo() {\n  const [notification, holder] = Notification.useNotification()\n  return <>{holder}<Button onClick={() => notification.info?.({ title: '通知', content: '配置已保存' })}>打开 Notification</Button></>\n}`,
       },
     ],
     props: [
       { name: 'title', description: '通知标题', type: 'string', defaultValue: '-' },
       { name: 'content', description: '通知详情', type: 'string', defaultValue: '-' },
-      { name: 'duration', description: '自动关闭延时（ms）', type: 'number', defaultValue: '3000' },
+      { name: 'position', description: '作用域通知默认出现在行末上方，RTL 时为左上角', type: 'string', defaultValue: 'LTR: topRight；RTL: topLeft' },
+      { name: 'duration', description: '自动关闭延时（ms），设为 0 时持续显示', type: 'number', defaultValue: '3000' },
     ],
   },
   {
@@ -780,7 +799,8 @@ export function Demo() {
       },
     ],
     props: [
-      { name: 'content', description: '确认提示文案', type: 'string', defaultValue: '-' },
+      { name: 'showArrow / triggerProps.showArrow', description: 'Vue 使用 showArrow，React 使用 triggerProps.showArrow', type: 'boolean', defaultValue: 'false' },
+      { name: 'content / title', description: 'Vue 使用 content，React 使用 title 作为确认文案', type: 'string', defaultValue: '-' },
       { name: 'type', description: '图标语义类型', type: `'info' | 'success' | 'warning' | 'error'`, defaultValue: `'info'` },
     ],
     events: [
@@ -795,7 +815,7 @@ export function Demo() {
     category: 'feedback',
     categoryLabel: '反馈',
     badge: 'HeroUI',
-    description: '同时提供 Arco Progress（0~1）以及 HeroUI 风格的 ProgressBar 与 ProgressCircle。',
+    description: 'Vue 的 Progress 使用 0 到 1，React 使用 0 到 100。Vue 另提供可指定值域的 ProgressBar 和 ProgressCircle。',
     frameworks: ['vue', 'react'],
     demos: [
       {
@@ -817,18 +837,19 @@ export function Demo() {
           { name: 'percent', description: 'Arco Progress 进度值（Vue: 0 ~ 1, React: 0 ~ 100）', type: 'number', defaultValue: '0' },
           { name: 'type', description: '进度条类型', type: `'line' | 'circle'`, defaultValue: `'line'` },
           { name: 'status', description: '进度状态', type: `'normal' | 'success' | 'warning' | 'danger' | 'error'`, defaultValue: `'normal'` },
+          { name: 'strokeWidth', description: '线性进度轨道厚度（px），显式值优先于尺寸档', type: 'number', defaultValue: '小 4 / 中 8 / 大 12' },
           { name: 'showText', description: '是否显示进度文案', type: 'boolean', defaultValue: 'true' },
         ],
       },
       {
         id: 'api-progressbar-props',
         title: 'ProgressBar / ProgressCircle Props',
-        kind: 'props',
         framework: 'vue',
+        kind: 'props',
         rows: [
           { name: 'value', description: '当前数值（0 ~ 100）', type: 'number', defaultValue: '0' },
           { name: 'label', description: '进度条标签', type: 'string', defaultValue: '-' },
-          { name: 'color', description: '语义色或自定义颜色', type: `'accent' | 'success' | 'warning' | 'danger'`, defaultValue: `'accent'` },
+          { name: 'min / max', description: '可绘制的数值范围', type: 'number', defaultValue: '0 / 100' },
         ],
       },
     ],
@@ -902,7 +923,7 @@ export function Demo() {
       },
     ],
     props: [
-      { name: 'size', description: '图标尺寸', type: 'number', defaultValue: '20' },
+      { name: 'size', description: '图标尺寸', type: 'number', defaultValue: '24' },
       { name: 'dot', description: '是否使用点状动画', type: 'boolean', defaultValue: 'false' },
       { name: 'tip', description: '加载提示文案', type: 'string', defaultValue: '-' },
       { name: 'loadingStyle', description: '加载时模糊内容并保留清晰的加载图标', type: "'blur'", defaultValue: '-' },
@@ -921,6 +942,16 @@ export function Demo() {
         id: 'trigger-basic',
         title: '基础触发器',
         description: '自定义弹出内容与触发方式。',
+        reactComponent: R.TriggerBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return (
+    <DSH.Trigger trigger="click" position="bottom" popup={() => <div>自定义弹出内容</div>}>
+      <DSH.Button variant="outline">点击触发 Trigger</DSH.Button>
+    </DSH.Trigger>
+  )
+}`,
         vueComponent: V3.TriggerBasicVue,
         vueCode: `<template>\n  <Trigger trigger="click"><Button>点击</Button><template #content>内容</template></Trigger>\n</template>`,
       },
@@ -939,9 +970,36 @@ export function Demo() {
     category: 'composites',
     categoryLabel: 'DSH 复合组件',
     badge: 'React',
-    description: '面向 DSH 插件场景的高阶组合组件：PanelShell、SettingsCard、SettingsRow、MenuSelect、Segmented、CodeBlockShell、JsonTree、FileTypeBadge 与 StatusLine。',
+    description: '用于插件设置与结果展示，包括 PanelShell、SettingsCard、SettingsRow、MenuSelect、SegmentedControl、CodeBlockShell、JsonTree、FileTypeBadge 与 StatusLine。',
     frameworks: ['react'],
     demos: [
+      {
+        id: 'panel-shell',
+        title: '模态面板与分段导航',
+        description: '打开面板后，使用左右方向键切换摘要和原始数据。按 Esc 关闭并返回启动按钮。较长内容在面板正文内滚动。',
+        reactComponent: R.PanelShellReact,
+        vueCode: '',
+        reactCode: `import * as React from 'react'
+import { Button, PanelShell, SegmentedControl, JsonTree } from '@dsh-plugin/dsh-ui-components'
+
+export function Demo() {
+  const [open, setOpen] = React.useState(false)
+  const [mode, setMode] = React.useState('summary')
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>查看运行结果</Button>
+      {open && <PanelShell title="运行结果" closeLabel="关闭运行结果" onClose={() => setOpen(false)}>
+        <SegmentedControl id="run-view" label="结果视图" value={mode} onChange={setMode}
+          items={[{ value: 'summary', label: '摘要' }, { value: 'data', label: '原始数据' }]} />
+        <div id="run-view-summary-panel" role="tabpanel" aria-labelledby="run-view-summary" hidden={mode !== 'summary'}>任务已完成</div>
+        <div id="run-view-data-panel" role="tabpanel" aria-labelledby="run-view-data" hidden={mode !== 'data'}>
+          <JsonTree value={{ status: 'done', timings: { total: 12 } }} defaultExpanded={false} />
+        </div>
+      </PanelShell>}
+    </>
+  )
+}`,
+      },
       {
         id: 'composites-react-demo',
         title: '插件设置面板与数据展示组合',
@@ -968,12 +1026,13 @@ export function Demo() {
       <SettingsCard title="运行策略" description="DSH 专属复合设置卡片">
         <SettingsRow label="推理模式" description="选择默认响应速度与质量平衡">
           <MenuSelect
+            label="推理模式"
             value={mode}
             onChange={setMode}
             options={[
               { value: 'fast', label: '快速模式' },
               { value: 'balanced', label: '均衡模式' },
-              { value: 'deep', label: '深度分析' },
+              { value: 'deep', label: '深度分析（暂不可用）', disabled: true },
             ]}
           />
         </SettingsRow>
@@ -996,14 +1055,45 @@ export function Demo() {
     ],
     apiSections: [
       {
+        id: 'api-panel-shell',
+        title: 'PanelShell Props',
+        kind: 'props',
+        framework: 'react',
+        description: '挂载即打开模态面板。请用状态控制挂载，并在 onClose 中更新状态以关闭面板。内容可单独滚动，标题和底部操作区保持可见。',
+        rows: [
+          { name: 'title', description: '可见标题，同时作为面板的无障碍名称', type: 'ReactNode' },
+          { name: 'closeLabel', description: '关闭按钮的无障碍名称，传入后显示按钮', type: 'string' },
+          { name: 'onClose', description: '按 Esc、点击关闭按钮或点击遮罩时调用', type: '() => void' },
+          { name: 'mask', description: '显示可点击的遮罩', type: 'boolean', defaultValue: 'true' },
+          { name: 'children', description: '可滚动的正文', type: 'ReactNode' },
+          { name: 'footer', description: '底部操作区', type: 'ReactNode' },
+        ],
+      },
+      {
+        id: 'api-segmented-control',
+        title: 'SegmentedControl Props',
+        kind: 'props',
+        framework: 'react',
+        description: '左右方向键按页面书写方向移动到可用项，Home 和 End 移到首尾。切换时同步选择和键盘焦点。',
+        rows: [
+          { name: 'items', description: '每项包含 value、label，可设置 disabled 和 disabledReason', type: 'readonly Segment[]', required: true },
+          { name: 'value', description: '当前选中项的值', type: 'string', required: true },
+          { name: 'onChange', description: '接收下一项的值', type: '(value: string) => void', required: true },
+          { name: 'label', description: '分段列表的无障碍名称', type: 'string', required: true },
+          { name: 'id', description: '生成页签 id 和对应面板 id 的前缀，面板由调用方渲染', type: 'string' },
+          { name: 'disabled', description: '禁用全部分段', type: 'boolean', defaultValue: 'false' },
+          { name: 'block', description: '占满父容器宽度', type: 'boolean', defaultValue: 'false' },
+        ],
+      },
+      {
         id: 'api-settings-card',
         title: 'SettingsCard Props',
         kind: 'props',
         framework: 'react',
         rows: [
-          { name: 'title', description: '卡片标题', type: 'ReactNode', required: true },
+          { name: 'title', description: '卡片标题', type: 'ReactNode', defaultValue: '-' },
           { name: 'description', description: '卡片副标题描述', type: 'ReactNode', defaultValue: '-' },
-          { name: 'extra', description: '右上角操作区域', type: 'ReactNode', defaultValue: '-' },
+          { name: 'footer', description: '卡片底部操作区', type: 'ReactNode', defaultValue: '-' },
         ],
       },
       {
@@ -1022,9 +1112,14 @@ export function Demo() {
         title: 'MenuSelect Props',
         kind: 'props',
         framework: 'react',
+        description: '方向键跳过禁用项，Home 和 End 定位到首尾可用项，Enter 确认。即使列表为空或全部禁用，Esc 仍可收起并将焦点还给触发器。',
         rows: [
           { name: 'value', description: '当前选中值', type: 'string', defaultValue: '-' },
-          { name: 'options', description: '选项列表', type: 'MenuSelectOption[]', required: true },
+          { name: 'options', description: '每项包含 value、label，可设置 disabled', type: 'readonly MenuSelectOption[]', required: true },
+          { name: 'disabled', description: '禁用整个控件并立即收起已打开的菜单', type: 'boolean', defaultValue: 'false' },
+          { name: 'label', description: '触发器和弹出列表的无障碍名称', type: 'string' },
+          { name: 'placeholder', description: '没有选中项时的触发器文本', type: 'string' },
+          { name: 'id', description: '触发器的 HTML id，可用于关联外部标签', type: 'string' },
           { name: 'onChange', description: '选中项改变回调', type: '(value: string) => void', defaultValue: '-' },
         ],
       },
@@ -1036,6 +1131,7 @@ export function Demo() {
         rows: [
           { name: 'language', description: 'CodeBlockShell 代码语言标识', type: 'string', defaultValue: '-' },
           { name: 'value', description: 'JsonTree 待展示的可序列化数据', type: 'unknown', required: true },
+          { name: 'defaultExpanded', description: 'JsonTree 根节点的初始展开状态，子节点初始折叠', type: 'boolean', defaultValue: 'true' },
         ],
       },
       {
@@ -1044,9 +1140,9 @@ export function Demo() {
         kind: 'props',
         framework: 'react',
         rows: [
-          { name: 'name', description: 'FileTypeBadge 文件名或扩展名', type: 'string', required: true },
-          { name: 'state', description: 'StatusLine 状态点枚举', type: `'idle' | 'running' | 'done' | 'error'`, defaultValue: `'idle'` },
-          { name: 'time', description: 'StatusLine 耗时或时间戳文本', type: 'string', defaultValue: '-' },
+          { name: 'name', description: 'FileTypeBadge 接受裸扩展名或 Windows、POSIX 路径，路径最后一级没有扩展名时显示 FILE', type: 'string', required: true },
+          { name: 'state', description: 'StatusLine 状态点枚举', type: `'idle' | 'ongoing' | 'done' | 'warning' | 'error'`, defaultValue: `'ongoing'` },
+          { name: 'time', description: 'StatusLine 的耗时或其他附加信息', type: 'ReactNode', defaultValue: '-' },
         ],
       },
     ],

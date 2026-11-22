@@ -6,7 +6,7 @@ title: InputOTP / VerificationCode 验证码输入
 
 ## 代码演示与属性效果
 
-### 六位验证码与完成回调
+### 六位验证码输入
 
 <DemoBlockById slug="input-otp" demoId="inputotp-basic" />
 

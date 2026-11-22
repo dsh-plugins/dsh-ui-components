@@ -39,8 +39,8 @@ export const CardBasicVue = defineComponent({
   setup() {
     return () =>
       h('div', { style: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;' }, [
-        h(UI.Card, { title: '标准卡片', extra: '更多' }, () => 'HeroUI 三级表面与柔和描边。'),
-        h(UI.Card, { title: '可悬停卡片', hoverable: true }, () => 'hoverable={true} 提供悬停阴影反馈。'),
+        h(UI.Card, { title: '标准卡片', hoverable: true }, () => '悬停查看阴影。'),
+        h(UI.Card, { title: '紧凑卡片', variant: 'flat', tight: true }, () => '适合紧凑列表。'),
       ])
   },
 })
@@ -190,11 +190,11 @@ export const TableBasicVue = defineComponent({
 
 export const TagBasicVue = defineComponent({
   setup() {
-    const colors = ['blue', 'green', 'orange', 'red', 'purple', 'gray'] as const
     return () =>
       h('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;align-items:center;' }, [
-        ...colors.map((color) => h(UI.Tag, { key: color, color }, () => color)),
-        h(UI.Chip, { color: 'purple', closable: true }, () => 'HeroUI Chip'),
+        h(UI.Tag, { color: 'blue', size: 'small' }, () => '小号'),
+        h(UI.Tag, { color: 'green' }, () => '默认'),
+        h(UI.Chip, { color: 'orange', size: 'large', closable: true }, () => '可关闭'),
       ])
   },
 })
@@ -352,7 +352,7 @@ export const ProgressBasicVue = defineComponent({
     const pct = ref(0.68)
     return () =>
       h('div', { style: 'display:flex;flex-direction:column;gap:14px;max-width:440px;' }, [
-        h(UI.Progress, { percent: pct.value }),
+        ...(['small', 'medium', 'large'] as const).map(size => h(UI.Progress, { key: size, size, percent: pct.value })),
         h(UI.ProgressBar, { value: Math.round(pct.value * 100), label: 'ProgressBar' }),
         h(UI.ProgressCircle, { value: Math.round(pct.value * 100) }),
       ])

@@ -1,5 +1,5 @@
 ---
-title: Mention 提及
+title: Mention / Mentions 提及
 ---
 
 <ComponentHeader slug="mention" />

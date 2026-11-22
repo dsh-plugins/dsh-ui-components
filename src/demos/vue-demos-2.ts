@@ -68,7 +68,7 @@ export const ColorPickerBasicVue = defineComponent({
     return () =>
       h('div', { style: 'display:flex;align-items:center;gap:16px;flex-wrap:wrap;' }, [
         h(UI.ColorPicker, { modelValue: color.value, 'onUpdate:modelValue': (v: string) => (color.value = v) }),
-        h(UI.ColorPicker, { defaultValue: '#722ed1', showText: true }),
+        h(UI.ColorPicker, { defaultValue: '#722ed1', showText: true, showFormatControls: true }),
         h(UI.ColorPicker, { defaultValue: '#00b42a', disabled: true }),
       ])
   },
@@ -78,7 +78,7 @@ export const DatePickerBasicVue = defineComponent({
   setup() {
     return () =>
       h('div', { style: 'display:flex;flex-direction:column;gap:12px;max-width:420px;' }, [
-        h(UI.DatePicker, { placeholder: 'DatePicker 选择日期' }),
+        h(UI.DatePicker, { defaultValue: '2026-01-02', format: 'YYYY-MM-DD' }),
         h(UI.DateRangePicker, { placeholder: ['开始日期', '结束日期'] }),
         h(UI.MonthPicker, { placeholder: 'MonthPicker 选择月份' }),
       ])
@@ -238,7 +238,8 @@ export const SelectBasicVue = defineComponent({
     ]
     return () =>
       h('div', { style: 'display:flex;flex-direction:column;gap:12px;max-width:380px;' }, [
-        h(UI.Select, { modelValue: single.value, 'onUpdate:modelValue': (v: any) => (single.value = v), options, allowClear: true }),
+        h('label', { for: 'vue-select-mode' }, '运行模式'),
+        h(UI.Select, { id: 'vue-select-mode', modelValue: single.value, 'onUpdate:modelValue': (v: any) => (single.value = v), options, allowClear: true }),
         h(UI.Select, {
           modelValue: multi.value,
           'onUpdate:modelValue': (v: any) => (multi.value = v),

@@ -22,10 +22,12 @@ export function ButtonPropsReact() {
       <DSH.Button size="sm">sm</DSH.Button>
       <DSH.Button size="md">md</DSH.Button>
       <DSH.Button size="lg">lg</DSH.Button>
-      <DSH.Button loading={loading} onClick={() => setLoading(!loading)}>
-        {loading ? '点击取消 loading' : '点击切换 loading'}
-      </DSH.Button>
-      <DSH.Button disabled>disabled</DSH.Button>
+      <DSH.Button variant="outline" onClick={() => setLoading(!loading)}>{loading ? '结束保存' : '模拟保存'}</DSH.Button>
+      <DSH.ButtonGroup size="sm" disabled={loading}>
+        <DSH.Button loading={loading}>保存</DSH.Button>
+        <DSH.Button variant="outline" size="md">预览</DSH.Button>
+      </DSH.ButtonGroup>
+      <DSH.Button block>占满一行</DSH.Button>
     </div>
   )
 }
@@ -161,16 +163,28 @@ export function InputNumberReact() {
 }
 
 export function SelectReact() {
-  const [val, setVal] = React.useState('balanced')
+  const id = React.useId()
   return (
-    <div style={{ maxWidth: 340 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 380 }}>
+      <label htmlFor={id}>运行模式</label>
       <DSH.Select
-        value={val}
-        onChange={(v: any) => setVal(v)}
+        id={id}
+        defaultValue="balanced"
+        allowClear
         options={[
           { value: 'fast', label: '快速模式' },
           { value: 'balanced', label: '均衡模式' },
           { value: 'deep', label: '深入分析' },
+          { value: 'off', label: '离线（禁用）', disabled: true },
+        ]}
+      />
+      <DSH.Select
+        multiple
+        defaultValue={['react', 'ts']}
+        options={[
+          { value: 'vue', label: 'Vue 3' },
+          { value: 'react', label: 'React' },
+          { value: 'ts', label: 'TypeScript' },
         ]}
       />
     </div>
@@ -216,8 +230,24 @@ export function RateReact() {
   return <DSH.Rate defaultValue={4} allowHalf />
 }
 
+export function ColorPickerReact() {
+  return (
+    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+      <DSH.ColorPicker defaultValue="#165dff" />
+      <DSH.ColorPicker defaultValue="#722ed1" showText showFormatControls />
+      <DSH.ColorPicker defaultValue="#00b42a" disabled />
+    </div>
+  )
+}
+
 export function DatePickerReact() {
-  return <DSH.DatePicker />
+  return (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 420 }}>
+      <DSH.DatePicker defaultValue="2026-01-02" format="YYYY-MM-DD" />
+      <DSH.RangePicker placeholder={['开始日期', '结束日期']} />
+      <DSH.MonthPicker placeholder="选择月份" />
+    </div>
+  )
 }
 
 export function TimePickerReact() {
@@ -250,12 +280,19 @@ export function BadgeTagReact() {
   )
 }
 
+export function TagReact() {
+  return <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+    <DSH.Tag tone="info" size="sm">小号</DSH.Tag>
+    <DSH.Tag tone="success">默认</DSH.Tag>
+    <DSH.Tag tone="warning" size="lg" closable>可关闭</DSH.Tag>
+  </div>
+}
+
 export function CardReact() {
-  return (
-    <DSH.Card title="React 卡片" extra={<DSH.Pill>HeroUI</DSH.Pill>}>
-      保留 Arco Card 能力与 HeroUI 表面层次。
-    </DSH.Card>
-  )
+  return <div style={{ display: 'grid', gap: 16 }}>
+    <DSH.Card title="标准卡片" hoverable>悬停查看阴影。</DSH.Card>
+    <DSH.Card title="紧凑卡片" variant="flat" tight>适合紧凑列表。</DSH.Card>
+  </div>
 }
 
 export function CollapseReact() {
@@ -286,9 +323,14 @@ export function EmptyReact() {
 
 export function PopoverReact() {
   return (
-    <DSH.Popover title="Popover" content="气泡卡片内容" trigger="click">
-      <button type="button" className="demo-trigger">点击 Popover</button>
-    </DSH.Popover>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+      <DSH.Popover title="Popover" content="气泡卡片内容" trigger="click">
+        <button type="button" className="demo-trigger">点击 Popover</button>
+      </DSH.Popover>
+      <DSH.HoverCard content="组件详情">
+        <button type="button" className="demo-trigger">悬停或聚焦查看详情</button>
+      </DSH.HoverCard>
+    </div>
   )
 }
 
@@ -329,13 +371,19 @@ export function AlertReact() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       <DSH.Alert type="info" title="信息" content="React 版通过 DshProvider 注入样式表与浮层容器。" />
-      <DSH.Alert type="success" title="成功" content="支持 info / success / warning / error。" />
+      <DSH.Alert type="success" title="成功" content="配置已保存。" />
+      <DSH.Alert type="warning" title="警告" content="请检查配置。" />
+      <DSH.Alert type="error" title="错误" content="保存失败。" closable />
     </div>
   )
 }
 
 export function ProgressReact() {
-  return <DSH.Progress percent={68} />
+  return <div style={{ display: 'grid', gap: 12 }}>
+    {(['small', 'default', 'large'] as const).map(size =>
+      <DSH.Progress key={size} size={size} percent={68} />)}
+    <DSH.Progress type="circle" percent={68} />
+  </div>
 }
 
 export function SpinReact() {
@@ -366,7 +414,7 @@ export function ModalDrawerReact() {
       <DSH.Modal title="React Modal" visible={modalOpen} onOk={() => setModalOpen(false)} onCancel={() => setModalOpen(false)}>
         React Modal 内容
       </DSH.Modal>
-      <DSH.Drawer title="React Drawer" visible={drawerOpen} onCancel={() => setDrawerOpen(false)}>
+      <DSH.Drawer title="React Drawer" visible={drawerOpen} onOk={() => setDrawerOpen(false)} onCancel={() => setDrawerOpen(false)}>
         React Drawer 内容
       </DSH.Drawer>
     </div>
@@ -543,16 +591,14 @@ export function TreeReact() {
   return <DSH.Tree treeData={treeData} defaultExpandedKeys={['src']} />
 }
 
-export function MessageNotificationReact() {
-  return (
-    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-      <DSH.Button variant="primary" onClick={() => DSH.messageSuccess('操作成功')}>Message 成功</DSH.Button>
-      <DSH.Button variant="outline" onClick={() => DSH.messageWarning('请注意检查配置')}>Message 警告</DSH.Button>
-      <DSH.Button variant="secondary" onClick={() => { DSH.notification({ title: '通知', content: 'React Notification 提示' }) }}>
-        打开 Notification
-      </DSH.Button>
-    </div>
-  )
+export function MessageReact() {
+  const [message, holder] = DSH.Message.useMessage()
+  return <>{holder}<DSH.Button onClick={() => message.success?.('操作成功')}>Message 成功</DSH.Button></>
+}
+
+export function NotificationReact() {
+  const [notification, holder] = DSH.Notification.useNotification()
+  return <>{holder}<DSH.Button onClick={() => notification.info?.({ title: '通知', content: '配置已保存' })}>打开 Notification</DSH.Button></>
 }
 
 export function PopconfirmReact() {
@@ -580,18 +626,30 @@ export function ModalReact() {
 }
 
 export function DrawerReact() {
+  return <DSH.Drawer title="作用域抽屉" trigger={<DSH.Button variant="outline">打开 Drawer</DSH.Button>}>
+    点击确定或取消关闭抽屉。
+  </DSH.Drawer>
+}
+
+// 复合组件
+export function PanelShellReact() {
   const [open, setOpen] = React.useState(false)
+  const [mode, setMode] = React.useState('summary')
   return (
     <>
-      <DSH.Button variant="outline" onClick={() => setOpen(true)}>打开 Drawer</DSH.Button>
-      <DSH.Drawer title="React Drawer" visible={open} onCancel={() => setOpen(false)}>
-        React Drawer 内容
-      </DSH.Drawer>
+      <DSH.Button onClick={() => setOpen(true)}>查看运行结果</DSH.Button>
+      {open && <DSH.PanelShell title="运行结果" closeLabel="关闭运行结果" onClose={() => setOpen(false)}>
+        <DSH.SegmentedControl id="run-view" label="结果视图" value={mode} onChange={setMode}
+          items={[{ value: 'summary', label: '摘要' }, { value: 'data', label: '原始数据' }]} />
+        <div id="run-view-summary-panel" role="tabpanel" aria-labelledby="run-view-summary" hidden={mode !== 'summary'}>任务已完成</div>
+        <div id="run-view-data-panel" role="tabpanel" aria-labelledby="run-view-data" hidden={mode !== 'data'}>
+          <DSH.JsonTree value={{ status: 'done', timings: { total: 12 } }} defaultExpanded={false} />
+        </div>
+      </DSH.PanelShell>}
     </>
   )
 }
 
-// 复合组件
 export function CompositesReact() {
   const [mode, setMode] = React.useState('balanced')
   const [autoSave, setAutoSave] = React.useState(true)
@@ -600,12 +658,13 @@ export function CompositesReact() {
       <DSH.SettingsCard title="运行策略" description="DSH 专属复合设置卡片">
         <DSH.SettingsRow label="推理模式" description="选择默认响应速度与质量平衡">
           <DSH.MenuSelect
+            label="推理模式"
             value={mode}
             onChange={setMode}
             options={[
               { value: 'fast', label: '快速模式' },
               { value: 'balanced', label: '均衡模式' },
-              { value: 'deep', label: '深度分析' },
+              { value: 'deep', label: '深度分析（暂不可用）', disabled: true },
             ]}
           />
         </DSH.SettingsRow>
@@ -625,5 +684,68 @@ export function CompositesReact() {
       </DSH.CodeBlockShell>
       <DSH.JsonTree value={{ package: '@dsh-plugin/dsh-ui-components', framework: 'react', arco: true }} />
     </div>
+  )
+}
+
+export function VerificationCodeBasicReact() {
+  const [code, setCode] = React.useState('')
+  return (
+    <div>
+      <DSH.VerificationCode length={6} onChange={setCode} />
+      <p aria-live="polite">{code.length === 6 ? '已完成输入' : ''}</p>
+    </div>
+  )
+}
+
+export function InputTagBasicReact() {
+  return <DSH.InputTag defaultValue={['React', 'TypeScript']} placeholder="输入后按回车添加标签" allowClear />
+}
+
+export function MentionsBasicReact() {
+  return <DSH.Mentions options={['Alice', 'Bob', 'Charlie']} placeholder="输入 @ 提及" />
+}
+
+export function UploadBasicReact() {
+  return <DSH.Upload autoUpload={false} />
+}
+
+export function CommentBasicReact() {
+  return <DSH.Comment author="DSH Design Team" datetime="1 分钟前" content="文档站点支持 Vue 与 React 示例。" />
+}
+
+export function WatermarkBasicReact() {
+  return <DSH.Watermark content="DSH UI"><div style={{ height: 120 }}>水印保护区域</div></DSH.Watermark>
+}
+
+export function TriggerBasicReact() {
+  return (
+    <DSH.Trigger trigger="click" position="bottom" popup={() => <div>自定义弹出内容</div>}>
+      <DSH.Button variant="outline">点击触发 Trigger</DSH.Button>
+    </DSH.Trigger>
+  )
+}
+
+export function ResizeBoxBasicReact() {
+  return (
+    <DSH.ResizeBox directions={['right', 'bottom']} style={{ width: 320, maxWidth: '100%', height: 120, padding: 16, border: '1px solid var(--docs-border)' }}>
+      拖拽右侧或底部边缘调整容器大小
+    </DSH.ResizeBox>
+  )
+}
+
+export function SplitBasicReact() {
+  return <DSH.ResizeBox.Split style={{ height: 140 }} panes={[<div key="left">左侧面板</div>, <div key="right">右侧面板</div>]} />
+}
+
+export function AffixBasicReact() {
+  return <DSH.Affix offsetTop={80}><DSH.Button variant="outline">Affix 固钉按钮</DSH.Button></DSH.Affix>
+}
+
+export function AnchorBasicReact() {
+  return (
+    <DSH.Anchor affix={false}>
+      <DSH.Anchor.Link href="#anchor-basic" title="基础用法" />
+      <DSH.Anchor.Link href="#api-props" title="API 参数" />
+    </DSH.Anchor>
   )
 }

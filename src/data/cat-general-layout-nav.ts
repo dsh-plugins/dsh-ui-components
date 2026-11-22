@@ -47,7 +47,7 @@ export function Demo() {
       {
         id: 'button-props',
         title: '尺寸、圆角、加载与组合',
-        description: '展示 size (sm/md/lg)、radius (none/sm/lg/full)、loading、disabled、CloseButton 与 ButtonGroup 效果。',
+        description: '点击「模拟保存」禁用整组按钮，再点击「结束保存」恢复操作。保存按钮继承组的 sm 尺寸，预览按钮显式使用 md。',
         vueComponent: V1.ButtonPropsVue,
         reactComponent: R.ButtonPropsReact,
         vueCode: `<script setup lang="ts">
@@ -62,17 +62,16 @@ const loading = ref(false)
   <Button size="md">md</Button>
   <Button size="lg">lg</Button>
   <Button radius="full" variant="outline">胶囊圆角</Button>
-  <Button :loading="loading" @click="loading = !loading">切换 loading</Button>
-  <Button disabled>disabled</Button>
+  <Button variant="outline" @click="loading = !loading">{{ loading ? '结束保存' : '模拟保存' }}</Button>
   <CloseButton aria-label="关闭" />
-  <ButtonGroup>
-    <Button variant="outline">左</Button>
-    <Button variant="outline">中</Button>
-    <Button variant="outline">右</Button>
+  <ButtonGroup size="sm" :disabled="loading">
+    <Button :loading="loading">保存</Button>
+    <Button variant="outline" size="md">预览</Button>
   </ButtonGroup>
+  <Button block>占满一行</Button>
 </template>`,
         reactCode: `import * as React from 'react'
-import { Button } from '@dsh-plugin/dsh-ui-components'
+import { Button, ButtonGroup } from '@dsh-plugin/dsh-ui-components'
 
 export function Demo() {
   const [loading, setLoading] = React.useState(false)
@@ -81,10 +80,12 @@ export function Demo() {
       <Button size="sm">sm</Button>
       <Button size="md">md</Button>
       <Button size="lg">lg</Button>
-      <Button loading={loading} onClick={() => setLoading(!loading)}>
-        切换 loading
-      </Button>
-      <Button disabled>disabled</Button>
+      <Button variant="outline" onClick={() => setLoading(!loading)}>{loading ? '结束保存' : '模拟保存'}</Button>
+      <ButtonGroup size="sm" disabled={loading}>
+        <Button loading={loading}>保存</Button>
+        <Button variant="outline" size="md">预览</Button>
+      </ButtonGroup>
+      <Button block>占满一行</Button>
     </div>
   )
 }`,
@@ -98,11 +99,12 @@ export function Demo() {
         rows: [
           { name: 'variant', description: '按钮视觉变体（React 支持 primary / secondary / outline / text）', type: `'primary' | 'secondary' | 'tertiary' | 'outline' | 'ghost' | 'danger' | 'danger-soft'`, defaultValue: `'primary'` },
           { name: 'size', description: '按钮尺寸', type: `'sm' | 'md' | 'lg'`, defaultValue: `'md'` },
-          { name: 'radius', description: '覆盖 DshProvider 全局圆角', type: `'none' | 'sm' | 'md' | 'lg' | 'full'`, defaultValue: '-' },
+          { name: 'radius', description: '覆盖 DshProvider 全局圆角', type: `'none' | 'sm' | 'md' | 'lg' | 'full'`, defaultValue: '-', framework: 'vue' },
+          { name: 'block', description: '占满父容器的可用宽度', type: 'boolean', defaultValue: 'false' },
           { name: 'loading', description: '是否为加载中状态', type: 'boolean', defaultValue: 'false' },
           { name: 'disabled', description: '是否禁用按钮', type: 'boolean', defaultValue: 'false' },
           { name: 'danger', description: '危险操作样式（React）', type: 'boolean', defaultValue: 'false', framework: 'react' },
-          { name: 'iconOnly', description: '纯图标按钮紧凑正方形布局', type: 'boolean', defaultValue: 'false', framework: 'vue' },
+          { name: 'iconOnly', description: '纯图标按钮采用正方形布局，请提供 aria-label', type: 'boolean', defaultValue: 'false' },
           { name: 'htmlType', description: '原生 button 的 type 属性', type: `'button' | 'submit' | 'reset'`, defaultValue: `'button'` },
         ],
       },
@@ -143,7 +145,7 @@ export function Demo() {
         description: '将多个按钮组合为紧凑工具条。',
         kind: 'props',
         rows: [
-          { name: 'size', description: '统一子按钮尺寸', type: `'sm' | 'md' | 'lg'`, defaultValue: `'md'` },
+          { name: 'size', description: '组内按钮继承此尺寸，单个按钮可用自己的 size 覆盖', type: `'sm' | 'md' | 'lg'`, defaultValue: `'md'` },
           { name: 'disabled', description: '统一禁用组内全部按钮', type: 'boolean', defaultValue: 'false' },
         ],
       },
@@ -196,7 +198,8 @@ export function Demo() {
           { name: 'status', description: '链接语义状态（React 危险态为 error）', type: `'normal' | 'success' | 'warning' | 'danger' | 'error'`, defaultValue: `'normal'` },
           { name: 'disabled', description: '是否禁用链接', type: 'boolean', defaultValue: 'false' },
           { name: 'hoverable', description: '悬浮时是否显示底色', type: 'boolean', defaultValue: 'true' },
-          { name: 'icon', description: '是否显示默认图标或自定义图标（React）', type: 'boolean | ReactNode', defaultValue: 'false' },
+          { name: 'icon', description: '显示默认图标。React 也可传入图标节点，Vue 可使用 icon 插槽', type: 'boolean | ReactNode (React)', defaultValue: 'false' },
+          { name: 'loading', description: '显示加载图标并阻止链接激活', type: 'boolean', defaultValue: 'false', framework: 'vue' },
         ],
       },
       {
@@ -535,6 +538,16 @@ export function Demo() {
         id: 'resize-basic',
         title: '多方向拖拽伸缩',
         description: '配置 directions 允许向右与向下拖拽。',
+        reactComponent: R.ResizeBoxBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return (
+    <DSH.ResizeBox directions={['right', 'bottom']} style={{ width: 320, maxWidth: '100%', height: 120, padding: 16, border: '1px solid var(--docs-border)' }}>
+      拖拽右侧或底部边缘调整容器大小
+    </DSH.ResizeBox>
+  )
+}`,
         vueComponent: V1.ResizeBoxBasicVue,
         vueCode: `<template>
   <ResizeBox :directions="['right', 'bottom']">内容</ResizeBox>
@@ -612,6 +625,12 @@ export function Demo() {
         id: 'split-basic',
         title: '可拖拽分割面板',
         description: '拖动中间分割线调整左右比例。',
+        reactComponent: R.SplitBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return <DSH.ResizeBox.Split style={{ height: 140 }} panes={[<div key="left">左侧面板</div>, <div key="right">右侧面板</div>]} />
+}`,
         vueComponent: V1.SplitBasicVue,
         vueCode: `<template>
   <Split style="height: 140px">
@@ -689,6 +708,12 @@ export function Demo() {
         id: 'affix-basic',
         title: '基础固钉',
         description: '设置 offsetTop 固定在视口顶部偏移位置。',
+        reactComponent: R.AffixBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return <DSH.Affix offsetTop={80}><DSH.Button variant="outline">Affix 固钉按钮</DSH.Button></DSH.Affix>
+}`,
         vueComponent: V1.AffixBasicVue,
         vueCode: `<template>\n  <Affix :offset-top="80"><Button>固钉按钮</Button></Affix>\n</template>`,
       },
@@ -714,6 +739,17 @@ export function Demo() {
         id: 'anchor-basic',
         title: '基础锚点',
         description: '高亮当前所在章节链接。',
+        reactComponent: R.AnchorBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return (
+    <DSH.Anchor affix={false}>
+      <DSH.Anchor.Link href="#anchor-basic" title="基础用法" />
+      <DSH.Anchor.Link href="#api-props" title="API 参数" />
+    </DSH.Anchor>
+  )
+}`,
         vueComponent: V1.AnchorBasicVue,
         vueCode: `<template>\n  <Anchor :affix="false"><AnchorLink href="#demo" title="示例" /></Anchor>\n</template>`,
       },
@@ -1156,9 +1192,9 @@ export function Demo() {
       {
         id: 'toolbar-basic',
         title: 'Toolbar 工具栏',
-        description: '使用方向键在组内按钮间移动焦点。',
+        description: '方向键在按钮间移动焦点，在输入框中移动光标。从输入框按 Tab 或 Shift+Tab 可到达相邻控件。',
         vueComponent: V1.ToolbarBasicVue,
-        vueCode: `<template>\n  <Toolbar><ToggleButton>加粗</ToggleButton><ToggleButton>斜体</ToggleButton></Toolbar>\n</template>`,
+        vueCode: `<template>\n  <Toolbar aria-label="编辑工具栏">\n    <input aria-label="搜索文档" placeholder="搜索文档" />\n    <ToggleButton>加粗</ToggleButton>\n    <ToggleButton>斜体</ToggleButton>\n  </Toolbar>\n</template>`,
       },
     ],
     props: [

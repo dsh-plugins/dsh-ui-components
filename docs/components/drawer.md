@@ -6,7 +6,7 @@ title: Drawer 抽屉
 
 ## 代码演示与属性效果
 
-### 多方向抽屉 (placement)
+### 打开和关闭抽屉
 
 <DemoBlockById slug="drawer" demoId="drawer-basic" />
 

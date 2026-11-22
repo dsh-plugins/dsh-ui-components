@@ -6,11 +6,23 @@ title: PanelShell / SettingsCard / MenuSelect / CodeBlockShell / JsonTree DSH �
 
 ## 代码演示与属性效果
 
+### 模态面板与分段导航
+
+<DemoBlockById slug="composites" demoId="panel-shell" />
+
 ### 插件设置面板与数据展示组合
 
 <DemoBlockById slug="composites" demoId="composites-react-demo" />
 
 ## API 文档
+
+### PanelShell Props
+
+<ApiSectionById slug="composites" sectionId="api-panel-shell" />
+
+### SegmentedControl Props
+
+<ApiSectionById slug="composites" sectionId="api-segmented-control" />
 
 ### SettingsCard Props
 

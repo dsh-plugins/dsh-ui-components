@@ -30,17 +30,16 @@ export const ButtonPropsVue = defineComponent({
           h(UI.Button, { radius: 'full', variant: 'outline' }, () => 'radius="full"'),
         ]),
         h('div', { style: 'display:flex;flex-wrap:wrap;gap:10px;align-items:center;' }, [
-          h(UI.Button, { loading: loading.value, onClick: () => (loading.value = !loading.value) }, () =>
-            loading.value ? '点击取消 loading' : '点击切换 loading'
+          h(UI.Button, { variant: 'outline', onClick: () => (loading.value = !loading.value) }, () =>
+            loading.value ? '结束保存' : '模拟保存'
           ),
-          h(UI.Button, { disabled: true }, () => 'disabled'),
           h(UI.CloseButton, { 'aria-label': '关闭' }),
-          h(UI.ButtonGroup, null, () => [
-            h(UI.Button, { variant: 'outline' }, () => '左'),
-            h(UI.Button, { variant: 'outline' }, () => '中'),
-            h(UI.Button, { variant: 'outline' }, () => '右'),
+          h(UI.ButtonGroup, { size: 'sm', disabled: loading.value }, () => [
+            h(UI.Button, { loading: loading.value }, () => '保存'),
+            h(UI.Button, { variant: 'outline', size: 'md' }, () => '预览'),
           ]),
         ]),
+        h(UI.Button, { block: true }, () => '占满一行'),
       ])
   },
 })
@@ -392,6 +391,7 @@ export const ToolbarBasicVue = defineComponent({
   setup() {
     return () =>
       h(UI.Toolbar, { 'aria-label': '编辑工具栏' }, () => [
+        h('input', { 'aria-label': '搜索文档', placeholder: '搜索文档' }),
         h(UI.ToggleButton, null, () => '加粗'),
         h(UI.ToggleButton, null, () => '斜体'),
         h(UI.ToggleButton, null, () => '下划线'),

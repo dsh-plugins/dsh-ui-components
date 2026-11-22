@@ -169,14 +169,22 @@ export function Demo() {
       {
         id: 'colorpicker-basic',
         title: '颜色选择、显示色值与禁用',
-        description: '展示 showText 显示文本与 disabled 状态。',
+        description: '开启 showFormatControls 可切换颜色格式并编辑透明度。示例同时展示色值文本和禁用状态。',
         vueComponent: V2.ColorPickerBasicVue,
-        vueCode: `<template>\n  <ColorPicker v-model="color" show-text />\n</template>`,
+        reactComponent: R.ColorPickerReact,
+        vueCode: `<template>\n  <ColorPicker default-value="#722ed1" show-text show-format-controls />\n</template>`,
+        reactCode: `import { ColorPicker } from '@dsh-plugin/dsh-ui-components'
+
+export function Demo() {
+  return <ColorPicker defaultValue="#722ed1" showText showFormatControls />
+}`,
       },
     ],
     props: [
-      { name: 'modelValue / value', description: '颜色值（HEX / RGB / HSV）', type: 'string', defaultValue: '-' },
+      { name: 'modelValue / value', description: '单色模式下的 HEX 或 RGB 色值', type: 'string', defaultValue: '-' },
       { name: 'showText', description: '是否在触发器上显示色值文本', type: 'boolean', defaultValue: 'false' },
+      { name: 'showFormatControls', description: '显示格式切换和透明度数值控件', type: 'boolean', defaultValue: 'false' },
+      { name: 'className / triggerProps.className', description: '分别附加触发器和浮层的类名，可传数组', type: 'string | string[]', framework: 'react' },
       { name: 'disabled', description: '是否禁用', type: 'boolean', defaultValue: 'false' },
     ],
   },
@@ -186,20 +194,26 @@ export function Demo() {
     title: '日期选择器',
     category: 'data-entry',
     categoryLabel: '数据输入',
-    description: '包含 DatePicker、DateRangePicker（RangePicker）、MonthPicker、QuarterPicker、WeekPicker、YearPicker。',
+    description: 'DatePicker 选择单日，RangePicker 选择日期范围。Vue 也导出 DateRangePicker 别名。另提供月份、季度、周和年份选择器。',
     frameworks: ['vue', 'react'],
     demos: [
       {
         id: 'datepicker-basic',
         title: '日期、范围与月份选择',
-        description: '统一日期网格与浮层主题。',
+        description: '可逐段编辑年、月、日，也可从日历选择。已有日期可直接清空。',
         vueComponent: V2.DatePickerBasicVue,
         reactComponent: R.DatePickerReact,
-        vueCode: `<template>\n  <DatePicker />\n  <DateRangePicker />\n  <MonthPicker />\n</template>`,
-        reactCode: `import { DatePicker } from '@dsh-plugin/dsh-ui-components'
+        vueCode: `<template>\n  <DatePicker default-value="2026-01-02" format="YYYY-MM-DD" />\n  <RangePicker :placeholder="['开始日期', '结束日期']" />\n  <MonthPicker placeholder="选择月份" />\n</template>`,
+        reactCode: `import { DatePicker, MonthPicker, RangePicker } from '@dsh-plugin/dsh-ui-components'
 
 export function Demo() {
-  return <DatePicker placeholder="请选择日期" allowClear />
+  return (
+    <>
+      <DatePicker defaultValue="2026-01-02" format="YYYY-MM-DD" />
+      <RangePicker placeholder={['开始日期', '结束日期']} />
+      <MonthPicker placeholder="选择月份" />
+    </>
+  )
 }`,
       },
     ],
@@ -209,9 +223,16 @@ export function Demo() {
         title: 'DatePicker Props',
         kind: 'props',
         rows: [
-          { name: 'modelValue / value', description: '绑定日期值', type: 'string | number | Date', defaultValue: '-' },
-          { name: 'format', description: '展示日期格式', type: 'string', defaultValue: `'YYYY-MM-DD'` },
-          { name: 'showTime', description: '是否增加时间选择', type: 'boolean | TimePickerProps', defaultValue: 'false' },
+          { name: 'modelValue', description: 'Vue v-model 绑定的日期。外部设为 undefined 可清空，defaultValue 只在未绑定时作为初始值', type: 'string | number | Date', framework: 'vue' },
+          { name: 'value', description: 'React 受控日期值', type: 'string | number | Date | Dayjs', framework: 'react' },
+          { name: 'pickerValue', description: '控制面板显示的月份。未指定时面板随外部选中的日期切换月份', type: 'DateValue' },
+          { name: 'format', description: '分段输入按声明的格式显示，MM 和 DD 保留前导零', type: 'string', defaultValue: '中文环境 YYYY-MM-DD' },
+          { name: 'id', description: '分段日期控件的标签目标，可用 label 的 for / htmlFor 关联日历按钮', type: 'string' },
+          { name: 'placeholder', description: '空日期的占位文字', type: 'string' },
+          { name: 'size', description: '小、中、大档控件高度分别为 28、36、44 px', type: "'mini' | 'small' | 'medium' | 'large'", defaultValue: "'medium'", framework: 'vue' },
+          { name: 'size', description: '小、中、大档控件高度分别为 28、36、44 px', type: "'mini' | 'small' | 'default' | 'large'", defaultValue: "'default'", framework: 'react' },
+          { name: 'showTime', description: '增加时间选择，可在模板中直接写 show-time', type: 'boolean', defaultValue: 'false', framework: 'vue' },
+          { name: 'showTime', description: '增加时间选择，可指定时间选择器配置', type: 'boolean | TimePickerProps', defaultValue: 'false', framework: 'react' },
           { name: 'allowClear', description: '是否允许清空', type: 'boolean', defaultValue: 'true' },
           { name: 'disabled', description: '是否禁用', type: 'boolean', defaultValue: 'false' },
         ],
@@ -221,8 +242,12 @@ export function Demo() {
         title: 'RangePicker Props',
         kind: 'props',
         rows: [
-          { name: 'modelValue / value', description: '日期范围数组 [start, end]', type: '[DateValue, DateValue]', defaultValue: '-' },
+          { name: 'modelValue / value', description: '日期范围 [开始, 结束]。手动编辑只提交完整且顺序有效的区间，未设置 pickerValue 时面板跟随起始月', type: '[DateValue, DateValue]', defaultValue: '-' },
           { name: 'mode', description: '范围选择模式', type: `'date' | 'month' | 'quarter' | 'week' | 'year'`, defaultValue: `'date'` },
+          { name: 'placeholder', description: '开始、结束日期的占位文字', type: '[string, string]' },
+          { name: 'allowClear', description: '显示清除整个范围的按钮', type: 'boolean', defaultValue: 'true' },
+          { name: 'disabledDate', description: '默认日期面板分别判断起点、终点，区间不能跨过两种角色均禁用的日期', type: "(date: Date, type: 'start' | 'end') => boolean", framework: 'vue' },
+          { name: 'disabledDate', description: '默认日期面板要求端点及中间日期均可选', type: '(date: Dayjs) => boolean', framework: 'react' },
           { name: 'shortcuts', description: '预设时间范围快捷选项', type: 'ShortcutType[]', defaultValue: '[]' },
         ],
       },
@@ -231,8 +256,10 @@ export function Demo() {
         title: 'DatePicker Events',
         kind: 'events',
         rows: [
-          { name: 'change / onChange', description: '日期值改变时触发', type: '(value: string, date: Date) => void' },
-          { name: 'ok / onOk', description: '点击确认按钮时触发', type: '(value: string, date: Date) => void' },
+          { name: 'change / ok', description: '更改日期 / 确认日期。value 的类型由 valueFormat 决定，清除时没有选中日期', type: '(value, date, formatted) => void', framework: 'vue' },
+          { name: 'onChange / onOk', description: '更改或确认单日。分段输入的清除操作传给 onChange 的文本为空字符串', type: '(formatted: string, date?: Dayjs) => void', framework: 'react' },
+          { name: 'RangePicker.onChange', description: '更改日期范围。清空分段输入时两个参数均为空数组', type: '(formatted: string[], dates: Dayjs[]) => void', framework: 'react' },
+          { name: 'clear / onClear', description: '点击单日或范围选择器的清除按钮时触发一次', type: '() => void' },
         ],
       },
     ],
@@ -316,7 +343,7 @@ export function Demo() {
       {
         id: 'input-basic',
         title: '尺寸、错误态、禁用与文本域',
-        description: '展示 size (small/medium/large)、allowClear、error、disabled 与 Textarea autoSize。',
+        description: '展示输入尺寸、清除、校验、禁用和自适应高度的文本域。',
         vueComponent: V2.InputBasicVue,
         reactComponent: R.InputReact,
         vueCode: `<template>\n  <Input v-model="val" allow-clear />\n  <Input size="small" placeholder="small" />\n  <Input error placeholder="error" />\n  <Textarea auto-size />\n</template>`,
@@ -343,9 +370,12 @@ export function Demo() {
         kind: 'props',
         rows: [
           { name: 'modelValue / value', description: '绑定输入值', type: 'string', defaultValue: '-' },
-          { name: 'size', description: '输入框尺寸', type: `'mini' | 'small' | 'medium' | 'large'`, defaultValue: `'medium'` },
+          { name: 'size', description: '小、中、大档的外框高度分别为 28、36、44px', type: "'mini' | 'small' | 'medium' | 'large'", defaultValue: "'medium'", framework: 'vue' },
+          { name: 'size', description: '小、中、大档的外框高度分别为 28、36、44px', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", framework: 'react' },
           { name: 'allowClear', description: '是否显示清除按钮', type: 'boolean', defaultValue: 'false' },
-          { name: 'error', description: '是否为错误状态', type: 'boolean', defaultValue: 'false' },
+          { name: 'error', description: '是否为错误状态', type: 'boolean', defaultValue: 'false', framework: 'vue' },
+          { name: 'invalid', description: '标记错误并设置 aria-invalid 为 true', type: 'boolean', defaultValue: 'false', framework: 'react' },
+          { name: 'aria-invalid', description: '传给输入元素的校验状态，invalid 为 true 时优先', type: "boolean | 'true' | 'false' | 'grammar' | 'spelling'", framework: 'react' },
           { name: 'disabled', description: '是否禁用', type: 'boolean', defaultValue: 'false' },
           { name: 'maxLength', description: '最大输入长度', type: 'number | { length: number; errorOnly?: boolean }', defaultValue: '-' },
         ],
@@ -355,6 +385,9 @@ export function Demo() {
         title: 'Textarea Props',
         kind: 'props',
         rows: [
+          { name: 'size', description: '最小外框高度分别为 60、72、96px', type: "'sm' | 'md' | 'lg'", defaultValue: "'md'", framework: 'react' },
+          { name: 'size', description: '最小外框高度分别为 60、72、96px', type: "'small' | 'medium' | 'large'", defaultValue: "'medium'", framework: 'vue' },
+          { name: 'aria-invalid', description: '传给文本域的原生校验状态，invalid 为 true 时优先', type: "boolean | 'true' | 'false' | 'grammar' | 'spelling'", framework: 'react' },
           { name: 'autoSize', description: '是否自适应内容高度', type: 'boolean | { minRows?: number; maxRows?: number }', defaultValue: 'false' },
           { name: 'showWordLimit', description: '是否显示字数统计（需配合 maxLength）', type: 'boolean', defaultValue: 'false' },
         ],
@@ -418,25 +451,38 @@ export function Demo() {
     category: 'data-entry',
     categoryLabel: '数据输入',
     badge: 'DSH',
-    description: '使用单个原生输入处理粘贴、光标、删除与自动填充，视觉上显示独立字符格。',
-    frameworks: ['vue'],
+    description: 'Vue 使用 InputOTP，React 使用 VerificationCode。两端均以独立字符格展示验证码。',
+    frameworks: ['vue', 'react'],
     demos: [
       {
         id: 'inputotp-basic',
-        title: '六位验证码与完成回调',
-        description: '支持整段粘贴与 @complete 事件。',
+        title: '六位验证码输入',
+        description: '输入六个字符后显示完成状态。',
+        reactComponent: R.VerificationCodeBasicReact,
+        reactCode: `import * as React from 'react'
+import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  const [code, setCode] = React.useState('')
+  return (
+    <div>
+      <DSH.VerificationCode length={6} onChange={setCode} />
+      <p aria-live="polite">{code.length === 6 ? '已完成输入' : ''}</p>
+    </div>
+  )
+}`,
         vueComponent: V2.InputOtpBasicVue,
         vueCode: `<template>\n  <InputOTP v-model="code" :length="6" @complete="onComplete" />\n</template>`,
       },
     ],
     props: [
-      { name: 'modelValue', description: '验证码字符串', type: 'string', defaultValue: `''` },
+      { name: 'modelValue / value', description: 'Vue / React 的受控验证码字符串', type: 'string', defaultValue: `''` },
       { name: 'length', description: '字符格数量', type: 'number', defaultValue: '6' },
-      { name: 'type', description: '输入类型限制', type: `'numeric' | 'text'`, defaultValue: `'numeric'` },
+      { name: 'type', description: 'Vue 输入类型限制', type: `'numeric' | 'text'`, defaultValue: `'numeric'` },
       { name: 'disabled', description: '是否禁用', type: 'boolean', defaultValue: 'false' },
     ],
     events: [
-      { name: 'complete', description: '填满所有字符格时触发', type: '(code: string) => void' },
+      { name: 'complete / onFinish', description: '填满所有字符格时触发', type: '(code: string) => void' },
     ],
   },
   {
@@ -452,6 +498,12 @@ export function Demo() {
         id: 'inputtag-basic',
         title: 'InputTag 与 TagGroup',
         description: '输入后按回车新增标签，支持点击关闭按钮移除。',
+        reactComponent: R.InputTagBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return <DSH.InputTag defaultValue={['React', 'TypeScript']} placeholder="输入后按回车添加标签" allowClear />
+}`,
         vueComponent: V2.InputTagBasicVue,
         vueCode: `<template>\n  <InputTag :default-value="['Vue', 'TypeScript']" allow-clear />\n  <TagGroup v-model="tags" />\n</template>`,
       },
@@ -464,7 +516,7 @@ export function Demo() {
   },
   {
     slug: 'mention',
-    name: 'Mention',
+    name: 'Mention / Mentions',
     title: '提及',
     category: 'data-entry',
     categoryLabel: '数据输入',
@@ -475,6 +527,12 @@ export function Demo() {
         id: 'mention-basic',
         title: '基础提及输入',
         description: '输入 @ 自动弹出候选列表。',
+        reactComponent: R.MentionsBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return <DSH.Mentions options={['Alice', 'Bob', 'Charlie']} placeholder="输入 @ 提及" />
+}`,
         vueComponent: V2.MentionBasicVue,
         vueCode: `<template>\n  <Mention :data="['Alice', 'Bob', 'Charlie']" placeholder="输入 @ 提及" />\n</template>`,
       },
@@ -482,7 +540,7 @@ export function Demo() {
     props: [
       { name: 'data', description: '提及候选项列表', type: 'string[]', defaultValue: '[]' },
       { name: 'prefix', description: '触发字符前缀', type: 'string | string[]', defaultValue: `'@'` },
-      { name: 'type', description: '输入框类型', type: `'input' | 'textarea'`, defaultValue: `'input'` },
+      { name: 'type', description: 'Vue 输入框类型，默认显示一行文本域', type: `'input' | 'textarea'`, defaultValue: `'textarea'` },
     ],
   },
   {
@@ -583,6 +641,7 @@ export function Demo() {
     ],
     props: [
       { name: 'modelValue', description: '搜索关键词', type: 'string', defaultValue: `''` },
+      { name: 'aria-labelledby', description: '将原生搜索输入框关联到外部标签的 id', type: 'string' },
       { name: 'placeholder', description: '占位提示', type: 'string', defaultValue: '-' },
       { name: 'disabled', description: '是否禁用', type: 'boolean', defaultValue: 'false' },
     ],
@@ -599,25 +658,37 @@ export function Demo() {
       {
         id: 'select-basic',
         title: '单选、多选与禁用项',
-        description: '展示 allowClear、multiple 多选标签与禁用选项。',
+        description: 'multiple 模式默认按当前语言显示选中项摘要。输入框可通过外部标签获取焦点。',
         vueComponent: V2.SelectBasicVue,
         reactComponent: R.SelectReact,
-        vueCode: `<template>\n  <Select v-model="single" :options="options" allow-clear />\n  <Select v-model="multi" multiple :options="options" />\n</template>`,
-        reactCode: `import * as React from 'react'
-import { Select } from '@dsh-plugin/dsh-ui-components'
+        vueCode: `<template>
+  <label for="mode">运行模式</label>
+  <Select id="mode" default-value="balanced" :options="options" allow-clear />
+  <Select multiple :default-value="['fast', 'balanced']" :options="options" />
+</template>
+
+<script setup>
+const options = [
+  { value: 'fast', label: '快速模式' },
+  { value: 'balanced', label: '均衡模式' },
+  { value: 'off', label: '离线（禁用）', disabled: true },
+]
+</script>`,
+        reactCode: `import { Select } from '@dsh-plugin/dsh-ui-components'
+
+const options = [
+  { value: 'fast', label: '快速模式' },
+  { value: 'balanced', label: '均衡模式' },
+  { value: 'off', label: '离线（禁用）', disabled: true },
+]
 
 export function Demo() {
-  const [val, setVal] = React.useState('balanced')
   return (
-    <Select
-      value={val}
-      onChange={(v) => setVal(v)}
-      options={[
-        { value: 'fast', label: '快速模式' },
-        { value: 'balanced', label: '均衡模式' },
-        { value: 'deep', label: '深入分析' },
-      ]}
-    />
+    <>
+      <label htmlFor="mode">运行模式</label>
+      <Select id="mode" defaultValue="balanced" options={options} allowClear />
+      <Select multiple defaultValue={['fast', 'balanced']} options={options} />
+    </>
   )
 }`,
       },
@@ -628,12 +699,16 @@ export function Demo() {
         title: 'Select Props',
         kind: 'props',
         rows: [
-          { name: 'modelValue / value', description: '绑定选中值', type: 'string | number | Array', defaultValue: '-' },
-          { name: 'options', description: '选项数据数组', type: 'SelectOptionData[]', defaultValue: '[]' },
-          { name: 'multiple / mode', description: '是否多选（React 使用 mode="multiple"）', type: `boolean | 'multiple' | 'tags'`, defaultValue: 'false' },
-          { name: 'allowSearch / showSearch', description: '是否允许搜索', type: 'boolean', defaultValue: 'false' },
+          { name: 'modelValue', description: '单选值或多选数组，支持 v-model', type: 'SelectOptionValue | SelectOptionValue[]', framework: 'vue' },
+          { name: 'value', description: '根导出 Select 的单选值或多选数组', type: 'string | string[]', framework: 'react' },
+          { name: 'options', description: '支持普通选项和含 isGroup、label、options 的分组', type: 'SelectOption[]', defaultValue: '[]', framework: 'vue' },
+          { name: 'options', description: '根导出 Select 需要带 value 和 label 的选项数组', type: 'SelectOption[]', required: true, framework: 'react' },
+          { name: 'multiple', description: '开启多选，默认展示已选项文字摘要。React 的 Arco.Select 使用 mode="multiple"', type: 'boolean', defaultValue: 'false' },
+          { name: 'id', description: '通过外部 label 的 for / htmlFor 激活选择器', type: 'string' },
+          { name: 'allowSearch / fieldNames', description: '允许搜索 / 设置选项字段映射，搜索会匹配分组内的选项', type: 'boolean / SelectFieldNames', framework: 'vue' },
+          { name: 'Arco.Select.showSearch', description: '使用 React 命名空间组件开启搜索，自定义 filterOption 收到 React 选项元素', type: 'boolean', defaultValue: 'false', framework: 'react' },
           { name: 'allowClear', description: '是否允许清除', type: 'boolean', defaultValue: 'false' },
-          { name: 'loading', description: '是否为加载中状态', type: 'boolean', defaultValue: 'false' },
+          { name: 'loading', description: '切换加载中状态；React 通过 Arco.Select 提供此属性', type: 'boolean', defaultValue: 'false' },
         ],
       },
       {
@@ -641,8 +716,8 @@ export function Demo() {
         title: 'Select Events',
         kind: 'events',
         rows: [
-          { name: 'change / onChange', description: '选中值变化时触发', type: '(value: any, option: any) => void' },
-          { name: 'search / onSearch', description: '搜索输入变化时触发', type: '(inputValue: string) => void' },
+          { name: 'change / onChange', description: '选中值变化时触发', type: '(value) => void' },
+          { name: 'search / onSearch', description: '搜索输入变化时触发，React 使用 Arco.Select', type: '(inputValue: string) => void' },
         ],
       },
     ],
@@ -721,6 +796,7 @@ export function Demo() {
     props: [
       { name: 'modelValue', description: '绑定输入值', type: 'string', defaultValue: `''` },
       { name: 'label', description: '字段标签', type: 'string', defaultValue: '-' },
+      { name: 'aria-labelledby', description: '使用外部标签时，传入该标签的 id 作为原生输入框的无障碍名称来源', type: 'string' },
       { name: 'description', description: '字段说明文字', type: 'string', defaultValue: '-' },
       { name: 'errorMessage', description: '错误提示信息', type: 'string', defaultValue: '-' },
     ],
@@ -771,6 +847,7 @@ export function Demo() {
     props: [
       { name: 'modelValue', description: '选中值（单选为标量，多选为数组）', type: 'string | number | Array', defaultValue: '-' },
       { name: 'options', description: '按钮选项列表', type: 'Array<{ label: string; value: string | number; disabled?: boolean }>', defaultValue: '[]' },
+      { name: 'allowEmpty', description: '设为 false 时保留最后一项选择。已有选择未变化时不会触发 change 或 update:modelValue', type: 'boolean', defaultValue: 'true' },
       { name: 'multiple', description: '是否支持多选', type: 'boolean', defaultValue: 'false' },
     ],
   },
@@ -837,6 +914,12 @@ export function Demo() {
         id: 'upload-basic',
         title: '文件上传列表',
         description: '支持多文件选择与上传列表展示。',
+        reactComponent: R.UploadBasicReact,
+        reactCode: `import * as DSH from '@dsh-plugin/dsh-ui-components'
+
+function Demo() {
+  return <DSH.Upload autoUpload={false} />
+}`,
         vueComponent: V2.UploadBasicVue,
         vueCode: `<template>\n  <Upload :auto-upload="false" multiple />\n</template>`,
       },
