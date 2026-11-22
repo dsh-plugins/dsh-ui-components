@@ -47,7 +47,10 @@ export function useDshPopupContainer(): () => HTMLElement {
 function resolveTheme(theme: DshTheme): 'light' | 'dark' {
   if (theme === 'light' || theme === 'dark') { return theme }
   if (typeof document === 'undefined') { return 'light' }
-  if (theme === 'host') { return document.body.hasAttribute('data-ds-dark-theme') ? 'dark' : 'light' }
+  if (theme === 'host') {
+    const value = document.body.getAttribute('data-ds-dark-theme')
+    return value !== null && value !== 'false' && value !== '0' ? 'dark' : 'light'
+  }
   return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
@@ -67,10 +70,9 @@ export function DshProvider({ children, className, style, theme = 'host', radius
   injectUiStyle('foundation/hero-colors.css', COLOR_OVERLAY_CSS)
   injectUiStyle('foundation/presentation.css', PRESENTATION_CSS)
 
-  const [effectiveTheme, setEffectiveTheme] = React.useState(() => resolveTheme(theme))
-  const [systemReduced, setSystemReduced] = React.useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches))
+  const [effectiveTheme, setEffectiveTheme] = React.useState<'light' | 'dark'>('light')
+  const [systemReduced, setSystemReduced] = React.useState(false)
   const [portal] = React.useState(() => typeof document === 'undefined' ? null : document.createElement('div'))
-  const [portalReady, setPortalReady] = React.useState(false)
   const root = React.useRef<HTMLDivElement>(null)
   const getPopupContainer = React.useCallback(() => portal ?? defaultContainer(), [portal])
   const motion = (reducedMotion ?? systemReduced) ? 'reduced' : 'full'
@@ -97,44 +99,52 @@ export function DshProvider({ children, className, style, theme = 'host', radius
     return () => query?.removeEventListener('change', update)
   }, [])
 
-  useLayoutEffect(() => {
+  React.useInsertionEffect(() => {
     if (portal === null) { return }
     document.body.appendChild(portal)
-    setPortalReady(true)
     return () => portal.remove()
   }, [portal])
 
 
   useLayoutEffect(() => {
     if (portal === null) { return }
-    portal.className = `${ROOT_CLASS} dsh-ui-overlay`
-    portal.dataset.theme = resolved
-    portal.dataset.radius = radius
-    portal.dataset.motion = motion
-    portal.dir = direction
-    portal.style.cssText = ''
-    if (root.current) {
-      const computed = getComputedStyle(root.current)
-      for (let index = 0; index < computed.length; index += 1) {
-        const key = computed.item(index)
-        if (key.startsWith('--')) { portal.style.setProperty(key, computed.getPropertyValue(key)) }
+    const sync = () => {
+      portal.className = `${ROOT_CLASS} dsh-ui-overlay`
+      portal.dataset.theme = resolved
+      portal.dataset.radius = radius
+      portal.dataset.motion = motion
+      portal.dir = direction
+      portal.style.cssText = ''
+      if (root.current) {
+        const computed = getComputedStyle(root.current)
+        for (let index = 0; index < computed.length; index += 1) {
+          const key = computed.item(index)
+          if (key.startsWith('--')) { portal.style.setProperty(key, computed.getPropertyValue(key)) }
+        }
+      }
+      for (const [key, value] of Object.entries(style ?? {})) {
+        if (key.startsWith('--') && value !== undefined) { portal.style.setProperty(key, String(value)) }
+      }
+      if (overlayInset !== undefined || overlayRadius !== undefined) { portal.dataset.overlayFrame = '' }
+      else { delete portal.dataset.overlayFrame }
+      for (const [name, value] of [['inset', overlayInset], ['radius', overlayRadius]] as const) {
+        if (value !== undefined) { portal.style.setProperty('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
       }
     }
-    for (const [key, value] of Object.entries(style ?? {})) {
-      if (key.startsWith('--') && value !== undefined) { portal.style.setProperty(key, String(value)) }
+    sync()
+    const observer = new MutationObserver(sync)
+    // 逐级监听，浮层位于独立子树，不会因写入自己的 style 再次触发。
+    for (let node: Element | null = root.current; node; node = node.parentElement) {
+      observer.observe(node, { attributes: true })
     }
-    if (overlayInset !== undefined || overlayRadius !== undefined) { portal.dataset.overlayFrame = '' }
-    else { delete portal.dataset.overlayFrame }
-    for (const [name, value] of [['inset', overlayInset], ['radius', overlayRadius]] as const) {
-      if (value !== undefined) { portal.style.setProperty('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
-    }
+    return () => observer.disconnect()
   }, [portal, className, resolved, radius, motion, direction, style, overlayInset, overlayRadius])
 
   return (
     <PopupContext.Provider value={getPopupContainer}>
       <Arco.ConfigProvider getPopupContainer={getPopupContainer} rtl={direction === 'rtl'}>
         <div ref={root} className={[ROOT_CLASS, className].filter(Boolean).join(' ')} style={style} data-theme={resolved} data-radius={radius} data-motion={motion} dir={direction}>
-          {portalReady ? children : null}
+          {children}
         </div>
       </Arco.ConfigProvider>
     </PopupContext.Provider>

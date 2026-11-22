@@ -26,6 +26,7 @@ export const PORTAL_ID = 'dsh-ui-portal'
  * @returns 释放函数，移除本次注入的标签；重复注入时返回空实现。
  */
 export function injectUiStyle(cssId: string, css: string): () => void {
+  if (typeof document === 'undefined') { return () => {} }
   return injectStyle(OWNER, cssId, css)
 }
 

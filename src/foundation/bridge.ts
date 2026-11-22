@@ -297,8 +297,8 @@ ${SEMANTIC}
 ${rampsDeclarations(RAMP_LIGHT)}
 }
 
-body[data-ds-dark-theme] .dsh-ui,
-body[data-ds-dark-theme] .dsh-ui-overlay {
+body[data-ds-dark-theme]:not([data-ds-dark-theme="false"], [data-ds-dark-theme="0"]) .dsh-ui,
+body[data-ds-dark-theme]:not([data-ds-dark-theme="false"], [data-ds-dark-theme="0"]) .dsh-ui-overlay {
 ${rampsDeclarations(RAMP_DARK)}
 }
 
@@ -443,7 +443,7 @@ const HERO_REFERENCE_CSS = `
       0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
       0 0 1px 0 rgba(0, 0, 0, 0.06);
   }
-  .dsh-ui[data-theme][data-radius][data-theme="dark"], body[data-ds-dark-theme] .dsh-ui[data-theme="host"][data-radius] {
+  .dsh-ui[data-theme][data-radius][data-theme="dark"], body[data-ds-dark-theme]:not([data-ds-dark-theme="false"], [data-ds-dark-theme="0"]) .dsh-ui[data-theme="host"][data-radius] {
     color-scheme: dark;
     --background: oklch(12% 0.005 285.823);
     --foreground: var(--snow);
@@ -949,7 +949,7 @@ export const HERO_CSS = `
 }
 
 .dsh-ui[data-theme][data-radius][data-theme="dark"],
-body[data-ds-dark-theme] .dsh-ui[data-theme="host"][data-radius] {
+body[data-ds-dark-theme]:not([data-ds-dark-theme="false"], [data-ds-dark-theme="0"]) .dsh-ui[data-theme="host"][data-radius] {
   --dsh-background: #101114;
   --dsh-foreground: #f2f3f7;
   --dsh-muted: #a5a7b3;
@@ -1039,7 +1039,7 @@ body[data-ds-dark-theme] .dsh-ui[data-theme="host"][data-radius] {
 }
 
 .dsh-ui[data-theme][data-radius][data-theme="dark"],
-body[data-ds-dark-theme] .dsh-ui[data-theme="host"][data-radius] {
+body[data-ds-dark-theme]:not([data-ds-dark-theme="false"], [data-ds-dark-theme="0"]) .dsh-ui[data-theme="host"][data-radius] {
   --primary-1: 25, 37, 62;
   --primary-2: 31, 48, 85;
   --primary-3: 38, 64, 118;

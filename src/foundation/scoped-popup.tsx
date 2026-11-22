@@ -108,8 +108,6 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
     }
     return React.createElement(Component as React.ElementType, {
       ...props, ...selectionProps, ref,
-      // 触发器与浮层同批挂载，避免先缓存未缩放文字后再复用到按下态。
-      ...([Arco.Popover, Arco.Dropdown, Arco.Popconfirm].includes(Component as typeof Arco.Popover) ? { children: ready ? props.children : null } : {}),
       ...(!nestedOnly ? { ...(!ready ? { popupVisible: false } : {}), getPopupContainer } : {}),
       triggerProps: { ...triggerDefaults, ...arrowOffset, ...trigger, ...(tooltipArrow ? { arrowProps: tooltipArrow } : {}), getPopupContainer, popupAlign, ...(!ready ? { popupVisible: false } : {}) },
     })
