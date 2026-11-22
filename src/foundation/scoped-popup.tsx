@@ -12,14 +12,14 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
     const [ready, setReady] = React.useState(false)
     React.useEffect(() => { setReady(true) }, [])
     const [query, setQuery] = React.useState('')
-    const selectInstance = React.useRef<{ dom?: HTMLElement } | null>(null)
-    const bindSelect = React.useCallback((value: { dom?: HTMLElement } | null) => {
+    const selectInstance = React.useRef<{ dom?: HTMLElement; focus?: () => void } | null>(null)
+    const bindSelect = React.useCallback((value: { dom?: HTMLElement; focus?: () => void } | null) => {
       selectInstance.current = value
       if (typeof ref === 'function') { ref(value) }
       else if (ref) { ref.current = value }
     }, [ref])
-    // 非搜索多选将内置 input 设为 disabled，使用不占位的标签激活按钮转交焦点。
-    const labelButton = selection && typeof props.id === 'string' && props.mode === 'multiple' && !props.showSearch && !props.allowCreate
+    // 多选的内置 input 可能被设为 disabled，标签激活后交由 Arco 选择焦点目标。
+    const labelButton = selection && typeof props.id === 'string' && props.mode === 'multiple'
     React.useEffect(() => {
       if (labelButton || !selection || typeof props.id !== 'string' || !props.id) { return }
       const root = selectInstance.current?.dom
@@ -126,7 +126,7 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
     if (!labelButton) { return element }
     return <>{element}<button type="button" hidden id={props.id as string} disabled={props.disabled === true} onClick={() => {
       const root = selectInstance.current?.dom
-      if (root && root.getAttribute('aria-disabled') !== 'true') { root.focus() }
+      if (root && root.getAttribute('aria-disabled') !== 'true') { selectInstance.current?.focus?.() }
     }} /></>
   })
   // 静态 Option/RangePicker 等入口由组件模块继续覆写为相同作用域的版本。
