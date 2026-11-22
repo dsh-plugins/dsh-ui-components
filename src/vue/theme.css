@@ -279,6 +279,18 @@
 .dsh-ui .arco-tabs-nav-type-card .arco-tabs-tab-active:not(.arco-tabs-tab-disabled) { color: var(--accent); }
 .dsh-ui .arco-tabs-content { padding-top: 8px; }
 .dsh-ui .arco-tabs-content:has(.arco-tabs-pane:empty) { padding-top: 0; }
+.dsh-ui .arco-tabs-type-card { display: flex; flex-direction: column; gap: 8px; }
+.dsh-ui .arco-tabs-nav-horizontal.arco-tabs-nav-type-card .arco-tabs-nav-tab-list { padding: 0; }
+.dsh-ui .arco-tabs-type-card > .arco-tabs-content { padding: 0; }
+.dsh-ui .arco-tabs-type-card.arco-tabs-vertical { flex-direction: row; align-items: flex-start; }
+.dsh-ui .arco-tabs-type-card.arco-tabs-vertical > .arco-tabs-content { flex: 1; min-width: 0; }
+.dsh-ui .arco-tabs-type-card.arco-tabs-right { flex-direction: row-reverse; }
+.dsh-ui .arco-tabs-type-card.arco-tabs-bottom > .arco-tabs-content { border-top: 1px solid var(--color-neutral-3); border-bottom: 0; }
+.dsh-ui .arco-tabs-type-card.arco-tabs-right > .arco-tabs-content { border-left: 1px solid var(--color-neutral-3); border-right: 0; }
+.dsh-ui .arco-tabs-nav-type-card::before { display: none; }
+.dsh-ui .arco-tabs-nav-type-card.arco-tabs-nav-bottom .arco-tabs-tab-active { border-top-color: var(--color-bg-2); border-bottom-color: var(--color-neutral-3); }
+.dsh-ui .arco-tabs-nav-type-card.arco-tabs-nav-right .arco-tabs-tab-active { border-right-color: var(--color-neutral-3); border-left-color: var(--color-bg-2); }
+.dsh-ui .arco-tabs-type-card > .arco-tabs-content:has(.arco-tabs-pane:empty):not(:has(.arco-tabs-pane:not(:empty))) { display: none; }
 .dsh-ui .arco-tabs-nav-type-capsule { background: var(--default); padding: 4px; border-radius: calc(var(--radius) * 3); }
 .dsh-ui .arco-tabs-nav-type-capsule .arco-tabs-tab-active { background: var(--segment); border-radius: calc(var(--radius) * 3); box-shadow: var(--surface-shadow); }
 .dsh-ui .arco-progress-type-line { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "label output" "track track"; gap: 4px; }
