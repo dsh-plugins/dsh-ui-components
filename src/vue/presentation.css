@@ -261,3 +261,27 @@
 .dsh-ui.dsh-ui[data-theme][data-radius][data-overlay-frame] .dsh-toast-region {
   width: min(460px, calc(100vw - 32px - 2 * var(--dsh-overlay-inset, 0px)));
 }
+
+/* 同一行内的控件按外框计算高度。多行选择与标签输入仍可随内容增高。 */
+.dsh-ui.dsh-ui[data-theme][data-radius] {
+  --dsh-field-height-sm: 28px;
+  --dsh-field-height-md: 36px;
+  --dsh-field-height-lg: 44px;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-wrapper, .arco-select-view-single) {
+  box-sizing: border-box; height: var(--dsh-control-height, var(--dsh-field-height-md)); min-height: 0; padding-block: 0;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-wrapper:has(> .arco-input-size-mini), .arco-input-number-size-mini, .arco-select-view-size-mini) { --dsh-control-height: 24px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-wrapper:has(> .arco-input-size-small), .arco-input-number-size-small, .arco-select-view-size-small) { --dsh-control-height: var(--dsh-field-height-sm); }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-wrapper:has(> .arco-input-size-large), .arco-input-number-size-large, .arco-select-view-size-large) { --dsh-control-height: var(--dsh-field-height-lg); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea-wrapper { box-sizing: border-box; --dsh-textarea-height: 72px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea-wrapper:is([size="sm"], [size="small"]) { --dsh-textarea-height: 60px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea-wrapper:is([size="lg"], [size="large"]) { --dsh-textarea-height: 96px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea-wrapper > .arco-textarea { min-height: calc(var(--dsh-textarea-height) - 2px); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mention > .dsh-mention { display: flex; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper:has(textarea[rows="1"]) { --dsh-textarea-height: 36px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-mention.arco-textarea-wrapper > textarea[rows="1"] { padding-block: 7px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-resizebox { border-radius: var(--dsh-radius, calc(var(--radius) * 1.5)); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-picker { border-width: 1px; border-style: solid; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-small { min-height: 32px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-large { min-height: 44px; }

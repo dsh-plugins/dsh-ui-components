@@ -10,7 +10,7 @@ export * from './vue/primitives.js'
 export * from './vue/selection.js'
 
 export { Button, CloseButton } from './vue/button.js'
-export { Alert, Progress, Spin, InputNumber, InputTag, Tag, Result, Table, Card } from './vue/basic.js'
+export { Alert, Progress, Spin, InputNumber, InputTag, Tag, Result, Table, Card, Textarea, Textarea as TextArea } from './vue/basic.js'
 export type { ButtonProps } from './vue/button.js'
 export { Link, InputGroup } from './vue/primitives.js'
 export { Modal, Drawer } from './vue/overlays.js'

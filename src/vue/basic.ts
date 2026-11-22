@@ -1,6 +1,6 @@
 import { defineComponent, h, inject, mergeProps, onBeforeUnmount, onMounted, onUpdated, shallowRef, useId, type App, type Component, type ComponentPublicInstance, type PropType } from 'vue'
 import { configProviderInjectionKey } from '@arco-design/web-vue/es/config-provider/context.js'
-import { Alert as ArcoAlert, Progress as ArcoProgress, Spin as ArcoSpin, InputNumber as ArcoInputNumber, InputTag as ArcoInputTag, Tag as ArcoTag, Result as ArcoResult, Tree as ArcoTree, Table as ArcoTable, Card as ArcoCard } from '@arco-design/web-vue'
+import { Textarea as ArcoTextarea, Alert as ArcoAlert, Progress as ArcoProgress, Spin as ArcoSpin, InputNumber as ArcoInputNumber, InputTag as ArcoInputTag, Tag as ArcoTag, Result as ArcoResult, Tree as ArcoTree, Table as ArcoTable, Card as ArcoCard } from '@arco-design/web-vue'
 
 const progress = defineComponent({
   name: 'DshProgress',
@@ -47,6 +47,9 @@ export type CardOptions = { variant?: 'glass'; glassOpacity?: number }
 
 type WithOptions<C extends abstract new (...args: never[]) => { $props: object }, Options> =
   C & (new () => Omit<InstanceType<C>, '$props'> & { $props: InstanceType<C>['$props'] & Options })
+
+/** 尺寸通过透传到外框的 size 属性控制。 */
+export const Textarea = ArcoTextarea as WithOptions<typeof ArcoTextarea, { size?: 'sm' | 'md' | 'lg' | 'small' | 'medium' | 'large' }>
 
 /** 表格滚动时临时显示滑块，保留 Arco 的参数、插槽和公开实例方法。 */
 export const Table = installComponent(defineComponent({
