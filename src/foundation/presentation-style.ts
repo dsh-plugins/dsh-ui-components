@@ -294,7 +294,16 @@ export const PRESENTATION_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-size-small, .arco-input-inner-wrapper-small, .arco-input-number-size-small, .arco-select-size-small, .arco-cascader-size-small, .arco-tree-select-size-small, .arco-input-group-wrapper-small.arco-autocomplete) { --dsh-control-height: var(--dsh-field-height-sm); }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-size-large, .arco-input-inner-wrapper-large, .arco-input-number-size-large, .arco-select-size-large, .arco-cascader-size-large, .arco-tree-select-size-large, .arco-input-group-wrapper-large.arco-autocomplete) { --dsh-control-height: var(--dsh-field-height-lg); }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group-wrapper.arco-input-number, .arco-autocomplete.arco-input-group-wrapper) :is(.arco-input-group, .arco-input-inner-wrapper, .arco-input-inner-wrapper > input) { height: 100%; min-height: 0; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper > input.arco-input { min-height: 0; height: 100%; border: 0; padding-block: 0; }
+/* 有前后缀或清除按钮时，外框负责底色、间距与焦点提示；输入元素只排文字。 */
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper > input.arco-input {
+  min-width: 0; min-height: 0; height: 100%; padding: 0; border: 0; background: transparent; outline: 0; box-shadow: none;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper-error {
+  outline: 1px solid var(--danger);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper-error:focus-within {
+  outline: 0; box-shadow: 0 0 0 2px var(--danger), var(--field-shadow);
+}
 .dsh-ui.dsh-ui[data-theme][data-radius] input.arco-input:not(.arco-verification-code-input):not(.arco-input-inner-wrapper > input) { border-width: 1px; border-style: solid; }
 .dsh-ui.dsh-ui[data-theme][data-radius] input.arco-input:not(:focus, .arco-input-error, .arco-verification-code-input, .arco-input-inner-wrapper > input) { border-color: var(--border); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-autocomplete.arco-input-group-wrapper { height: var(--dsh-control-height, var(--dsh-field-height-md)); }

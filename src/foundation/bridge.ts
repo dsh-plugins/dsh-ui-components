@@ -253,7 +253,7 @@ const RULES = `
 /* 输入类控件的聚焦用描边表达，与宿主 Input 的边框变色一致；不叠加外扩焦点
    环，否则边框外会多出一圈比控件本身更大的蓝框。这里必须显式写 outline-style
    与 outline-width，单写 outline: none 会被上面的 :focus-visible 规则盖掉。 */
-.dsh-ui .arco-input:focus-visible,
+.dsh-ui .arco-input:where(:not(.arco-input-inner-wrapper > input)):focus-visible,
 .dsh-ui .arco-textarea:focus-visible,
 .dsh-ui .arco-input-inner-wrapper:focus-within,
 .dsh-ui .arco-input-number:focus-within,
@@ -623,9 +623,10 @@ const HERO_REFERENCE_CSS = `
 .dsh-ui[data-theme][data-radius] .arco-input-wrapper { border: 0; padding: 0; background: transparent; box-shadow: none; min-height: 0; }
 .dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper { border: var(--border-width-field) solid var(--field-border); background: var(--field-background); box-shadow: var(--field-shadow); }
 .dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper .arco-input { box-shadow: none; border: 0; background: transparent; }
-.dsh-ui[data-theme][data-radius] .arco-input:hover,
+.dsh-ui[data-theme][data-radius] .arco-input:where(:not(.arco-input-inner-wrapper > input)):hover,
+.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper:where(:not(.arco-input-inner-wrapper-error, .arco-input-inner-wrapper-disabled)):hover,
 .dsh-ui[data-theme][data-radius] .arco-textarea:hover { border-color: var(--field-border-hover); background: var(--field-hover); }
-.dsh-ui[data-theme][data-radius] :is(.arco-input, .arco-textarea):focus,
+.dsh-ui[data-theme][data-radius] :is(.arco-input:where(:not(.arco-input-inner-wrapper > input)), .arco-textarea):focus,
 .dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper:focus-within,
 .dsh-ui[data-theme][data-radius] .arco-select-focused .arco-select-view { border-color: var(--field-border-focus); background: var(--field-focus); outline: none; box-shadow: 0 0 0 2px var(--focus), var(--field-shadow); }
 .dsh-ui[data-theme][data-radius] :is(.arco-input-error, .arco-textarea-error),
@@ -1111,7 +1112,7 @@ body[data-ds-dark-theme]:not([data-ds-dark-theme="false"], [data-ds-dark-theme="
 .dsh-ui[data-theme][data-radius] :is(.arco-input, .arco-textarea) { color: var(--dsh-foreground); }
 .dsh-ui[data-theme][data-radius] :is(.arco-input-error, .arco-textarea-error, .arco-select-view-error) { border-color: var(--dsh-danger); }
 .dsh-ui[data-theme][data-radius] .arco-input-wrapper .arco-input:focus-visible, .dsh-ui[data-theme][data-radius] .arco-textarea:focus-visible { outline: 0; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input:not(.arco-input-wrapper .arco-input,.arco-input-error):not(:focus),
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input:not(.arco-input-inner-wrapper > input, .arco-input-wrapper .arco-input, .arco-input-error):not(:focus),
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper:not(.arco-input-inner-wrapper-error):not(:focus-within) { border-color: var(--border); background: var(--surface-secondary); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea:focus { border-color: var(--focus); box-shadow: inset 0 0 0 1px var(--focus); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-btn-icon-only.arco-btn-loading { color: var(--button-fg); background: var(--button-bg); }
