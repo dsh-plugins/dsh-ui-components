@@ -1,5 +1,5 @@
 import dayjs, { type Dayjs } from 'dayjs'
-import { type CalendarFactory } from './picker-model.js'
+import { validDateRange, type CalendarFactory, type DisabledDay } from './picker-model.js'
 
 type DateUnit = 'year' | 'month' | 'day'
 type DateParts = Partial<Record<DateUnit, number>>
@@ -39,7 +39,7 @@ export interface DateInputOptions {
   invalidate: () => void
   change: (dates: (Dayjs | undefined)[]) => void
   toggle: () => void
-  disabledDate: (date: Dayjs) => boolean
+  disabledDate?: DisabledDay
 }
 
 /** 两个框架共享输入语义，Arco Trigger 继续负责定位与关闭。 */
@@ -54,10 +54,11 @@ export function renderDateInput<N>(h: CalendarFactory<N>, options: DateInputOpti
     const parts = draft.parts[index] ??= {}
     parts[unit] = value
     const next = dateFromParts(parts)
-    if (next && !options.disabledDate(next)) {
+    if (next && !options.disabledDate?.(next, index === 0 ? 'start' : 'end')) {
       const result = Array.from({ length: range ? 2 : 1 }, (_, slot) => dateFromParts(draft.parts[slot] ?? {}))
       result[index] = next
-      if (result.every(date => !date || !options.disabledDate(date))) { options.change(result) }
+      const [start, end] = result
+      if (!range || (start && end && validDateRange(start, end, options.disabledDate))) { options.change(result) }
     }
     if (value === undefined && dates[index]) { options.change([]) }
     options.invalidate()
