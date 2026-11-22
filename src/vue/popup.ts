@@ -130,17 +130,15 @@ function scopedPopup<C extends Component>(component: C, name: string, nested?: '
         }
         if (name === 'Select' && (attrs.allowSearch ?? attrs['allow-search']) !== undefined && (attrs.allowSearch ?? attrs['allow-search']) !== false && Array.isArray(attrs.options) && !slots.header) {
           const text = String(attrs.inputValue ?? attrs['input-value'] ?? query.value)
-          const filter = attrs.filterOption ?? attrs['filter-option']
           forwarded.showHeaderOnEmpty = true
-          forwarded.fallbackOption = false
           forwarded.placeholder = attrs.placeholder ?? 'Select an item'
           forwarded.allowSearch = false
           delete forwarded['allow-search']
-          forwarded.inputValue = undefined
+          // Arco 的选项模型负责分组、fieldNames 与自定义过滤器。
+          forwarded.inputValue = text
           delete forwarded['input-value']
-          forwarded.options = filter === false ? attrs.options : attrs.options.filter(option => typeof filter === 'function' ? filter(text, option) : String(option.label ?? option.value ?? option).toLocaleLowerCase().includes(text.toLocaleLowerCase()))
           componentSlots = { ...componentSlots, header: () => [h('div', { class: 'dsh-select-search' }, h('div', { class: 'dsh-select-search__group' }, h('input', {
-            type: 'search', 'aria-label': '搜索', value: text, autofocus: (forwarded.options as unknown[]).length > 0,
+            type: 'search', 'aria-label': '搜索', value: text, autofocus: true,
             onInput(event: Event) {
               const value = (event.target as HTMLInputElement).value
               query.value = value
