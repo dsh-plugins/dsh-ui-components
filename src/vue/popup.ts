@@ -154,7 +154,7 @@ function scopedPopup<C extends Component>(component: C, name: string, nested?: '
             },
           })))] }
         }
-        if (name === 'Select' && attrs.multiple && !slots.label && !attrs.formatLabel && !attrs['format-label']) {
+        if (name === 'Select' && (attrs.multiple === '' || attrs.multiple === true) && !slots.label && !attrs.formatLabel && !attrs['format-label']) {
           const values = (attrs.modelValue ?? attrs['model-value'] ?? selection.value ?? []) as unknown[]
           const parts = new Intl.ListFormat(locale.value).formatToParts(values.map((_, index) => String(index)))
           const separators = parts.filter(part => part.type === 'literal').map(part => part.value)
