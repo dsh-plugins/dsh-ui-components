@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, expectTypeOf, it } from 'vitest'
+import type { ColorPicker } from '../../src/vue/color.js'
 import { colorVariables } from '../../src/vue/color-model.js'
 
 describe('颜色输入解析与 HSB 坐标', () => {
@@ -33,4 +34,8 @@ describe('颜色输入解析与 HSB 坐标', () => {
     expect(colorVariables(undefined)).toEqual({})
     expect(colorVariables('invalid')).toEqual({})
   })
+})
+
+it('公开格式控件的布尔属性', () => {
+  expectTypeOf<InstanceType<typeof ColorPicker>['$props']['showFormatControls']>().toEqualTypeOf<boolean | undefined>()
 })

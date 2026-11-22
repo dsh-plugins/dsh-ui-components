@@ -35,6 +35,9 @@ export const ColorPicker = defineComponent({
       }, slots)])
     }
   },
-}) as unknown as typeof Arco.ColorPicker
+}) as unknown as typeof Arco.ColorPicker & (new () =>
+  Omit<InstanceType<typeof Arco.ColorPicker>, '$props'> & {
+    $props: InstanceType<typeof Arco.ColorPicker>['$props'] & { showFormatControls?: boolean }
+  })
 
 Object.assign(ColorPicker, { install(app: App, options?: { componentPrefix?: string }) { app.component(`${options?.componentPrefix ?? 'A'}ColorPicker`, ColorPicker) } })
