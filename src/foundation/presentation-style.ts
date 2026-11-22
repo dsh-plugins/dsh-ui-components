@@ -277,4 +277,45 @@ export const PRESENTATION_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius][data-overlay-frame] :is(.arco-notification-wrapper, .dsh-toast-region) {
   width: min(460px, calc(100vw - 32px - 2 * var(--dsh-overlay-inset, 0px)));
 }
+
+/* 同一行内的控件按外框计算高度。多行选择与标签输入仍可随内容增高。 */
+.dsh-ui.dsh-ui[data-theme][data-radius] {
+  --dsh-field-height-sm: 28px;
+  --dsh-field-height-md: 36px;
+  --dsh-field-height-lg: 44px;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input:not(.arco-verification-code-input), .arco-input-inner-wrapper, .arco-input-number, .arco-select-single > .arco-select-view, .arco-cascader-single > .arco-cascader-view, .arco-tree-select-single > .arco-tree-select-view) {
+  box-sizing: border-box;
+  height: var(--dsh-control-height, var(--dsh-field-height-md));
+  min-height: 0;
+  padding-block: 0;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-size-mini, .arco-input-inner-wrapper-mini, .arco-input-number-size-mini, .arco-select-size-mini, .arco-cascader-size-mini, .arco-tree-select-size-mini, .arco-input-group-wrapper-mini.arco-autocomplete) { --dsh-control-height: 24px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-size-small, .arco-input-inner-wrapper-small, .arco-input-number-size-small, .arco-select-size-small, .arco-cascader-size-small, .arco-tree-select-size-small, .arco-input-group-wrapper-small.arco-autocomplete) { --dsh-control-height: var(--dsh-field-height-sm); }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-size-large, .arco-input-inner-wrapper-large, .arco-input-number-size-large, .arco-select-size-large, .arco-cascader-size-large, .arco-tree-select-size-large, .arco-input-group-wrapper-large.arco-autocomplete) { --dsh-control-height: var(--dsh-field-height-lg); }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group-wrapper.arco-input-number, .arco-autocomplete.arco-input-group-wrapper) :is(.arco-input-group, .arco-input-inner-wrapper, .arco-input-inner-wrapper > input) { height: 100%; min-height: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper > input.arco-input { min-height: 0; height: 100%; border: 0; padding-block: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] input.arco-input:not(.arco-verification-code-input):not(.arco-input-inner-wrapper > input) { border-width: 1px; border-style: solid; }
+.dsh-ui.dsh-ui[data-theme][data-radius] input.arco-input:not(:focus, .arco-input-error, .arco-verification-code-input, .arco-input-inner-wrapper > input) { border-color: var(--border); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-autocomplete.arco-input-group-wrapper { height: var(--dsh-control-height, var(--dsh-field-height-md)); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-single { display: inline-flex; vertical-align: middle; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-single > .arco-select-view { flex: 1; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-select-single, .arco-cascader-single, .arco-tree-select-single) > :is(.arco-select-view, .arco-cascader-view, .arco-tree-select-view) {
+  box-sizing: border-box; height: var(--dsh-control-height, var(--dsh-field-height-md)); min-height: 0; padding-block: 0;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-cascader-single, .arco-tree-select-single):not([class*="-disabled"],[class*="-error"]) > :is(.arco-cascader-view, .arco-tree-select-view) {
+  background: var(--surface-secondary); border: 1px solid var(--border); border-radius: calc(var(--radius) * 3);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea[class*="dsh-textarea-"] {
+  box-sizing: border-box; min-height: 72px; border-width: 1px; border-style: solid;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea.dsh-textarea-sm { min-height: 60px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea.dsh-textarea-lg { min-height: 96px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-mentions .arco-mentions-textarea[rows="1"] { min-height: 36px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-switch.arco-switch-small { width: 32px; min-width: 32px; height: 16px; --switch-thumb-offset: calc(100% - 18.5px); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-switch-small .arco-switch-dot { width: 16.5px; height: 12px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(label.arco-checkbox, label.arco-radio) { min-height: 20px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-picker { border-width: 1px; border-style: solid; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-small { min-height: 32px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-large { min-height: 44px; }
 `

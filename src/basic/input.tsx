@@ -2,7 +2,7 @@
  * 文本类输入控件。
  *
  * `Input` / `Textarea` 沿用 Arco 的受控与非受控行为，追加 DSH 的两项约定：
- * 等宽字体开关 `mono` 与校验失败标记 `invalid`。尺寸按 DSH 取 32（标准）/
+ * 等宽字体开关 `mono` 与校验失败标记 `invalid`。尺寸按 DSH 取 36（标准）/
  * 28（紧凑）/ 44（大）。
  *
  * ref 的类型沿用 Arco 自己的签名：它暴露的是 `{ dom, focus, blur }` 这样的
@@ -16,7 +16,7 @@ import { HeroInputNumber } from '../data/hero-input-number.js'
 import { cx } from '../foundation/style.js'
 import { injectBasicStyles } from './styles.js'
 
-/** 输入控件的尺寸，与按钮分开定义，因为输入框标准高度是 32 而非 36。 */
+/** 输入控件的尺寸，与按钮分开定义，因为输入框按 28/36/44px 的外框高度布局。 */
 export type FieldSize = 'md' | 'sm' | 'lg'
 
 /** DSH 尺寸到 Arco 尺寸的映射。 */

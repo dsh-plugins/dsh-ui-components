@@ -114,7 +114,9 @@ export function Select({
 }
 
 /** {@link AutoComplete} 的 props。 */
-export type AutoCompleteProps = React.ComponentPropsWithoutRef<typeof Arco.AutoComplete>
+export type AutoCompleteProps = React.ComponentPropsWithoutRef<typeof Arco.AutoComplete> & {
+  size?: FieldSize | NonNullable<React.ComponentPropsWithoutRef<typeof Arco.Input>['size']>
+}
 
 /**
  * 带候选提示的文本输入。
@@ -124,7 +126,8 @@ export type AutoCompleteProps = React.ComponentPropsWithoutRef<typeof Arco.AutoC
  * @param props - 见 {@link AutoCompleteProps}。
  * @returns 自动完成输入元素。
  */
-export function AutoComplete(props: AutoCompleteProps): React.ReactElement {
+export function AutoComplete({ size, inputProps, ...props }: AutoCompleteProps): React.ReactElement {
   injectBasicStyles()
-  return <ScopedAutoComplete {...props} />
+  const inputSize = size === 'sm' || size === 'md' || size === 'lg' ? ARCO_SIZE[size] : size
+  return <ScopedAutoComplete {...props} inputProps={{ ...inputProps, size: inputProps?.size ?? inputSize }} />
 }
