@@ -126,10 +126,6 @@
 }
 
 /* DemoBlock inside VitePress */
-.vp-dsh-provider-wrap {
-  display: block;
-}
-
 .demo-block {
   margin: 14px 0 24px;
   border: 1px solid var(--vp-c-divider);

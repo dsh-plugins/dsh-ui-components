@@ -13,8 +13,8 @@
   "dependencies": {
     "@arco-design/web-react": "^2.66.18",
     "@arco-design/web-vue": "^2.59.0",
-    "@dsh-plugin/dsh-ui-components": "0.1.0-dev.45006073943",
-    "@dsh-plugin/dsh-ui-components-vue": "0.1.0-dev.45005848807",
+    "@dsh-plugin/dsh-ui-components": "0.1.0-dev.45076619532",
+    "@dsh-plugin/dsh-ui-components-vue": "0.1.0-dev.45101238362",
     "dayjs": "1.11.23",
     "highlight.js": "^11.11.1",
     "react": "^18.3.1",

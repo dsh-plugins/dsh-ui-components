@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, type Component } from 'vue'
 import type { ComponentType } from 'react'
+import { DshProvider } from '@dsh-plugin/dsh-ui-components-vue'
 import hljs from 'highlight.js/lib/core'
 import xml from 'highlight.js/lib/languages/xml'
 import typescript from 'highlight.js/lib/languages/typescript'
@@ -20,6 +21,7 @@ const props = defineProps<{
   vueCode?: string
   reactCode?: string
   frameworks?: ('vue' | 'react')[]
+  provideVueTheme?: boolean
 }>()
 
 const codeVisible = ref(false)
@@ -74,14 +76,14 @@ async function copyCode() {
       <span v-else>{{ frameworks?.includes('vue') ? '此示例使用 React 18。' : '当前组件仅提供 React 18 实现。' }}</span>
     </div>
     <div class="demo-preview">
-      <template v-if="docsState.framework === 'vue'">
-        <component :is="vueComponent" v-if="vueComponent" />
-        <ReactMount v-else-if="reactComponent" :component="reactComponent" />
+      <!-- ReactMount owns its own theme; mount a Vue provider only for a rendered Vue demo. -->
+      <template v-if="displayedFramework === 'vue' && vueComponent">
+        <DshProvider v-if="provideVueTheme" :theme="docsState.theme" :radius="docsState.radius" :reduced-motion="docsState.reducedMotion">
+          <component :is="vueComponent" />
+        </DshProvider>
+        <component :is="vueComponent" v-else />
       </template>
-      <template v-else>
-        <ReactMount v-if="reactComponent" :component="reactComponent" />
-        <component :is="vueComponent" v-else-if="vueComponent" />
-      </template>
+      <ReactMount v-else-if="displayedFramework === 'react' && reactComponent" :component="reactComponent" />
     </div>
     <div class="demo-meta">
       <div>
