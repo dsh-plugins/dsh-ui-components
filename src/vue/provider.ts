@@ -97,6 +97,7 @@ export const DshProvider = defineComponent({
     let counter = 0
     let disposed = false
     let disconnect: (() => void) | undefined
+    let appliedPortalTokens = new Map<string, string>()
 
     const close = (id: number) => {
       clearTimeout(timers.get(id))
@@ -165,27 +166,39 @@ export const DshProvider = defineComponent({
       if (!portal || !root.value) {
         return
       }
-      portal.className = 'dsh-ui dsh-ui-portal'
-      portal.dataset.theme = resolvedTheme.value
-      portal.dataset.radius = props.radius
-      portal.dataset.motion = motion.value
-      portal.dataset.hostTheme = String(props.theme === 'auto' && hostTheme.value)
-      const framed = props.overlayInset !== undefined || props.overlayRadius !== undefined
-      if (framed) { portal.dataset.overlayFrame = '' }
-      else { delete portal.dataset.overlayFrame }
-      portal.dir = props.rtl ? 'rtl' : 'ltr'
-      // 自定义属性在声明元素处求值，独立 portal 必须复制根节点的最终值。
-      portal.removeAttribute('style')
+      // 先读完实时计算样式再修改 DOM，避免每复制一个 token 都重新计算级联样式。
+      const tokens = new Map<string, string>()
       const styles = getComputedStyle(root.value)
-      for (let index = 0; index < styles.length; index++) {
+      const length = styles.length
+      for (let index = 0; index < length; index++) {
         const name = styles.item(index)
         if (name.startsWith('--')) {
-          portal.style.setProperty(name, styles.getPropertyValue(name))
+          tokens.set(name, styles.getPropertyValue(name))
         }
       }
       for (const [name, value] of [['inset', props.overlayInset], ['radius', props.overlayRadius]] as const) {
-        if (value !== undefined) { portal.style.setProperty('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
+        if (value !== undefined) { tokens.set('--dsh-overlay-' + name, typeof value === 'number' ? value + 'px' : value) }
       }
+
+      const metadata = {
+        theme: resolvedTheme.value,
+        radius: props.radius,
+        motion: motion.value,
+        hostTheme: String(props.theme === 'auto' && hostTheme.value),
+      }
+      for (const [name, value] of Object.entries(metadata)) {
+        if (portal.dataset[name] !== value) { portal.dataset[name] = value }
+      }
+      portal.toggleAttribute('data-overlay-frame', props.overlayInset !== undefined || props.overlayRadius !== undefined)
+      const direction = props.rtl ? 'rtl' : 'ltr'
+      if (portal.dir !== direction) { portal.dir = direction }
+      for (const name of appliedPortalTokens.keys()) {
+        if (!tokens.has(name)) { portal.style.removeProperty(name) }
+      }
+      for (const [name, value] of tokens) {
+        if (appliedPortalTokens.get(name) !== value) { portal.style.setProperty(name, value) }
+      }
+      appliedPortalTokens = tokens
     }
     onBeforeMount(() => {
       const portal = document.createElement('div')
