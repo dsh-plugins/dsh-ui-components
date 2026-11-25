@@ -2,7 +2,7 @@
 export const SELECTION_OVERLAY_CSS = `
 /* HeroUI 3.2.7 ListBox 与菜单的尺寸；沿用 Arco 的键盘、过滤及选中状态。 */
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:not(.arco-select-disabled,.arco-select-error) > .arco-select-view {
-  background: var(--surface-secondary); border: 1px solid var(--border); border-radius: calc(var(--radius) * 3);
+  background: var(--dsh-field-fill, var(--surface-secondary)); border: 1px solid var(--border);
 }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select:not(.arco-select-disabled,.arco-select-error) > .arco-select-view:is(:focus-visible,:focus-within),
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-focused:not(.arco-select-disabled,.arco-select-error) > .arco-select-view {
@@ -128,7 +128,7 @@ export const SELECTION_OVERLAY_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-dropdown-menu-disabled { opacity: .5; }
 
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search { padding: 12px 12px 4px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search input { display: block; box-sizing: border-box; width: 100%; height: 36px; border: 0; border-radius: 12px; padding: 8px 12px; background: var(--field-background); color: var(--field-foreground); font-size: 14px; line-height: 20px; box-shadow: var(--field-shadow); outline: none; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search input { display: block; box-sizing: border-box; width: 100%; height: 36px; border: 0; border-radius: var(--field-radius); padding: 8px 12px; background: var(--field-background); color: var(--field-foreground); font-size: 14px; line-height: 20px; box-shadow: var(--field-shadow); outline: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search input:focus-visible { box-shadow: 0 0 0 2px var(--focus), var(--field-shadow); outline: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search input::-webkit-search-cancel-button { appearance: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-dropdown:has(.dsh-select-search) .arco-select-dropdown-empty { padding-top: 6px; padding-bottom: 6px; }
@@ -163,7 +163,7 @@ export const SELECTION_OVERLAY_CSS = `
 
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-dropdown:has(.dsh-select-search) .arco-select-dropdown-empty { color: var(--foreground); }
 
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search__group { height: 36px; overflow: hidden; border-radius: 12px; background: var(--field-background); box-shadow: var(--field-shadow); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search__group { height: 36px; overflow: hidden; border-radius: var(--field-radius); background: var(--field-background); box-shadow: var(--field-shadow); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search__group:has(input:focus-visible) { box-shadow: 0 0 0 2px var(--focus), var(--field-shadow); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search__group input { background: transparent; border-radius: inherit; box-shadow: none; transform: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-select-search__group input:focus-visible { box-shadow: none; }

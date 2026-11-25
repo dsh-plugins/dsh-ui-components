@@ -71,7 +71,9 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
         selectionProps.dropdownRender = () => <div className="dsh-autocomplete-empty"><span className="dsh-autocomplete-empty__text">{(props.dropdownRender as ((menu: React.ReactNode) => React.ReactNode) | undefined)?.(null) ?? (config.locale?.locale?.startsWith('zh') ? '无结果' : 'No results found')}</span></div>
       }
     }
-    if (selection && props.showSearch && Array.isArray(props.options) && props.dropdownRender === undefined) {
+    const selectConfig = config.componentConfig?.Select
+    const createsOptions = (props.allowCreate ?? selectConfig?.allowCreate) || (props.mode ?? selectConfig?.mode) === 'tags'
+    if (selection && !createsOptions && props.showSearch && Array.isArray(props.options) && props.dropdownRender === undefined) {
       const text = String(props.inputValue ?? query)
       selectionProps.showSearch = false
       // 保留原始 options，让 Arco 用真实的 Option 元素执行过滤和渲染。
@@ -87,7 +89,7 @@ export function wrapScopedPopup<C extends React.ElementType>(Component: C, trigg
         selectInstance.current?.dom?.dispatchEvent(new KeyboardEvent('keydown', { key: event.key, bubbles: true }))
       }} /></div></div>{menu}</>
     }
-    if (selection && props.mode === 'multiple' && props.renderTag === undefined && !props.showSearch) {
+    if (selection && !createsOptions && props.mode === 'multiple' && props.renderTag === undefined && !props.showSearch) {
       const values = (props.value ?? localValue ?? []) as unknown[]
       const parts = new Intl.ListFormat(config.locale?.locale ?? 'zh-CN').formatToParts(values.map((_, index) => String(index)))
       const separators = parts.filter(part => part.type === 'literal').map(part => part.value)

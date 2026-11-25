@@ -280,6 +280,7 @@ export const PRESENTATION_CSS = `
 
 /* 同一行内的控件按外框计算高度。多行选择与标签输入仍可随内容增高。 */
 .dsh-ui.dsh-ui[data-theme][data-radius] {
+  --dsh-field-fill: initial;
   --dsh-field-height-sm: 28px;
   --dsh-field-height-md: 36px;
   --dsh-field-height-lg: 44px;
@@ -296,7 +297,7 @@ export const PRESENTATION_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group-wrapper.arco-input-number, .arco-autocomplete.arco-input-group-wrapper) :is(.arco-input-group, .arco-input-inner-wrapper, .arco-input-inner-wrapper > input) { height: 100%; min-height: 0; }
 /* 有前后缀或清除按钮时，外框负责底色、间距与焦点提示；输入元素只排文字。 */
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper > input.arco-input {
-  min-width: 0; min-height: 0; height: 100%; padding: 0; border: 0; background: transparent; outline: 0; box-shadow: none;
+  min-width: 0; min-height: 0; height: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; outline: 0; box-shadow: none;
 }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-inner-wrapper-error {
   outline: 1px solid var(--danger);
@@ -309,11 +310,32 @@ export const PRESENTATION_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-autocomplete.arco-input-group-wrapper { height: var(--dsh-control-height, var(--dsh-field-height-md)); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-single { display: inline-flex; vertical-align: middle; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-select-single > .arco-select-view { flex: 1; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(
+  .arco-select-view, .arco-cascader-view, .arco-tree-select-view, .arco-input-tag, .arco-input-inner-wrapper,
+  .arco-input-group-wrapper, .arco-input-group, .arco-picker, .dsh-menu-select__trigger
+) {
+  border-radius: var(--field-radius);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-select-multiple, .arco-cascader-multiple, .arco-tree-select-multiple) > :is(.arco-select-view, .arco-cascader-view, .arco-tree-select-view) {
+  align-items: center; height: auto; min-height: var(--dsh-control-height, var(--dsh-field-height-md)); padding-block: 0;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-group-wrapper > .arco-input-group,
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group-wrapper > .arco-input-group, .arco-input-group-compact) :is(.arco-input-group-addbefore, .arco-input-group-addafter) > :is(.arco-btn, .arco-input, .arco-select, .arco-cascader, .arco-tree-select),
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group-wrapper > .arco-input-group, .arco-input-group-compact) :is(.arco-select, .arco-cascader, .arco-tree-select) > :is(.arco-select-view, .arco-cascader-view, .arco-tree-select-view) {
+  border-radius: inherit;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group-wrapper > .arco-input-group, .arco-input-group-compact) > * { border-radius: 0; }
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group-wrapper > .arco-input-group, .arco-input-group-compact) > :first-child {
+  border-start-start-radius: inherit; border-end-start-radius: inherit;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group-wrapper > .arco-input-group, .arco-input-group-compact) > :last-child {
+  border-start-end-radius: inherit; border-end-end-radius: inherit;
+}
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-select-single, .arco-cascader-single, .arco-tree-select-single) > :is(.arco-select-view, .arco-cascader-view, .arco-tree-select-view) {
   box-sizing: border-box; height: var(--dsh-control-height, var(--dsh-field-height-md)); min-height: 0; padding-block: 0;
 }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-cascader-single, .arco-tree-select-single):not([class*="-disabled"],[class*="-error"]) > :is(.arco-cascader-view, .arco-tree-select-view) {
-  background: var(--surface-secondary); border: 1px solid var(--border); border-radius: calc(var(--radius) * 3);
+  background: var(--dsh-field-fill, var(--surface-secondary)); border: 1px solid var(--border);
 }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-textarea[class*="dsh-textarea-"] {
   box-sizing: border-box; min-height: 72px; border-width: 1px; border-style: solid;
@@ -338,4 +360,47 @@ export const PRESENTATION_CSS = `
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-picker { border-width: 1px; border-style: solid; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-small { min-height: 32px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-large { min-height: 44px; }
+
+@scope (.dsh-ui[data-theme="light"], body:not([data-ds-dark-theme]:not([data-ds-dark-theme="false"], [data-ds-dark-theme="0"])) .dsh-ui[data-theme="host"]) to (.dsh-ui) {
+  :scope:not(.dsh-ui-overlay),
+  :scope[data-theme][data-radius] :is(
+    .arco-modal, .arco-drawer, .arco-card:not(.dsh-card--flat, .dsh-card--glass),
+    .dsh-settings-card, .dsh-panel-shell__card
+  ) {
+    &:has(:is(
+      .arco-input, .arco-textarea, .arco-input-tag, .arco-select-view, .arco-tree-select-view, .arco-cascader-view,
+      .arco-picker, .dsh-date-input, .arco-color-picker-value, .dsh-menu-select__trigger
+    ):not(:scope .dsh-ui *)) {
+      background-color: var(--background);
+    }
+  }
+
+  :is(.arco-input, .arco-input-inner-wrapper, .arco-select-view, .arco-tree-select-view, .arco-cascader-view, .arco-picker) {
+    --dsh-field-fill: var(--field-background);
+    --color-fill-2: var(--field-background);
+  }
+  .arco-input-number-mode-embed.arco-input-group-wrapper {
+    background-color: var(--field-background);
+  }
+  :scope[data-theme][data-radius] :is(.arco-color-picker:has(> .arco-color-picker-value), .dsh-menu-select__trigger) {
+    background-color: var(--field-background);
+    box-shadow: var(--field-shadow);
+  }
+
+  :scope[data-theme][data-radius] :is(
+    .arco-input-disabled:not(.arco-input-inner-wrapper > input), .arco-input-inner-wrapper-disabled,
+    .arco-input-number.arco-input-group-wrapper-disabled, .arco-textarea-disabled,
+    .arco-input-tag-disabled, .arco-select-disabled > .arco-select-view, .arco-tree-select-disabled > .arco-tree-select-view,
+    .arco-cascader-disabled > .arco-cascader-view, .arco-picker-disabled, .dsh-date-input[data-disabled],
+    .arco-color-picker-disabled:has(> .arco-color-picker-value), .dsh-menu-select__trigger:disabled
+  ) {
+    --field-background: var(--default);
+    --field-foreground: var(--muted);
+    --field-shadow: none;
+    --color-fill-2: var(--field-background);
+    background-color: var(--field-background);
+    color: var(--field-foreground);
+    box-shadow: none;
+  }
+}
 `

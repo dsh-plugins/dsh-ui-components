@@ -1,7 +1,9 @@
 /** HeroUI 颜色面板的默认视觉。 */
 export const COLOR_OVERLAY_CSS = String.raw`
 /* HeroUI 3.2.7 ColorPicker 视觉适配，Arco 保留拖拽、输入和受控值。 */
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker { background: transparent; border-radius: 4px; padding: 0; height: 32px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker { background: transparent; border-radius: var(--field-radius); padding: 0; height: 32px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker:has(> .arco-color-picker-value) { padding-inline: 4px 12px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker:has(> .arco-color-picker-value) > .arco-color-picker-preview { width: 24px; height: 24px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker > .arco-color-picker-preview { width: 32px; height: 32px; border: 0; border-radius: 16px; box-shadow: inset 0 0 0 1px var(--dsh-color-outline); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-color-picker > .arco-color-picker-preview { background-image: linear-gradient(var(--dsh-color-current), var(--dsh-color-current)), var(--dsh-color-checker); background-position: 0 0, center; background-size: auto, 16px 16px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-panel {
@@ -31,7 +33,7 @@ export const COLOR_OVERLAY_CSS = String.raw`
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-input-wrapper { margin-top: 12px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) :is(.arco-color-picker-select,.arco-color-picker-select-type,.arco-color-picker-input-alpha,.arco-color-picker-control-wrapper > .arco-color-picker-preview) { display: none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) .arco-color-picker-group-wrapper { margin-left: 0; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) .arco-color-picker-input-hex { width: 100%; height: 36px; min-height: 36px; padding: 8px 12px; border: 0; border-radius: 12px; background: var(--field-background); color: var(--field-foreground); box-shadow: var(--field-shadow); font-size: 14px; line-height: 20px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel:not(.dsh-color-panel--advanced) .arco-color-picker-input-hex { width: 100%; height: 36px; min-height: 36px; padding: 8px 12px; border: 0; border-radius: var(--field-radius); background: var(--field-background); color: var(--field-foreground); box-shadow: var(--field-shadow); font-size: 14px; line-height: 20px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-input-hex :is(.arco-input,.arco-input-inner-wrapper) { height: 20px; min-height: 20px; padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; box-shadow: none; font-size: 14px; line-height: 20px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-input-hex :is(.arco-input-prefix,.arco-input-group-prefix) { padding: 0; color: inherit; font-size: 14px; line-height: 20px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-color-panel .arco-color-picker-handler-center { display: none; }
