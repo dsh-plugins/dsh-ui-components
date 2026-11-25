@@ -1,5 +1,5 @@
 allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:
-  - '@dsh-plugin/dsh-ui-components-vue@0.1.0-dev.45101238362'
-  - '@dsh-plugin/dsh-ui-components@0.1.0-dev.45076619532'
+  - '@dsh-plugin/dsh-ui-components-vue@0.1.0-dev.45544484387'
+  - '@dsh-plugin/dsh-ui-components@0.1.0-dev.45544484650'
