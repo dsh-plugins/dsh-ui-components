@@ -3,6 +3,7 @@
 /* 组件变量来自 HeroUI 3.2.7，Arco 的交互状态在当前 Provider 内映射。 */
 .dsh-ui {
   --dsh-background: var(--background);
+  --dsh-form-background: var(--dsh-background);
   --dsh-foreground: var(--foreground);
   --dsh-muted: var(--muted);
   --dsh-surface: var(--surface);
@@ -45,6 +46,9 @@
   --danger: var(--dsw-alias-state-error-primary, #d52c42);
   --border: var(--dsw-alias-border-l2, #dddfe6);
   --backdrop: var(--dsw-alias-bg-mask-1, rgb(15 18 30 / 44%));
+}
+.dsh-ui[data-host-theme="true"][data-theme="light"] {
+  --dsh-form-background: var(--dsw-static-neutral-bluish-60, #f5f5f7);
 }
 
 .dsh-ui[data-radius="none"] { --radius: 0px; }
@@ -184,7 +188,7 @@
   background: var(--field-background); color: var(--field-foreground); box-shadow: var(--field-shadow); min-height: 36px;
   font-size: 14px; line-height: 20px; transition: border-color 150ms, box-shadow 150ms, background-color 150ms;
 }
-.dsh-ui .arco-input-wrapper { padding: 7px 12px; border: 1px solid var(--border); background: var(--surface-secondary); }
+.dsh-ui .arco-input-wrapper { padding: 7px 12px; border: 1px solid var(--border); background: var(--color-fill-2); }
 .dsh-ui .arco-input-wrapper .arco-input { height: auto; padding: 0; font-size: 14px; line-height: 20px; background: transparent; color: var(--field-foreground); }
 .dsh-ui .arco-textarea-wrapper { padding: 0; border: 1px solid transparent; background: var(--field-background); overflow: hidden; box-shadow: none; }
 .dsh-ui .arco-textarea-wrapper .arco-textarea { min-height: 56px; padding: 8px 12px; font-size: 14px; line-height: 20px; border: 0; border-radius: inherit; background: transparent; box-shadow: none; color: var(--field-foreground); resize: vertical; }
@@ -194,9 +198,11 @@
 .dsh-ui :is(.arco-input-error, .arco-textarea-error, .arco-select-view-error) { outline: 2px solid var(--danger); outline-offset: -2px; }
 .dsh-ui .arco-input-wrapper .arco-input:focus-visible, .dsh-ui .arco-textarea:focus-visible { outline: 0; }
 .dsh-ui .arco-select-view-single { position: relative; align-items: center; height: 36px; padding: 8px 28px 8px 12px; }
+.dsh-ui .arco-select-view-multiple { position: relative; align-items: center; }
 .dsh-ui .arco-select-view-single .arco-select-view-input { height: 20px; padding: 0; font: inherit; }
 .dsh-ui .arco-select-view-single .arco-select-view-value { min-height: 0; height: auto; padding: 0; font-size: 14px; line-height: 20px; color: var(--field-foreground); }
-.dsh-ui .arco-select-view-suffix { position: absolute; inset-inline-end: 8px; top: 10px; margin: 0; width: 16px; height: 16px; padding: 0; }
+.dsh-ui .arco-select-view-suffix { margin: 0; width: 16px; height: 16px; padding: 0; }
+.dsh-ui .arco-select-view-single .arco-select-view-suffix { position: absolute; inset-inline-end: 8px; top: 10px; }
 .dsh-ui .arco-select-view-icon { display: flex; width: 16px; height: 16px; color: var(--field-placeholder); }
 .dsh-ui .arco-select-view-icon > .arco-icon-down { width: 16px; height: 16px; background: currentColor; mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.97%205.47a.75.75%200%200%201%201.06%200L8%209.44l3.97-3.97a.75.75%200%201%201%201.06%201.06l-4.5%204.5a.75.75%200%200%201-1.06%200l-4.5-4.5a.75.75%200%200%201%200-1.06%22%20fill%3D%22black%22%20fill-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat; }
 .dsh-ui .arco-select-view-icon > .arco-icon-down path { visibility: hidden; }
@@ -392,7 +398,7 @@
 .dsh-ui .dsh-otp { position: relative; display: inline-block; cursor: text; }
 .dsh-ui .dsh-otp__input { position: absolute; inset: 0; width: 100%; height: 100%; box-sizing: border-box; color: transparent; caret-color: transparent; background: transparent; border: 0; opacity: 0; pointer-events: none; }
 .dsh-ui .dsh-otp__cells { display: flex; gap: 8px; }
-.dsh-ui .dsh-otp__cell { box-sizing: border-box; display: inline-flex; width: 38px; height: 40px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: var(--field-radius); background: var(--surface-secondary); color: var(--field-foreground); font-family: inherit; font-size: 18px; line-height: 24px; font-weight: 600; letter-spacing: -.27px; }
+.dsh-ui .dsh-otp__cell { box-sizing: border-box; display: inline-flex; width: 38px; height: 40px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: var(--field-radius); background: var(--color-fill-2); color: var(--field-foreground); font-family: inherit; font-size: 18px; line-height: 24px; font-weight: 600; letter-spacing: -.27px; }
 .dsh-ui .dsh-otp[data-disabled="true"] { cursor: var(--cursor-disabled); }
 .dsh-ui .dsh-otp[data-disabled="true"] .dsh-otp__cell { color: var(--muted); }
 .dsh-ui .dsh-otp__cell[data-active="true"] { border-color: var(--dsh-accent); box-shadow: var(--dsh-focus); }
@@ -518,7 +524,7 @@
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-pagination-item-active { color:var(--foreground); background:var(--default); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-pagination-item-disabled { color:var(--foreground); opacity:var(--disabled-opacity); }
 .dsh-ui.dsh-ui[data-theme][data-radius] :where(.arco-pagination:not(.arco-pagination-size-mini,.arco-pagination-size-small,.arco-pagination-size-large)) :is(.arco-pagination-item-prev,.arco-pagination-item-previous,.arco-pagination-item-next) { width:36px; min-width:36px; }
-.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-number-mode-button:not(.arco-input-number-size-mini,.arco-input-number-size-small,.arco-input-number-size-large) { box-sizing:border-box; height:36px; padding:0; overflow:hidden; border:var(--border-width-field) solid var(--field-border); border-radius:calc(var(--radius) * 1.5); background:var(--field-background); box-shadow:var(--field-shadow); }
+.dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-number-mode-button:not(.arco-input-number-size-mini,.arco-input-number-size-small,.arco-input-number-size-large) { box-sizing:border-box; height:36px; padding:0; overflow:hidden; border:var(--border-width-field) solid var(--field-border); border-radius:var(--field-radius); background:var(--field-background); box-shadow:var(--field-shadow); }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-number-mode-button:not(.arco-input-number-size-mini,.arco-input-number-size-small,.arco-input-number-size-large) :is(.arco-input-wrapper,.arco-input-inner-wrapper) { display:flex; align-items:center; height:36px; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-number-mode-button:not(.arco-input-number-size-mini,.arco-input-number-size-small,.arco-input-number-size-large) .arco-input-group { display:flex; width:100%; height:36px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-input-number-mode-button:not(.arco-input-number-size-mini,.arco-input-number-size-small,.arco-input-number-size-large) :is(.arco-input-prepend,.arco-input-append,.arco-input-group-addbefore,.arco-input-group-addafter) { display:flex; flex:0 0 40px; width:40px; padding:0; border:0; border-radius:0; background:transparent; }

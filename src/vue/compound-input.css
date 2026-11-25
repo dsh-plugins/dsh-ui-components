@@ -1,3 +1,21 @@
+.dsh-ui :is(.arco-input-group, .arco-input-outer) {
+  border-radius: var(--field-radius);
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group, .arco-input-outer) > * {
+  border-radius: 0;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group, .arco-input-outer) > :first-child {
+  border-start-start-radius: inherit;
+  border-end-start-radius: inherit;
+}
+.dsh-ui.dsh-ui[data-theme][data-radius] :is(.arco-input-group, .arco-input-outer) > :last-child {
+  border-start-end-radius: inherit;
+  border-end-end-radius: inherit;
+}
+.dsh-ui :is(.arco-input-prepend, .arco-input-append) > :is(.arco-input-search-btn, .arco-input-number-step-button) {
+  border-radius: inherit;
+}
+
 /* Arco Vue 将装饰、密码眼睛和清除按钮渲染为原生 input 的兄弟节点。 */
 .dsh-ui .arco-input-wrapper:not(.arco-input-number, .arco-input-number *):has(> .arco-input-prefix, > .arco-input-suffix, > .arco-input-clear-btn) {
   align-items: center;

@@ -294,3 +294,34 @@
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-picker { border-width: 1px; border-style: solid; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-small { min-height: 32px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-hero-input-tag.arco-input-tag-size-large { min-height: 44px; }
+
+@scope (.dsh-ui[data-theme="light"]) to (.dsh-ui) {
+  :scope:not(.dsh-ui-portal),
+  :scope[data-theme][data-radius] :is(
+    .arco-modal, .arco-drawer, .arco-card:not(.dsh-card--flat, .dsh-card--glass), .dsh-surface[data-variant="default"]
+  ) {
+    &:has(:is(
+      .arco-input-wrapper, .arco-textarea-wrapper, .arco-input-tag, .arco-select-view,
+      .arco-picker, .dsh-date-input, .dsh-otp, .arco-color-picker-value
+    ):not(:scope .dsh-ui *)) {
+      background-color: var(--dsh-form-background);
+    }
+  }
+
+  :is(.arco-input-wrapper, .arco-textarea-wrapper, .arco-input-tag, .arco-select-view, .arco-picker, .dsh-date-input, .dsh-otp__cell) {
+    --color-fill-2: var(--field-background);
+  }
+
+  :scope[data-theme][data-radius] :is(
+    .arco-input-disabled, .arco-input-number-mode-button.arco-input-outer-disabled, .arco-textarea-disabled,
+    .arco-input-tag-disabled, .arco-select-view-disabled, .arco-picker-disabled, .arco-color-picker-disabled:has(> .arco-color-picker-value),
+    .dsh-date-input[data-disabled], .dsh-otp[data-disabled="true"] .dsh-otp__cell
+  ) {
+    --field-background: var(--default);
+    --field-foreground: var(--muted);
+    --field-shadow: none;
+    --color-fill-2: var(--field-background);
+    background-color: var(--field-background);
+    box-shadow: none;
+  }
+}

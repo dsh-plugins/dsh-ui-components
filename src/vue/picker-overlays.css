@@ -59,7 +59,7 @@
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-calendar__years { padding-right: 4px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .arco-picker-range { border-width: var(--border-width-field); }
 
-.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input { box-sizing: border-box; display: flex; align-items: center; height: 36px; min-width: 0; width: 100%; border: var(--border-width-field) solid var(--field-border); border-radius: calc(var(--radius) * 1.5); background: var(--field-background); box-shadow: var(--field-shadow); color: var(--field-foreground); font-size: 14px; line-height: 20px; }
+.dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input { box-sizing: border-box; display: flex; align-items: center; height: 36px; min-width: 0; width: 100%; border: var(--border-width-field) solid var(--field-border); border-radius: var(--field-radius); background: var(--field-background); box-shadow: var(--field-shadow); color: var(--field-foreground); font-size: 14px; line-height: 20px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] .dsh-date-input__field { display: flex; align-items: center; flex-shrink: 0; gap: 1px; padding: 8px 8px 8px 12px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.dsh-date-input[data-size="mini"], .arco-picker.arco-picker-size-mini) { height: 24px; min-height: 24px; }
 .dsh-ui.dsh-ui[data-theme][data-radius] :is(.dsh-date-input[data-size="small"], .arco-picker.arco-picker-size-small) { height: 28px; min-height: 28px; }
